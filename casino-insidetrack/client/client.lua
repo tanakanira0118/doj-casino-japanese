@@ -185,6 +185,9 @@ function Utils:HandleControls()
 
                 if Utils.ChooseHorseVisible then
                     if (clickedButton ~= 12) and (clickedButton ~= -1) then
+                        if Utils.PlayerBalance < Utils.CurrentBet then
+                            Utils.CurrentBet = math.floor(Utils.PlayerBalance / 100) * 100
+                        end
                         Utils.CurrentHorse = (clickedButton - 1)
                         Utils:ShowBetScreen(Utils.CurrentHorse)
                         Utils.ChooseHorseVisible = false
@@ -226,7 +229,7 @@ function Utils:HandleControls()
 
                 -- Change bet
                 if (clickedButton == 8) then
-                    if (Utils.CurrentBet < Utils.PlayerBalance) then
+                    if (Utils.CurrentBet < Utils.PlayerBalance - 100) then
                         Utils.CurrentBet = (Utils.CurrentBet + 100)
                         Utils.CurrentGain = (Utils.CurrentBet * 2)
                         Utils:UpdateBetValues(Utils.CurrentHorse, Utils.CurrentBet, Utils.PlayerBalance, Utils.CurrentGain)

@@ -16,8 +16,8 @@ Config.AnimatedWallWin = 'CASINO_WIN_PL'
 
 Config.SendWelcomeMail = false -- Sends a email to players phone on entering casino
 Config.WelcomeMailsender = "The Diamond Casino & Resort"
-Config.WelcomeMailsubject ="Welcome!"
-Config.WelcomeMailmessage = "Welcome to The Diamond Casino & Resort, We are Open 24/7 & only accept Electronic Transactions"
+Config.WelcomeMailsubject ="ようこそ"
+Config.WelcomeMailmessage = "The Diamond Casino & Resortへようこそ！ 年中無休＆電子決済のみ対応"
 
 Config.payment = "bank" -- or "cash" -- Payment player will recieve by selling casino chips
 

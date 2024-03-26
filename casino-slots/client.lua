@@ -192,11 +192,11 @@ local function SlotMachineHandler()
     local RandomAnimName = RandomIdle[math.random(1, #RandomIdle)]
     NetworkAddPedToSynchronisedScene(PlayerPedId(), IdleScene, AnimDict, RandomAnimName, 2.0, -1.5, 13, 16, 2.0, 0)
     NetworkStartSynchronisedScene(IdleScene)
-    exports['qb-core']:DrawText('<strong>Spin:</strong> ↵<br><strong>Leave: </strong>←<br><strong>Adjust Bet:</strong> ↑')
+    exports['qb-core']:DrawText('<strong>スピン:</strong> ↵<br><strong>やめる: </strong>←<br><strong>ベットを調整する:</strong> ↑')
     CreateThread(function()
         while true do
             QBCore.Functions.TriggerCallback('doj:server:CasinoChipsAmount', function(result)
-                exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>"..SlotReferences[ClosestSlotModel].name.."</p>Availble chips: "..math.floor(result))   
+                exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>"..SlotReferences[ClosestSlotModel].name.."</p>利用可能なチップ: "..math.floor(result))   
             end)
             if not IsSpinning then
                 if IsControlJustPressed(0, 202) then -- BACKSPACE 
@@ -357,7 +357,7 @@ Citizen.CreateThread(function()
             if dist <= 2.0 then
                 wait = 5
                 inZone  = true 
-                text = '<b>The Diamond Casino & Resort</p>Slot: '..SlotReferences[ClosestSlotModel].name..'</b></p>Press <b>E</b> to sit'
+                text = '<b>The Diamond Casino & Resort</p>スロット: '..SlotReferences[ClosestSlotModel].name..'</b></p><b>E</b>で座る'
                 if IsControlJustPressed(0, 38) then
                     local netID = NetworkGetEntityIsNetworked(ClosestSlot) and NetworkGetNetworkIdFromEntity(ClosestSlot)
                     if not netID then
@@ -460,7 +460,7 @@ RegisterNetEvent('dc-casino:slots:client:spinreels', function(SpinTime, ReelRewa
     if ReelRewards[1] == math.floor(ReelRewards[1]) then Sounds[9]() else Sounds[10]() end
     if RewardMultiplier == 0 then
         Sounds[1]()
-        QBCore.Functions.Notify('You Lose', 'error', 3500)
+        QBCore.Functions.Notify('負けました', 'error', 3500)
         -- exports['qb-core']:DrawText('<b>You Lose</b>)
         local LoseScene = NetworkCreateSynchronisedScene(ClosestSlotCoord, ClosestSlotRotation, 2, 2, 0, 1.0, 0, 1.0)
         LoadAnimDict(AnimDict)

@@ -460,10 +460,10 @@ RegisterNetEvent("BLACKJACK:RequestBets", function(index)
 		CreateThread(function()
 			scrollerIndex = index
 			-- exports["qb-core"]:DrawText("<strong>Max Bet:</strong> Q</p><strong>Adjust Bet: </strong>↑/↓</p><strong>Place Bet: </strong>ENTER</p><strong>ESC:</strong> Exit")  
-			exports["qb-core"]:DrawText("<strong>Place Bet: </strong>↵</p><strong>Adjust Bet: </strong>↑/↓</p><strong><strong>Exit:</strong> ←") 
+			exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong>終了: </strong>←") 
 			while true do
 				Wait(0)
-				exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Time Left: 0:"..timeLeft.."</p>Current Bet: "..bet.." </p>Availble chips: "..math.floor(retval))   
+				exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>残り時間: 0:"..timeLeft.."</p>現在のベット: "..bet.." </p>使用可能なチップ: "..math.floor(retval))   
 				local tableLimit = (tables[scrollerIndex].highStakes == true) and #bettingNums or lowTableLimit
 				if IsControlJustPressed(1, 205) then -- Q / Y 
 					selectedBet = tableLimit
@@ -562,7 +562,7 @@ RegisterNetEvent("BLACKJACK:RequestBets", function(index)
 						end
 						return
 					else
-						QBCore.Functions.Notify('You dont have any casino chips...', 'error', 3500)
+						QBCore.Functions.Notify('カジノチップを持っていません...', 'error', 3500)
 					end
 				end
 			end
@@ -643,8 +643,8 @@ RegisterNetEvent("doj:client:blackjackMenu", function(args)
 			NetworkStartSynchronisedScene(scene)
 			return
 		else
-			QBCore.Functions.Notify("You don't have enough casino chips to double down.", "error")
-			exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Dealer: "..dealerValue[g_seat].."</p>Hand: "..handValue(hand))  
+			QBCore.Functions.Notify("ダブルダウンをするのに十分なカジノチップを持っていない。", "error")
+			exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>ディーラー: "..dealerValue[g_seat].."</p>ハンド: "..handValue(hand))  
 			TriggerEvent("casino:context:hit&stand")
 		end
 	else
@@ -683,8 +683,8 @@ RegisterNetEvent("doj:client:blackjackMenu", function(args)
 			NetworkStartSynchronisedScene(scene)
 			return
 		else
-			QBCore.Functions.Notify("You don't have enough casino chips to split.", "error")
-			exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Dealer: "..dealerValue[g_seat].."</p>Hand: "..handValue(hand))  
+			QBCore.Functions.Notify("スプリットするのに十分なカジノチップを持っていない。", "error")
+			exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>ディーラー: "..dealerValue[g_seat].."</p>ハンド: "..handValue(hand))  
 			TriggerEvent("casino:context:hit&stand")
 		end
 	end 
@@ -697,27 +697,27 @@ RegisterNetEvent("BLACKJACK:RequestMove", function()
 		return 
 	elseif  #hand < 3 and #splitHand == 0 then
 		TriggerEvent("casino:context:hit&doubledown")
-		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Dealer: "..dealerValue[g_seat].."</p>Hand: "..handValue(hand))  
+		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>ディーラー: "..dealerValue[g_seat].."</p>ハンド: "..handValue(hand))  
 	elseif CanSplitHand(hand) == true then
 		TriggerEvent("casino:context:hit&split")
-		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Dealer: "..dealerValue[g_seat].."</p>Hand: "..handValue(hand).."</p>[Split Hand: "..handValue(splitHand).."]") 
+		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>ディーラー: "..dealerValue[g_seat].."</p>ハンド: "..handValue(hand).."</p>[スプリットハンド: "..handValue(splitHand).."]") 
 	elseif leavingBlackjack == false then
 		TriggerEvent("casino:context:hit&stand")
-		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>Dealer: "..dealerValue[g_seat].."</p>Hand: "..handValue(hand)) 
+		exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Blackjack</p>ディーラー: "..dealerValue[g_seat].."</p>ハンド: "..handValue(hand)) 
 	end
 end)
 
 RegisterNetEvent("BLACKJACK:GameEndReaction", function(result)
 	CreateThread(function()
 		if #hand == 2 and handValue(hand) == 21 and result == "good" then 
-			QBCore.Functions.Notify("You have BLACKJACK!", "success")
+			QBCore.Functions.Notify("ブラックジャックです！", "success")
 			PlaySoundFrontend(-1, "TENNIS_MATCH_POINT", "HUD_AWARDS", 1)
 		elseif handValue(hand) > 21 and result ~= "good" then
-			QBCore.Functions.Notify("You BUST", "error", 3500)
+			QBCore.Functions.Notify("バーストした", "error", 3500)
 			PlaySoundFrontend(-1, "ERROR", "HUD_AMMO_SHOP_SOUNDSET", 1)
 		else
 			PlaySoundFrontend(-1, "CHALLENGE_UNLOCKED", "HUD_AWARDS", 1) 
-			QBCore.Functions.Notify("You "..resultNames[result].." with the hand: "..handValue(hand)) 
+			QBCore.Functions.Notify("あなたはハンド"..handValue(hand).."で"..resultNames[result].."した") 
 		end
 
 		hand = {}
@@ -899,9 +899,9 @@ function ProcessTables()
 							inZone  = true
 
 							if highStakes then
-								text = "<strong>The Diamond Casino & Resort</p>Blackjack KGV(High-Limit)</strong></p>Press <strong>E</strong> to sit"  
+								text = "<strong>The Diamond Casino & Resort</p>Blackjack KGV(High-Limit)</strong></p><strong>E</strong>で座る"  
 							else
-								text = "<strong>The Diamond Casino & Resort</p>Blackjack KGV</strong></p>Press <strong>E</strong> to sit" 
+								text = "<strong>The Diamond Casino & Resort</p>Blackjack KGV</strong></p><strong>E</strong>で座る" 
 							end
 						
 						

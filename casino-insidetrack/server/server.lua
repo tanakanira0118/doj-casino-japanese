@@ -25,7 +25,7 @@ RegisterServerEvent("insidetrack:server:placebet", function(bet)
         if Chips.amount >= bet then
             Player.Functions.RemoveItem("casino_goldchip", bet)
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "remove", bet)
-            TriggerClientEvent('QBCore:Notify', src, "You placed a "..bet.." casino chips bet")
+            TriggerClientEvent('QBCore:Notify', src, "あなたは"..bet.."カジノチップ賭けました")
         else
             return TriggerClientEvent('QBCore:client:closeBetsNotEnough', src)
         end
@@ -40,9 +40,9 @@ RegisterServerEvent("insidetrack:server:winnings", function(amount)
     if Player ~= nil then
         if Player.Functions.AddItem('casino_goldchip', amount, nil, {["quality"] = 100}) then
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["casino_goldchip"], "add", amount)
-            TriggerClientEvent('QBCore:Notify', src, "You Won "..amount.." casino chips!")
+            TriggerClientEvent('QBCore:Notify', src, "あなたは"..amount.."カジノチップ勝ちました！")
         else
-            TriggerClientEvent('QBCore:Notify', src, 'You have to much in your pockets', 'error')
+            TriggerClientEvent('QBCore:Notify', src, 'ポケットがいっぱいです', 'error')
         end
     end
 end) 

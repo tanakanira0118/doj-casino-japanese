@@ -276,7 +276,7 @@ RegisterNetEvent("doj:client:startingBets", function(args)
             if currentBetAmount >= 10 then 
                 currentBetAmount = currentBetAmount - 10
             else
-                QBCore.Functions.Notify("Cannot bet below zero", "error", 3500)
+                QBCore.Functions.Notify("0以下のベットは出来ません", "error", 3500)
             end
         elseif args == 3 then 
             -- -- print("submitting bet")
@@ -287,7 +287,7 @@ RegisterNetEvent("doj:client:startingBets", function(args)
                 putBetOnTable()
                 Wait(1000)
             else
-                QBCore.Functions.Notify("Invalid amount.", "error", 3500)
+                QBCore.Functions.Notify("無効な数量。", "error", 3500)
             end
         elseif args == 4 then 
             -- -- print("custom bet")
@@ -328,16 +328,16 @@ RegisterNetEvent('doj:client:hit&standMenu', function()
             isMenuHeader = true,
         },
         {
-            header = "Hit", 
-            txt = "Draw another card",
+            header = "ヒット", 
+            txt = "カードを引く",
             params = {
                 event = "doj:client:hit&standActions",
                 args = 1
             }
         },
         {
-            header = "Stand", 
-            txt = "Be a pussy",
+            header = "スタンド", 
+            txt = "確定する",
             params = {
                 event = "doj:client:hit&standActions",
                 args = 2
@@ -403,14 +403,14 @@ CreateThread(function()
         if not sittingAtBlackjackTable then
             if closestChair ~= nil and closestChairDist < 1.3 then
                 inZone  = true
-                text = "<b>The Diamond Casino & Resort</p>Blackjack RT98</b></p>Press <b>E</b> to sit" 
+                text = "<b>The Diamond Casino & Resort</p>Blackjack RT98</b></p><b>E</b>で座る" 
                 if not timeoutHowToBlackjack then
                     if IsControlJustPressed(0, 38) then
                         if blackjackTableData[closestChair] == false then
                             print("calling goToBlackjackSeat with chairID: " .. tostring(closestChair))
                             TriggerServerEvent("Blackjack:requestSitAtBlackjackTable",closestChair) 
                         else 
-                            QBCore.Functions.Notify("This seat is taken.", "error", 3500)
+                            QBCore.Functions.Notify("この席は埋まっています。", "error", 3500)
                         end
                     end
                 end
@@ -453,11 +453,11 @@ CreateThread(function()
         if drawTimerBar then
             QBCore.Functions.TriggerCallback('BLACKJACKRT98:server:blackChipsAmount', function(result)
                 retval = result
-                exports['casinoUi']:DrawCasinoUi('show', "<b>The Diamond Casino & Resort Blackjack</b></p>Time Left: 0:"..timeLeft.."</p>Availble chips: "..math.floor(result).."</p>Current Bet: "..math.floor(currentBetAmount))   
+                exports['casinoUi']:DrawCasinoUi('show', "<b>The Diamond Casino & Resort Blackjack</b></p>残り時間: 0:"..timeLeft.."</p>利用可能なチップ: "..math.floor(result).."</p>現在のベット: "..math.floor(currentBetAmount))   
 	        end) 
         end
         if drawCurrentHand then
-            exports['qb-core']:DrawText("<b>Dealers Hand: </b>"..math.floor(dealersHand).."</p><b>Your hand: </b>"..math.floor(currentHand)) 
+            exports['qb-core']:DrawText("<b>ディーラーのハンド: </b>"..math.floor(dealersHand).."</p><b>あなたのハンド: </b>"..math.floor(currentHand)) 
         end
         Wait(250) 
     end
@@ -477,7 +477,7 @@ AddEventHandler("Blackjack:beginBetsBlackjack",function(gameID,tableId)
     -- exports["qb-core"]:HideText()
     TriggerEvent("doj:client:openBetMenu")
     -- QBCore.Functions.Notify("Place your bets", 'primary', 3500)
-    exports['qb-core']:DrawText("Place your bets...")  
+    exports['qb-core']:DrawText("賭けてください...")  
 
     bettedThisRound = false
     drawTimerBar = true
@@ -592,7 +592,7 @@ AddEventHandler("Blackjack:standOrHit",function(gameId,chairId,nextCardCount,tab
                     waitingForStandOrHitState = false
                     TriggerServerEvent("Blackjack:standBlackjack",globalGameId,globalNextCardCount)
                     declineCard()
-                    QBCore.Functions.Notify("Failed to stand/hit in time, standing.", 'error', 3500)
+                    QBCore.Functions.Notify("スタンド/ヒットの時間切れです。スタンドします。", 'error', 3500)
                 end
             end)
         else 
@@ -645,7 +645,7 @@ function goToBlackjackSeat(blackjackSeatID)
 
     
     -- print("[CMG Casino] start sit at blackjack seat") 
-    exports['qb-core']:DrawText("Waiting for game to start...")
+    exports['qb-core']:DrawText("ゲームの開始を待っています...")
 
     blackjackAnimsToLoad = {
       "anim_casino_b@amb@casino@games@blackjack@dealer",

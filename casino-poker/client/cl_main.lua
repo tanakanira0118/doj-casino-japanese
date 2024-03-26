@@ -130,7 +130,7 @@ AddEventHandler(
 AddEventHandler('aquiverPoker:resetTable',function(tableId)
     if SharedPokers[tableId] ~= nil then
         SharedPokers[tableId].resetTable()
-        exports["qb-core"]:DrawText("<strong>Place Bet: </strong>↵</p><strong>Adjust Bet: </strong>↑/↓</p><strong><strong>Exit:</strong> ←")
+        exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong><strong>終了:</strong> ←")
     end
 end)
 
@@ -453,11 +453,11 @@ AquiverPoker = function(index, data)
 
                         self.EnableRender(true)
                         SetPlayerControl(PlayerPedId(), 1, 0)
-                        exports["qb-core"]:DrawText("<strong>Place Bet: </strong>↵</p><strong>Adjust Bet: </strong>↑/↓</p><strong><strong>Exit:</strong> ←") 
+                        exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong><strong>終了:</strong> ←") 
 
                         Citizen.Wait(500)
                     else
-                        QBCore.Functions.Notify('This seat is occupied.')
+                        QBCore.Functions.Notify('この席は埋まっています。')
                     end
                 end,
                 self.index,
@@ -653,7 +653,7 @@ AquiverPoker = function(index, data)
 
                             if clientTimer < 1 then
                                 clientTimer = nil
-                                QBCore.Functions.Notify('You did not respond for the dealer ask in time, you have folded your hand.')
+                                QBCore.Functions.Notify('ディーラーの問いかけに対して時間内に返答しなかったため、ハンドをフォールドしました。')
                                 TriggerServerEvent('aquiverPoker:foldCards', self.index)
                             end
                         end
@@ -680,7 +680,7 @@ AquiverPoker = function(index, data)
                             watchingCards = true
                             -- ShakeGameplayCam('HAND_SHAKE', 0.15)
                             -- buttonScaleform = setupThirdButtons('instructional_buttons')
-                            exports["qb-core"]:DrawText("<strong>Play Hand:</strong> E</p><strong>Fold Hand:</strong> ←") 
+                            exports["qb-core"]:DrawText("<strong>プレイ:</strong> E</p><strong>フォールド:</strong> ←") 
 
                             local playerHandValue = Config.getHandAllValues(data.Hand)
                             if playerHandValue ~= nil then
@@ -691,7 +691,7 @@ AquiverPoker = function(index, data)
                                         function()
                                             while watchingCards do
                                                 Citizen.Wait(0)
-                                                exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>Player hand: "..form)   
+                                                exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>プレイヤーのハンド: "..form)   
 
                                                 -- drawText2d(0.5, 0.9, 0.45, form)
 
@@ -922,7 +922,7 @@ AquiverPoker = function(index, data)
 
                         if buttonScaleform ~= nil then
                             -- DrawScaleformMovieFullscreen(buttonScaleform, 255, 255, 255, 255, 0)
-                            exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>Current Bet: "..currentBetInput.."</p>Availble chips: "..PlayerOwnedChips)   
+                            exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>現在のベット: "..currentBetInput.."</p>利用可能なチップ: "..PlayerOwnedChips)   
                         end
 
                         EnableControlAction(0, 0, true) -- changing camera
@@ -1006,7 +1006,7 @@ AquiverPoker = function(index, data)
                                             PlaySoundFrontend(-1, 'DLC_VW_ERROR_MAX', 'dlc_vw_table_games_frontend_sounds', true)
                                         end
                                     else
-                                        QBCore.Functions.Notify("You did not set up a bet value.")
+                                        QBCore.Functions.Notify("ベット額を設定していません。")
                                     end
                                 end
 
@@ -1106,7 +1106,7 @@ AquiverPoker = function(index, data)
                                     while DoesCamExist(mainCamera) do
                                         Citizen.Wait(0)
 
-                                        exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>Dealer hand: "..form)   
+                                        exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>ディーラーのハンド: "..form)   
 
                                         -- drawText2d(0.5, 0.9, 0.45, form)
                                     -- elseif
@@ -1544,7 +1544,7 @@ Citizen.CreateThread(function()
                                         if #(playerpos - chaircoords) < 1.5 then
                                             wait = 5
                                             inZone  = true
-                                            text = "<strong>The Diamond Casino & Resort</p>Poker</strong></p>Press <strong>E</strong> to sit"
+                                            text = "<strong>The Diamond Casino & Resort</p>Poker</strong></p><strong>E</strong>で座る"
 
                                             local chairrotation = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, chairBone))
                                             -- drawfreameeMarker(chaircoords + vector3(0.0, 0.0, 1.0))

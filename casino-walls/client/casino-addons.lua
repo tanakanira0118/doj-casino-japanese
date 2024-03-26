@@ -2,7 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 RegisterNetEvent('qb-casino:client:openCasinoShop', function()
     local ShopItems = {}
-    ShopItems.label = "The Diamond Casino & Resort Shop"
+    ShopItems.label = "The Diamond Casino & Resort ショップ"
     ShopItems.items = Config.CasinoShop
     ShopItems.slots = #Config.CasinoShop 
     TriggerServerEvent("inventory:server:OpenInventory", "shop", "Vendingshop_", ShopItems)
@@ -12,12 +12,12 @@ RegisterNetEvent('doj:casinoChipMenu', function()
     TriggerEvent('drawtextui:HideUI')
     exports['qb-menu']:openMenu({
         {
-            header = "The Diamond Casino & Resort Chip Exchange",
+            header = "The Diamond Casino & Resort チップ換金",
             isMenuHeader = true,
         },
         {
-            header = "Sell All Casino Chips", 
-            txt = "Current Value: $"..Config.casinoChipPrice.." per chip",
+            header = "カジノチップを全て売る", 
+            txt = "相場: チップあたり$"..Config.casinoChipPrice.."",
             params = {
                 
                 event = "qb-casino:server:GoldSell",
@@ -25,7 +25,7 @@ RegisterNetEvent('doj:casinoChipMenu', function()
             }
         },
         {
-            header = "< Return",
+            header = "< 戻る",
 			txt = "",
 			params = {
                 event = "doj:casinoMainMenu"
@@ -36,21 +36,21 @@ end)
 
 CreateThread(function()
     local CasinoShop = CircleZone:Create(vector3(948.591, 34.207, 71.839), 2.0, {
-        name="CasinoShop",
+        name="カジノショップ",
         heading=160,
         debugPoly=false,
         useZ=true,
     })
     CasinoShop:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            text = '<b>The Diamond Casino & Resort</b></p>Cashier'
+            text = '<b>The Diamond Casino & Resort</b></p>レジ'
             exports['qb-core']:DrawText(text)
             exports['qb-target']:AddTargetModel(`U_F_M_CasinoCash_01`, {
                 options = {
                     { 
                         event = "doj:casinoMainMenu",
                         icon = "fab fa-speakap",
-                        label = "Speak with Casino Employee", 
+                        label = "カジノ従業員と話す", 
                     },
                 },
                 distance = 3.0 
@@ -65,21 +65,21 @@ end)
 
 CreateThread(function()
     local CasinoMembership = CircleZone:Create(vector3(920.726, 45.883, 71.073), 5.0, {
-        name="CasinoMembership",
+        name="カジノメンバーシップ",
         heading=160,
         debugPoly=false,
         useZ=true,
     })
     CasinoMembership:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            text = '<b>The Diamond Casino & Resort</b></p>Front Counter'
+            text = '<b>The Diamond Casino & Resort</b></p>フロントカウンター'
             exports['qb-core']:DrawText(text)
             exports['qb-target']:AddTargetModel(`u_f_m_casinoshop_01`, {
                 options = {
                     { 
                         event = "doj:casinoMembershipMenu",
                         icon = "fab fa-speakap",
-                        label = "Speak with Casino Employee", 
+                        label = "カジノ従業員と話す", 
                     },
                 },
                 distance = 3.0 
@@ -103,21 +103,21 @@ RegisterNetEvent('doj:casinoMainMenu', function()
                     isMenuHeader = true,
                 },
                 {
-                    header = "Chip Exchange", 
-                    txt = "See current prices",
+                    header = "チップ換金", 
+                    txt = "現在の価格を見る",
                     params = {
                         event = "doj:casinoChipMenu",
                     }
                 },
                 {
-                    header = "Browse Shop", 
-                    txt = "See what we have to offer",
+                    header = "ショップを見る", 
+                    txt = "商品を見る",
                     params = {
                         event = "qb-casino:client:openCasinoShop",
                     }
                 },
                 {
-                    header = "Cancel",
+                    header = "キャンセル",
                     txt = "",
                     params = {
                         event = ""
@@ -125,7 +125,7 @@ RegisterNetEvent('doj:casinoMainMenu', function()
                 },
             })
         else
-            text = '<b>The Diamond Casino & Resort</p>Please visit the front desk!</b>'
+            text = '<b>The Diamond Casino & Resort</p>フロントデスクまでお越しください</b>'
             exports['qb-core']:DrawText(text)
         end
     end)
@@ -140,23 +140,23 @@ RegisterNetEvent('doj:casinoMembershipMenu', function()
             isMenuHeader = true,
         },
         {
-            header = "Purchase Casino Membership", 
-            txt = "Price: $"..Config.casinoMemberPrice,
+            header = "Casino Membershipを購入する", 
+            txt = "価格: $"..Config.casinoMemberPrice,
             params = {
                 isServer = true,
                 event = "doj:server:purchaseMembership",
             }
         },
         {
-            header = "Purchase V.I.P Membership", 
-            txt = "Price: $"..Config.casinoVIPPrice,
+            header = "V.I.P Membershipを購入する", 
+            txt = "価格: $"..Config.casinoVIPPrice,
             params = {
                 isServer = true,
                 event = "doj:server:purchaseVIPMembership",
             }
         },
         {
-            header = "Cancel",
+            header = "キャンセル",
             txt = "",
             params = {
                 event = ""

@@ -2,7 +2,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 CreateThread(function()
     local TeleportUpZone = CircleZone:Create(vector3(930.251, 34.324, 81.089), 1.5, {
-        name="TeleportUp",
+        name="下にテレポート",
         heading=328.0,
         debugPoly=false,
         useZ=true,
@@ -14,7 +14,7 @@ CreateThread(function()
                 if HasItem then  
                     TriggerEvent("doj:casinoTeleportUp")
                 else
-                    exports['qb-core']:DrawText('<b>The Diamond Casino & Resort</p>NOT A MEMBER</p></b>Please visit the front desk!</b>')
+                    exports['qb-core']:DrawText('<b>The Diamond Casino & Resort</p>会員ではありません</p></b>フロントデスクまでお越しください</b>')
                 end
             end)
         else
@@ -26,7 +26,7 @@ end)
 
 CreateThread(function()
     local TeleportDownZone = CircleZone:Create(vector3(964.737, 58.743, 112.553), 1.5, {
-        name="TeleportDown",
+        name="下にテレポート",
         heading=328.0,
         debugPoly=false,
         useZ=true,
@@ -53,19 +53,19 @@ end)
 RegisterNetEvent('doj:casinoTeleportUp', function()
     exports['qb-menu']:showHeader({
         {
-            header = "The Diamond Casino & Resort Elevators",
+            header = "The Diamond Casino & Resort エレベーター",
             isMenuHeader = true,
         },
         {
-            header = "Elevator Up", 
-            txt = "Roof access",
+            header = "上に行く", 
+            txt = "屋上",
             params = {
                 event = "doj:casinoTeleports",
                 args = 1,
             }
         },
         {
-            header = "return",
+            header = "戻る",
 			txt = "",
 			params = {
                 event = "doj:casinoTeleportUp"
@@ -77,19 +77,19 @@ end)
 RegisterNetEvent('doj:casinoTeleportDown', function()
     exports['qb-menu']:showHeader({
         {
-            header = "The Diamond Casino & Resort Elevators",
+            header = "The Diamond Casino & Resort エレベーター",
             isMenuHeader = true,
         },
         {
-            header = "Elevator Down", 
-            txt = "Main Lobby",
+            header = "下に行く", 
+            txt = "メインロビー",
             params = {
                 event = "doj:casinoTeleports",
                 args = 2,
             }
         },
         {
-            header = "return",
+            header = "戻る",
 			txt = "",
 			params = {
                 event = "doj:casinoTeleportDown"

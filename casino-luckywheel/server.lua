@@ -23,7 +23,7 @@ RegisterNetEvent('luckywheel:getwheel', function()
 		if result == '0' then
 			TriggerEvent("luckywheel:startwheel", Player, src)
 		else
-			TriggerClientEvent('QBCore:Notify', src, "You have already had a spin on the wheel today", "error")
+			TriggerClientEvent('QBCore:Notify', src, "今日は既に回しています", "error")
 		end
 	elseif Config.LimitedSpins == false then
 		if Player.PlayerData.money["bank"] >= Config.startingPrice then
@@ -31,7 +31,7 @@ RegisterNetEvent('luckywheel:getwheel', function()
 			TriggerEvent("luckywheel:startwheel", Player, src)
 		else
 			-- return TriggerClientEvent('QBCore:Notify', src, "You have enough in the bank to spin", "error")
-			TriggerClientEvent('QBCore:Notify', src, "You have enough in the bank to spin", "error")
+			TriggerClientEvent('QBCore:Notify', src, "回すための銀行残高が不足しています", "error")
 		end
 	end
 end)
@@ -68,16 +68,16 @@ RegisterNetEvent('luckywheel:give', function(source, price)
 	elseif price.type == 'item' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 		Player.Functions.AddItem(price.name, price.count, slot) 
-		TriggerClientEvent('QBCore:Notify', source, "Congratulations! You won "..price.count.." "..price.name.."!", 'success')
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは"..price.count.."個の"..price.name.."を得ました！", 'success')
 		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add",price.count )
 	elseif price.type == 'money' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 		Player.Functions.AddMoney('bank', tonumber(price.count), 'banking-quick-depo')
-		TriggerClientEvent('QBCore:Notify', source, "Congratulations! You won $"..price.count, 'success')
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは$"..price.count.."を得ました！", 'success')
 	elseif price.type == 'weapon' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 		Player.Functions.AddItem(price.name, 1, slot)
-		TriggerClientEvent('QBCore:Notify', source, "Congratulations! You won a Pistol!", 'success')
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは"..price.name.."を得ました！", 'success')
 		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add",1)
 	end
 	TriggerClientEvent("luckywheel:rollFinished", -1)
@@ -103,7 +103,7 @@ RegisterNetEvent('luckywheel:server:setVehicleOwner', function()
 		Config.VehiclePlateText,
 		0
 	})
-	TriggerClientEvent('QBCore:Notify', src, "YOU WON THE SHOW CAR! congratulations!", 'success')
+	TriggerClientEvent('QBCore:Notify', src, "展示車を獲得しました！ おめでとうございます！", 'success')
 end)
 
 

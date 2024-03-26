@@ -87,7 +87,7 @@ RegisterNetEvent('dc-casino:slots:server:spin', function(ChosenBetAmount)
     -- luacheck: ignore
     or UseItem and Player.Functions.RemoveItem(ItemName, SlotReferences[SlotModel].betamounts[ChosenBetAmount]) then TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "remove", ChosenBetAmount)
 
-    else TriggerClientEvent('QBCore:Notify', src, 'Nothing left to bet with', 'error') return end
+    else TriggerClientEvent('QBCore:Notify', src, 'ベットするものが残っていません', 'error') return end
 
     for i = 1, #ReelRewards do
         if SlotReferences[SlotModel].misschance > math.random(1, 100) then ReelRewards[i] = ReelRewards[i] + math.random(4, 6) / 10 end

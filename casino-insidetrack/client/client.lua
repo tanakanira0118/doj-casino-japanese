@@ -24,7 +24,7 @@ CreateThread(function()
                 text = '<b>The Diamond Casino & Resort Inside Track</b>'
 				exports['qb-core']:DrawText(text)
                 exports['qb-target']:AddCircleZone("Betting", vector3(956.121,70.185,70.433), 1.0, {
-                    name="Betting",
+                    name="賭ける",
                     heading=160,
                     debugPoly=false,
                     useZ=true,
@@ -33,7 +33,7 @@ CreateThread(function()
                         {
                             event = "QBCore:client:openInsideTrack", 
                             icon = "fas fa-coins",
-                            label = "Start Betting",
+                            label = "賭けを始める",
                         },
                     },
                     distance = 3.0 
@@ -53,14 +53,14 @@ RegisterNetEvent('doj:casinoinsideTrackHeader', function()
             isMenuHeader = true,
         },
         {
-            header = "Start Horse Betting", 
-            txt = "100 casino chips",
+            header = "馬に賭ける", 
+            txt = "100カジノチップ",
             params = {
                 event = "QBCore:client:openInsideTrack",
             }
         },
         {
-            header = "Cancel",
+            header = "キャンセル",
 			txt = "",
 			params = {
                 event = "doj:casinoinsideTrackHeader"
@@ -115,13 +115,13 @@ end
 RegisterNetEvent('QBCore:client:closeBetsNotEnough')
 AddEventHandler('QBCore:client:closeBetsNotEnough', function()
     closeHorseBets()
-    QBCore.Functions.Notify("Bets Closed! You dont have enough Casino Chips...", "error", 3500)
+    QBCore.Functions.Notify("ベットを締め切りました！ カジノチップが十分にありません...", "error", 3500)
 end)
 
 RegisterNetEvent('QBCore:client:closeBetsZeroChips')
 AddEventHandler('QBCore:client:closeBetsZeroChips', function()
     closeHorseBets()
-    QBCore.Functions.Notify("Bets Closed! You dont have any Casino Chips...", "error", 3500)
+    QBCore.Functions.Notify("ベットを締め切りました！ カジノチップを持っていません...", "error", 3500)
 end)
 
 

@@ -5,16 +5,16 @@ RegisterNetEvent('casino:context:hit&stand', function()
             isMenuHeader = true,
         },
         {
-            header = "Hit", 
-            txt = "Draw another card",
+            header = "ヒット", 
+            txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 1
             }
         },
         {
-            header = "Stand", 
-            txt = "Be a pussy",
+            header = "スタンド", 
+            txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 2
@@ -30,24 +30,24 @@ RegisterNetEvent('casino:context:hit&doubledown', function()
             isMenuHeader = true,
         },
         {
-            header = "Hit", 
-            txt = "Draw another card",
+            header = "ヒット", 
+            txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 1
             }
         },
         {
-            header = "Stand", 
-            txt = "Be a pussy",
+            header = "スタンド", 
+            txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 2
             }
         },
         {
-            header = "Double Down", 
-            txt = "Double your initial bet",
+            header = "ダブルダウン", 
+            txt = "初回のベットを倍にする",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 3
@@ -63,24 +63,24 @@ RegisterNetEvent('casino:context:hit&split', function()
             isMenuHeader = true,
         },
         {
-            header = "Hit", 
-            txt = "Draw another card",
+            header = "ヒット", 
+            txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 1
             }
         },
         {
-            header = "Stand", 
-            txt = "Be a pussy",
+            header = "スタンド", 
+            txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 2
             }
         },
         {
-            header = "Split", 
-            txt = "Split",
+            header = "スプリット", 
+            txt = "分割する",
             params = {
                 event = "doj:client:blackjackMenu",
                 args = 4

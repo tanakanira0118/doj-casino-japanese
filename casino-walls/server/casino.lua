@@ -24,12 +24,12 @@ AddEventHandler("qb-casino:server:GoldSell", function()
         price = price * quantity
         Player.Functions.AddMoney(Config.payment, price, "sold-casino-chips")
         TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "remove", quantity)
-        TriggerClientEvent('QBCore:Notify', src, "You sold "..quantity.." Gold chips for $"..price)
+        TriggerClientEvent('QBCore:Notify', src, quantity.."枚のゴールドチップを"..price.."ドルで売りました")
         TriggerEvent('qb-log:server:CreateLog', 'guedesteste', 'Dinheiro Venda | '..Player.PlayerData.name, 'default', quantity.." fichas de ouro por "..price.."€")
         TriggerClientEvent("doj:casinoChipMenu", src)
 		quantity = 0
     else
-        TriggerClientEvent('QBCore:Notify', src, "You dont have any gold casino chips...", "error") 
+        TriggerClientEvent('QBCore:Notify', src, "ゴールドカジノチップがありません...", "error") 
         TriggerClientEvent("doj:casinoChipMenu", src)
     end
 end)
@@ -41,7 +41,7 @@ RegisterNetEvent("doj:server:purchaseMembership", function()
     local MembershipCheck = Player.Functions.GetItemByName('casino_member')
     if MembershipCheck ~= nil then
         TriggerClientEvent('doj:casinoMembershipMenu', src)
-        TriggerClientEvent('QBCore:Notify', src, 'You already have a Membership', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'すでに会員証を持っています', 'error')
     else
 	    if Player.Functions.AddItem('casino_member', 1, false, info) then
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_member'], "add", 1)
@@ -57,7 +57,7 @@ RegisterNetEvent("doj:server:purchaseVIPMembership", function()
     local VIPMembershipCheck = Player.Functions.GetItemByName('casino_vip')
     if VIPMembershipCheck ~= nil then
         TriggerClientEvent('doj:casinoMembershipMenu', src)
-        TriggerClientEvent('QBCore:Notify', src, 'You already have a Membership', 'error')
+        TriggerClientEvent('QBCore:Notify', src, 'すでに会員証を持っています', 'error')
     else
 	    if Player.Functions.AddItem('casino_vip', 1, false, info) then
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_vip'], "add", 1)

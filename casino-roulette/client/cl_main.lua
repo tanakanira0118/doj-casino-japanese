@@ -206,12 +206,12 @@ createRulettAsztal = function(index, data)
 
                     if Config.allowCustomBet then
                         if IsDisabledControlJustPressed(0, 22) then --Custom Bet [space]
-                            local tmpInput = getGenericTextInput('How many chips you would like to bet?')
+                            local tmpInput = getGenericTextInput('いくつのチップを賭けますか？')
                             if tonumber(tmpInput) then
                                 tmpInput = tonumber(tmpInput)
                                 if tmpInput > 0 then
                                     changeBetAmount(tmpInput)
-                                    QBCore.Functions.Notify('Custom Bet: '..currentBetAmount..' chips','success')
+                                    QBCore.Functions.Notify('カスタムベット: '..currentBetAmount..'チップ','success')
                                 end
                             end
                         end
@@ -646,12 +646,12 @@ createRulettAsztal = function(index, data)
                                                     PlaySoundFrontend(-1, 'DLC_VW_BET_DOWN', 'dlc_vw_table_games_frontend_sounds', true)
                                                     TriggerServerEvent('casino:taskBetRulett', selectedRulett, aimingAtBet, currentBetAmount)
                                                 else
-                                                    QBCore.Functions.Notify('Your bet it too low or too high for this table.','error')
+                                                    QBCore.Functions.Notify('あなたのベットはこのテーブルに対して低すぎるか高すぎます。','error')
 
                                                 end
                                             end
                                         else
-                                            QBCore.Functions.Notify('Bet needs to be raised','error')
+                                            QBCore.Functions.Notify('ベットを上げる必要があります', 'error')
                                         end
                                     end
                                 end
@@ -901,7 +901,7 @@ Citizen.CreateThread(function()
                     if dist <= 2.0 then 
                         wait = 5
                         inZone  = true 
-                        text = "<strong>The Diamond Casino & Resort</p>Roulette</strong></p>Press <strong>E</strong> to sit"
+                        text = "<strong>The Diamond Casino & Resort</p>Roulette</strong></p><strong>E</strong>で座る"
                         local closestChairData = getClosestChairData(v.tableObject)
                         if closestChairData == nil then
                             break
@@ -1011,14 +1011,14 @@ function casinoNuiUpdateGame(rulettIndex, ido, statusz)
         retval = result
         if selectedRulett == rulettIndex then
             if not statusz then
-                exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Roulette</p>Time Left: "..ido.."</p>Current Bet: "..currentBetAmount.."</p>Availble chips: "..math.floor(retval))
+                exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Roulette</p>残り時間: "..ido.."</p>現在のベット: "..currentBetAmount.."</p>利用可能なチップ: "..math.floor(retval))
                 if Config.allowCustomBet then
-                    exports["qb-core"]:DrawText("<strong>Place Bet: </strong>LEFT CLICK</p><strong>Adjust Bet: </strong>↑/↓</p><strong>Exit:</strong> ←</p><strong>Custom Amount:</strong> SPACEBAR")
+                    exports["qb-core"]:DrawText("<strong>ベットをする: </strong>左クリック</p><strong>ベットを調整する: </strong>↑/↓</p><strong>終了:</strong> ←</p><strong>量をカスタム:</strong> スペースバー")
                 else
-                    exports["qb-core"]:DrawText("<strong>Place Bet: </strong>LEFT CLICK</p><strong>Adjust Bet: </strong>↑/↓</p><strong>Exit:</strong> ←")
+                    exports["qb-core"]:DrawText("<strong>ベットをする: </strong>左クリック</p><strong>ベットを調整する: </strong>↑/↓</p><strong>終了:</strong> ←")
                 end
             else
-                exports["qb-core"]:DrawText("The game is starting..")  
+                exports["qb-core"]:DrawText("ゲームを開始しています...")  
                 hideUi()
             end
         end

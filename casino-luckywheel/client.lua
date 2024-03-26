@@ -59,7 +59,7 @@ CreateThread(function()
     })
     LuckyWheelZone:onPlayerInOut(function(isPointInside)
         if isPointInside then
-			text = "<b>The Diamond Casino & Resort</p>Lucky Wheel</b></p> $"..Config.startingPrice.." a spin"
+			text = "<b>The Diamond Casino & Resort</p>Lucky Wheel</b></p> $"..Config.startingPrice.."で回す"
 			exports['qb-core']:DrawText(text)
 			exports['qb-target']:AddCircleZone("LuckyWheel", vector3(949.391, 44.72, 71.638), 2.0, {
 				name="LuckyWheel",
@@ -71,7 +71,7 @@ CreateThread(function()
 						{
 							event = "luckywheel:client:startWheel",
 							icon = "fas fa-sync-alt",
-							label = "Try Your Luck",
+							label = "運試しをする",
 						},
 					},
 				distance = 2.0 
@@ -90,14 +90,14 @@ RegisterNetEvent('doj:casinoLuckyWheelHeader', function()
             isMenuHeader = true,
         },
         {
-            header = "Try Your Luck", 
-            txt = "$"..Config.startingPrice.." a spin",
+            header = "運試しをする", 
+            txt = "$"..Config.startingPrice.."で回す",
             params = {
                 event = "luckywheel:client:startWheel",
             }
         },
         {
-            header = "Cancel",
+            header = "キャンセル",
 			txt = "",
 			params = {
                 event = "doj:casinoLuckyWheelHeader"
@@ -122,8 +122,8 @@ RegisterNetEvent("luckywheel:client:startWheel", function()
 		if HasItem then 
 			TriggerServerEvent("luckywheel:getwheel")
 		else
-			QBCore.Functions.Notify('You dont have a V.I.P Membership!', 'error', 3500)
-			text = '<b>The Diamond Casino & Resort</p>Please visit the front desk!</b>'
+			QBCore.Functions.Notify('V.I.P Membershipを持っていません！', 'error', 3500)
+			text = '<b>The Diamond Casino & Resort</p>フロントデスクにお越しください。</b>'
             exports['qb-core']:DrawText(text)
 		end
 	end)

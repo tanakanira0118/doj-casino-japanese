@@ -925,10 +925,10 @@ function SetExports()
 			if Chips.amount >= minAmount then
 				Chips = Chips 
 			else
-				return TriggerClientEvent('QBCore:Notify', src, 'You dont have enough Casino Chips', 'error')
+				return TriggerClientEvent('QBCore:Notify', src, 'カジノチップが十分ではありません', 'error')
 			end
 		else
-			return TriggerClientEvent('QBCore:Notify', src, 'You dont have any Casino Chips', 'error')
+			return TriggerClientEvent('QBCore:Notify', src, 'カジノチップを持っていません', 'error')
 		end
     end) 
 	
@@ -946,9 +946,9 @@ function SetExports()
         if Player ~= nil then
 			if Player.Functions.AddItem('casino_goldchip', amount, nil, {["quality"] = 100}) then
 				TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["casino_goldchip"], "add", amount)
-				TriggerClientEvent('QBCore:Notify', src, "You Won "..math.floor(amount).." Casino Chips!")
+				TriggerClientEvent('QBCore:Notify', src, "あなたは"..math.floor(amount).."枚のカジノチップを獲得しました！")
 			else
-				TriggerClientEvent('QBCore:Notify', src, 'You have to much in your pockets', 'error')
+				TriggerClientEvent('QBCore:Notify', src, 'ポケットに余裕がありません', 'error')
 			end
         end
     end)

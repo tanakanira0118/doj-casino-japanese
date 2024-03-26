@@ -94,9 +94,9 @@ for i,v in pairs(customTables) do
 end
 
 resultNames = {
-	["good"] = "WON",
-	["bad"] = "BUST",
-	["impartial"] = "Got a PUSH",
+	["good"] = "勝利",
+	["bad"] = "バースト",
+	["impartial"] = "プッシュ",
 }
 
 requestCardAnims = {

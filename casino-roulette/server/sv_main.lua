@@ -1,4 +1,3 @@
-
 local QBCore = exports['qb-core']:GetCoreObject()
 
 local aktivRulettek = {}
@@ -7,16 +6,16 @@ local aktivRulettek = {}
 function getPlayerChips(source)
     -- local Player = QBCore.Functions.GetPlayer(source)
     -- local Chips = Player.Functions.GetItemByName("casino_goldchip")
-    -- if Chips ~= nil then 
+    -- if Chips ~= nil then
     --     if Chips.amount >= 10 then
-    --         return Chips.amount 
+    --         return Chips.amount
     --     else end
     -- else end
 
     local Player = QBCore.Functions.GetPlayer(source)
     local retval = 0
     local Item = Player.Functions.GetItemByName('casino_goldchip')
-    if Item  then
+    if Item then
         retval = Item.amount
     end
     return retval
@@ -24,31 +23,30 @@ end
 
 function giveChips(source, amount)
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.Functions.AddItem("casino_goldchip", amount, nil, nil, false, GetCurrentResourceName(), "", "", "")  then
+    if Player.Functions.AddItem("casino_goldchip", amount, nil, nil, false, GetCurrentResourceName(), "", "", "") then
         TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "add")
-        TriggerClientEvent('QBCore:Notify', source, "+ "..amount.."チップ")
+        TriggerClientEvent('QBCore:Notify', source, "+ " .. amount .. "チップ")
     end
-end 
+end
 
 function removeChips(source, amount)
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.Functions.RemoveItem("casino_goldchip", amount)  then
+    if Player.Functions.RemoveItem("casino_goldchip", amount) then
         TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "remove")
-        TriggerClientEvent('QBCore:Notify', source, "- "..amount.."チップ")
-    end 
+        TriggerClientEvent('QBCore:Notify', source, "- " .. amount .. "チップ")
+    end
 end
 
-
 local ItemList = {
-    ["casino_goldchip"] = 1 
+    ["casino_goldchip"] = 1
 }
 QBCore.Functions.CreateCallback('roulette:server:ChipsAmount', function(source, cb)
     local retval = 0
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then 
-        for k, v in pairs(Player.PlayerData.items) do 
-            if Player.PlayerData.items[k] ~= nil then 
-                if ItemList[Player.PlayerData.items[k].name] ~= nil then 
+    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then
+        for k, v in pairs(Player.PlayerData.items) do
+            if Player.PlayerData.items[k] ~= nil then
+                if ItemList[Player.PlayerData.items[k].name] ~= nil then
                     retval = retval + (ItemList[Player.PlayerData.items[k].name] * Player.PlayerData.items[k].amount)
                 end
             end
@@ -66,13 +64,13 @@ function isPlayerExist(source)
     end
 end
 
-RegisterNetEvent('server_remote:rulett:taskSitDown',function(rulettIndex, chairData)
+RegisterNetEvent('server_remote:rulett:taskSitDown', function(rulettIndex, chairData)
     local source = source
     local chairId = chairData.chairId
 
     if aktivRulettek[rulettIndex] ~= nil then
         if aktivRulettek[rulettIndex].chairsUsed[chairId] ~= nil then
-            return TriggerClientEvent('QBCore:Notify', source, 'この席は埋まっています。','error')
+            return TriggerClientEvent('QBCore:Notify', source, 'この席は埋まっています。', 'error')
         else
             TriggerClientEvent('client_callback:rulett:taskSitDown', source, rulettIndex, chairData)
         end
@@ -81,7 +79,7 @@ RegisterNetEvent('server_remote:rulett:taskSitDown',function(rulettIndex, chairD
     end
 end)
 
-RegisterNetEvent('casino:taskStartRoulette',function(rulettIndex, chairId)
+RegisterNetEvent('casino:taskStartRoulette', function(rulettIndex, chairId)
     local source = source
     if aktivRulettek[rulettIndex] == nil then
         aktivRulettek[rulettIndex] = {
@@ -97,7 +95,7 @@ RegisterNetEvent('casino:taskStartRoulette',function(rulettIndex, chairId)
         aktivRulettek[rulettIndex].chairsUsed[chairId] = source
         TriggerClientEvent('client:casino:openRulett', source, rulettIndex)
     else
-        TriggerClientEvent('QBCore:Notify', source, 'この席は埋まっています。','error')
+        TriggerClientEvent('QBCore:Notify', source, 'この席は埋まっています。', 'error')
     end
 end)
 
@@ -114,7 +112,7 @@ function countTablePlayers(rulettIndex)
 end
 
 RegisterNetEvent('casino:rulett:notUsing')
-AddEventHandler('casino:rulett:notUsing',function(rulettIndex)
+AddEventHandler('casino:rulett:notUsing', function(rulettIndex)
     local source = source
     if aktivRulettek[rulettIndex] ~= nil then
         for chairId, src in pairs(aktivRulettek[rulettIndex].chairsUsed) do
@@ -125,7 +123,7 @@ AddEventHandler('casino:rulett:notUsing',function(rulettIndex)
     end
 end)
 
-AddEventHandler('playerDropped',function(reason)
+AddEventHandler('playerDropped', function(reason)
     local source = source
     for rulettIndex, v in pairs(aktivRulettek) do
         for chairId, src in pairs(v.chairsUsed) do
@@ -215,11 +213,11 @@ function CheckWinners(bets, WinningBetIndex)
                 end
             elseif
                 (betData.betId == '39' and RULETT_NUMBERS.Pirosak[WinningBetIndex]) or (betData.betId == '40' and RULETT_NUMBERS.Feketek[WinningBetIndex]) or
-                    (betData.betId == '41' and RULETT_NUMBERS.Parosak[WinningBetIndex]) or
-                    (betData.betId == '42' and RULETT_NUMBERS.Paratlanok[WinningBetIndex]) or
-                    (betData.betId == '43' and RULETT_NUMBERS.to18[WinningBetIndex]) or
-                    (betData.betId == '44' and RULETT_NUMBERS.to36[WinningBetIndex])
-             then
+                (betData.betId == '41' and RULETT_NUMBERS.Parosak[WinningBetIndex]) or
+                (betData.betId == '42' and RULETT_NUMBERS.Paratlanok[WinningBetIndex]) or
+                (betData.betId == '43' and RULETT_NUMBERS.to18[WinningBetIndex]) or
+                (betData.betId == '44' and RULETT_NUMBERS.to36[WinningBetIndex])
+            then
                 giveWinningChips(targetSrc, betData.betAmount, 2)
                 playersWon[targetSrc] = true
                 if playersLoss[targetSrc] then
@@ -233,11 +231,11 @@ function CheckWinners(bets, WinningBetIndex)
                 end
             elseif
                 (betData.betId == '45' and RULETT_NUMBERS.st12[WinningBetIndex]) or (betData.betId == '46' and RULETT_NUMBERS.sn12[WinningBetIndex]) or
-                    (betData.betId == '47' and RULETT_NUMBERS.rd12[WinningBetIndex]) or
-                    (betData.betId == '48' and RULETT_NUMBERS.ket_to_1[WinningBetIndex]) or
-                    (betData.betId == '49' and RULETT_NUMBERS.ket_to_2[WinningBetIndex]) or
-                    (betData.betId == '50' and RULETT_NUMBERS.ket_to_3[WinningBetIndex])
-             then
+                (betData.betId == '47' and RULETT_NUMBERS.rd12[WinningBetIndex]) or
+                (betData.betId == '48' and RULETT_NUMBERS.ket_to_1[WinningBetIndex]) or
+                (betData.betId == '49' and RULETT_NUMBERS.ket_to_2[WinningBetIndex]) or
+                (betData.betId == '50' and RULETT_NUMBERS.ket_to_3[WinningBetIndex])
+            then
                 giveWinningChips(targetSrc, betData.betAmount, 3)
                 playersWon[targetSrc] = true
 
@@ -277,7 +275,7 @@ function giveWinningChips(source, amount, szorzo)
     end
 end
 
-RegisterNetEvent('casino:taskBetRulett',function(rulettIndex, betId, betAmount)
+RegisterNetEvent('casino:taskBetRulett', function(rulettIndex, betId, betAmount)
     local src = source
     if aktivRulettek[rulettIndex] ~= nil then
         if aktivRulettek[rulettIndex].statusz then
@@ -285,7 +283,7 @@ RegisterNetEvent('casino:taskBetRulett',function(rulettIndex, betId, betAmount)
         end
         local chipsAmount = getPlayerChips(src)
         if chipsAmount ~= nil then
-            if chipsAmount >= betAmount then 
+            if chipsAmount >= betAmount then
                 removeChips(src, betAmount)
                 -- TriggerClientEvent('QBCore:Notify', src, betAmount..' chips bet on ['..betId..']')
                 Config.DebugMsg(string.format('player %s betted %s chips on betId: %s', GetPlayerName(src), betAmount, betId))
@@ -319,7 +317,7 @@ RegisterNetEvent('casino:taskBetRulett',function(rulettIndex, betId, betAmount)
         else
             TriggerClientEvent('QBCore:Notify', src, 'カジノチップがありません', 'error')
         end
-    else 
+    else
         TriggerClientEvent('QBCore:Notify', src, 'error', '存在しないルーレットテーブルでサーバーサイドでエラーが発生しました。')
     end
 end)

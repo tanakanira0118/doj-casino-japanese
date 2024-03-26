@@ -3,18 +3,18 @@ Config.Locale = 'ja'
 QBCore = exports['qb-core']:GetCoreObject()
 
 -- YOUR MAIN SETUPS
-Config.Debug = false -- enable debug messages in sv/cl console
-Config.TimeLeftAfter = 15 -- time remaining after one player betted (dealer actions start timeout)
-Config.PlayerDecideTime = 15 -- player decide time (when watching our cards)
-Config.HowToSpeed = 5000 -- x seconds to change to next
+Config.Debug = false               -- enable debug messages in sv/cl console
+Config.TimeLeftAfter = 15          -- time remaining after one player betted (dealer actions start timeout)
+Config.PlayerDecideTime = 15       -- player decide time (when watching our cards)
+Config.HowToSpeed = 5000           -- x seconds to change to next
 Config.ShowCardsAfterReveal = true -- showing cameras on the players cards when revealing them
 
 Config.Pokers = {
     [1] = {
-        Position = vector3(996.17, 51.69, 68.45), 
+        Position = vector3(996.17, 51.69, 68.45),
         Heading = 318.91,
         MaximumBet = 2500,
-        MinimumBet = 50 
+        MinimumBet = 50
     },
     [2] = {
         Position = vector3(1000.66, 50.88, 68.45),
@@ -100,7 +100,7 @@ Config.PokerChairs = {
 }
 
 Config.GetCardType = function(cardArrayId)
-    if cardArrayId >= 1 and cardArrayId <= 13 then -- CLUBS
+    if cardArrayId >= 1 and cardArrayId <= 13 then      -- CLUBS
         return 0
     elseif cardArrayId >= 14 and cardArrayId <= 26 then -- DIAMOND
         return 1
@@ -510,22 +510,18 @@ Config.DebugMsg = function(msg)
 end
 
 Locales = {}
-function _(str, ...)  -- Translate string
-
-	if Locales[Config.Locale] ~= nil then
-
-		if Locales[Config.Locale][str] ~= nil then
-			return string.format(Locales[Config.Locale][str], ...)
-		else
-			return 'Translation [' .. Config.Locale .. '][' .. str .. '] does not exist'
-		end
-
-	else
-		return 'Locale [' .. Config.Locale .. '] does not exist'
-	end
-
+function _(str, ...) -- Translate string
+    if Locales[Config.Locale] ~= nil then
+        if Locales[Config.Locale][str] ~= nil then
+            return string.format(Locales[Config.Locale][str], ...)
+        else
+            return 'Translation [' .. Config.Locale .. '][' .. str .. '] does not exist'
+        end
+    else
+        return 'Locale [' .. Config.Locale .. '] does not exist'
+    end
 end
 
 function _U(str, ...) -- Translate string first char uppercase
-	return tostring(_(str, ...):gsub("^%l", string.upper))
+    return tostring(_(str, ...):gsub("^%l", string.upper))
 end

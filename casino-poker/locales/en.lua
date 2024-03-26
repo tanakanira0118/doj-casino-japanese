@@ -7,7 +7,7 @@ Locales['en'] = {
     ['not_enough_chips_next'] = 'You do not have enough chips to bet on the Pair Plus, because you would not have enough chips for the playing.',
     ['not_enough_chips_third'] = 'You can not put that amount of chips because you would not have enough for playing your hand.',
     ['not_enough_chips_toplay'] = 'You do not have enough chips to play!',
-    ['already_betted']= 'You already betted.',
+    ['already_betted'] = 'You already betted.',
     ['lose'] = 'You lose!',
     -- formatted notif
     ['dealer_not_qual'] = 'Draw.\nThe Dealer did not qualify for the game.\nYou got %s chips back.',

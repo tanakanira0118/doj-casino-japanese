@@ -3,20 +3,20 @@ local UsedSlots = {}
 local Slots = {}
 
 local function table_matches(t1, t2)
-	local type1, type2 = type(t1), type(t2)
-	if type1 ~= type2 then return false end
-	if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
+    local type1, type2 = type(t1), type(t2)
+    if type1 ~= type2 then return false end
+    if type1 ~= 'table' and type2 ~= 'table' then return t1 == t2 end
 
-	for k1,v1 in pairs(t1) do
-	   local v2 = t2[k1]
-	   if v2 == nil or not table_matches(v1,v2) then return false end
-	end
+    for k1, v1 in pairs(t1) do
+        local v2 = t2[k1]
+        if v2 == nil or not table_matches(v1, v2) then return false end
+    end
 
-	for k2,v2 in pairs(t2) do
-	   local v1 = t1[k2]
-	   if v1 == nil or not table_matches(v1,v2) then return false end
-	end
-	return true
+    for k2, v2 in pairs(t2) do
+        local v1 = t1[k2]
+        if v1 == nil or not table_matches(v1, v2) then return false end
+    end
+    return true
 end
 
 local function LeaveSlot(source)
@@ -75,7 +75,7 @@ end)
 RegisterNetEvent('dc-casino:slots:server:spin', function(ChosenBetAmount)
     local src = source
     local SpinTime = math.random(4000, 6000)
-    local ReelRewards = {math.random(0, 15), math.random(0, 15), math.random(0, 15)}
+    local ReelRewards = { math.random(0, 15), math.random(0, 15), math.random(0, 15) }
     local SlotHeading = GetEntityHeading(Slots[src].Slot)
     local SlotModel = GetEntityModel(Slots[src].Slot)
     local Player = QBCore.Functions.GetPlayer(src)
@@ -83,11 +83,14 @@ RegisterNetEvent('dc-casino:slots:server:spin', function(ChosenBetAmount)
     if not Slots[src] then return end
     if not SlotReferences[SlotModel].betamounts[ChosenBetAmount] then return end
     if UseCash and Player.Functions.RemoveMoney('cash', SlotReferences[SlotModel].betamounts[ChosenBetAmount], 'Casino Slot Spin')
-    or UseBank and Player.Functions.RemoveMoney('bank', SlotReferences[SlotModel].betamounts[ChosenBetAmount], 'Casino Slot Spin')
-    -- luacheck: ignore
-    or UseItem and Player.Functions.RemoveItem(ItemName, SlotReferences[SlotModel].betamounts[ChosenBetAmount]) then TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "remove", ChosenBetAmount)
-
-    else TriggerClientEvent('QBCore:Notify', src, 'ベットするものが残っていません', 'error') return end
+        or UseBank and Player.Functions.RemoveMoney('bank', SlotReferences[SlotModel].betamounts[ChosenBetAmount], 'Casino Slot Spin')
+        -- luacheck: ignore
+        or UseItem and Player.Functions.RemoveItem(ItemName, SlotReferences[SlotModel].betamounts[ChosenBetAmount]) then
+        TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "remove", ChosenBetAmount)
+    else
+        TriggerClientEvent('QBCore:Notify', src, 'ベットするものが残っていません', 'error')
+        return
+    end
 
     for i = 1, #ReelRewards do
         if SlotReferences[SlotModel].misschance > math.random(1, 100) then ReelRewards[i] = ReelRewards[i] + math.random(4, 6) / 10 end
@@ -126,10 +129,10 @@ RegisterNetEvent('dc-casino:slots:server:spin', function(ChosenBetAmount)
         -- GetPlayerName(src), Player.PlayerData.citizenid, src, SlotReferences[SlotModel].betamounts[ChosenBetAmount], RewardAmount))
         if RewardMultiplier == 0 then return end
         if UseCash and Player.Functions.AddMoney('cash', RewardAmount, 'Casino Slot Spin')
-        or UseBank and Player.Functions.AddMoney('bank', RewardAmount, 'Casino Slot Spin')
-        -- luacheck: ignore
-        or UseItem and Player.Functions.AddItem(ItemName, RewardAmount) then 
-            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "add", RewardAmount) 
+            or UseBank and Player.Functions.AddMoney('bank', RewardAmount, 'Casino Slot Spin')
+            -- luacheck: ignore
+            or UseItem and Player.Functions.AddItem(ItemName, RewardAmount) then
+            TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items['casino_goldchip'], "add", RewardAmount)
             -- TriggerClientEvent('QBCore:Notify', src, 'You won '..tonumber(RewardAmount)..' chips!', 'success')
         end
     end)
@@ -157,14 +160,14 @@ local ItemList = {
 QBCore.Functions.CreateCallback('doj:server:CasinoChipsAmount', function(source, cb)
     local retval = 0
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then 
-        for k, v in pairs(Player.PlayerData.items) do 
-            if Player.PlayerData.items[k] ~= nil then 
-                if ItemList[Player.PlayerData.items[k].name] ~= nil then 
+    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then
+        for k, v in pairs(Player.PlayerData.items) do
+            if Player.PlayerData.items[k] ~= nil then
+                if ItemList[Player.PlayerData.items[k].name] ~= nil then
                     retval = retval + (ItemList[Player.PlayerData.items[k].name] * Player.PlayerData.items[k].amount)
                 end
             end
         end
     end
-    cb(retval) 
+    cb(retval)
 end)

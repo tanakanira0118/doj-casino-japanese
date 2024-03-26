@@ -7,7 +7,7 @@ Locales['ja'] = {
     ['not_enough_chips_next'] = 'プレイに十分なチップがないため、ペアプラスにベットすることができません。',
     ['not_enough_chips_third'] = 'その量のチップを置くことはできません。ハンドをプレイするために十分なチップがありません。',
     ['not_enough_chips_toplay'] = 'プレイするには十分なチップがありません！',
-    ['already_betted']= 'すでにベット済みです。',
+    ['already_betted'] = 'すでにベット済みです。',
     ['lose'] = '負けました！',
     -- formatted notif
     ['dealer_not_qual'] = '引き分け。\nディーラーはゲームに適格ではありませんでした。\n%sチップが返却されました。',

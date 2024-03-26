@@ -6,17 +6,17 @@ closeToPokers = false
 function ShowHelpNotification(msg)
     exports["qb-core"]:DrawText(msg)
     -- exports["qb-core"]:DrawText("<strong>Diamond Casino Poker</strong></p>"..msg)
-    -- exports['casinoUi']:DrawCasinoUi('show', "<strong>Diamond Casino Poker</strong></p>"..reactiveText)  
+    -- exports['casinoUi']:DrawCasinoUi('show', "<strong>Diamond Casino Poker</strong></p>"..reactiveText)
 end
 
-local mainScene = nil -- the main sitting scene, we need it globally, for the exit
+local mainScene = nil        -- the main sitting scene, we need it globally, for the exit
 local activePokerTable = nil -- current table Id where we are sitting
-local activeChairData = nil -- chair data, it is a table with rotation and coords
-local currentBetInput = 0 -- currently bet input
+local activeChairData = nil  -- chair data, it is a table with rotation and coords
+local currentBetInput = 0    -- currently bet input
 
-local playerBetted = nil -- important, because when it changes to TRUE, we are disabling the standup, etc
-local playerPairPlus = nil -- pair plus bet amount
-local watchingCards = false -- for the notification and other inputs
+local playerBetted = nil     -- important, because when it changes to TRUE, we are disabling the standup, etc
+local playerPairPlus = nil   -- pair plus bet amount
+local watchingCards = false  -- for the notification and other inputs
 local playerDecidedChoice = false
 
 local clientTimer = nil
@@ -127,7 +127,7 @@ AddEventHandler(
     end
 )
 
-AddEventHandler('aquiverPoker:resetTable',function(tableId)
+AddEventHandler('aquiverPoker:resetTable', function(tableId)
     if SharedPokers[tableId] ~= nil then
         SharedPokers[tableId].resetTable()
         exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong><strong>終了:</strong> ←")
@@ -138,7 +138,7 @@ AddEventHandler(
     'aquiverPoker:Stage:7',
     function(tableId)
         if SharedPokers[tableId] ~= nil then
-            currentHelpText = _U('clearing_table') 
+            currentHelpText = _U('clearing_table')
             SharedPokers[tableId].clearTable()
         end
     end
@@ -242,10 +242,10 @@ AquiverPoker = function(index, data)
     self.playerDraw = function()
         local pedReaction = CreateSynchronizedScene(self.data.Position, 0.0, 0.0, self.data.Heading, 2)
         if self.isPedFemale() then
-            local pedr = ({'female_dealer_reaction_impartial_var01', 'female_dealer_reaction_impartial_var02', 'female_dealer_reaction_impartial_var03'})[math.random(1, 3)]
+            local pedr = ({ 'female_dealer_reaction_impartial_var01', 'female_dealer_reaction_impartial_var02', 'female_dealer_reaction_impartial_var03' })[math.random(1, 3)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         else
-            local pedr = ({'reaction_impartial_var_01', 'reaction_impartial_var_02', 'reaction_impartial_var_03', 'reaction_impartial_var_04'})[math.random(1, 4)]
+            local pedr = ({ 'reaction_impartial_var_01', 'reaction_impartial_var_02', 'reaction_impartial_var_03', 'reaction_impartial_var_04' })[math.random(1, 4)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         end
     end
@@ -255,14 +255,14 @@ AquiverPoker = function(index, data)
         if GetEntityModel(PlayerPedId()) == GetHashKey('mp_f_freemode_01') then -- female
             reaction =
                 ({
-                'female_reaction_great_var_01',
-                'female_reaction_great_var_02',
-                'female_reaction_great_var_03',
-                'female_reaction_great_var_04',
-                'female_reaction_great_var_05'
-            })[math.random(1, 5)]
+                    'female_reaction_great_var_01',
+                    'female_reaction_great_var_02',
+                    'female_reaction_great_var_03',
+                    'female_reaction_great_var_04',
+                    'female_reaction_great_var_05'
+                })[math.random(1, 5)]
         else
-            reaction = ({'reaction_great_var_01', 'reaction_great_var_02', 'reaction_great_var_03', 'reaction_great_var_04'})[math.random(1, 4)]
+            reaction = ({ 'reaction_great_var_01', 'reaction_great_var_02', 'reaction_great_var_03', 'reaction_great_var_04' })[math.random(1, 4)]
         end
 
         if reaction then
@@ -273,10 +273,10 @@ AquiverPoker = function(index, data)
 
         local pedReaction = CreateSynchronizedScene(self.data.Position, 0.0, 0.0, self.data.Heading, 2)
         if self.isPedFemale() then
-            local pedr = ({'female_dealer_reaction_bad_var01', 'female_dealer_reaction_bad_var02', 'female_dealer_reaction_bad_var03'})[math.random(1, 3)]
+            local pedr = ({ 'female_dealer_reaction_bad_var01', 'female_dealer_reaction_bad_var02', 'female_dealer_reaction_bad_var03' })[math.random(1, 3)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         else
-            local pedr = ({'reaction_bad_var_01', 'reaction_bad_var_02', 'reaction_bad_var_03', 'reaction_bad_var_04'})[math.random(1, 4)]
+            local pedr = ({ 'reaction_bad_var_01', 'reaction_bad_var_02', 'reaction_bad_var_03', 'reaction_bad_var_04' })[math.random(1, 4)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         end
     end
@@ -286,14 +286,14 @@ AquiverPoker = function(index, data)
         if GetEntityModel(PlayerPedId()) == GetHashKey('mp_f_freemode_01') then -- female
             reaction =
                 ({
-                'female_reaction_terrible_var_01',
-                'female_reaction_terrible_var_02',
-                'female_reaction_terrible_var_03',
-                'female_reaction_terrible_var_04',
-                'female_reaction_terrible_var_05'
-            })[math.random(1, 5)]
+                    'female_reaction_terrible_var_01',
+                    'female_reaction_terrible_var_02',
+                    'female_reaction_terrible_var_03',
+                    'female_reaction_terrible_var_04',
+                    'female_reaction_terrible_var_05'
+                })[math.random(1, 5)]
         else
-            reaction = ({'reaction_terrible_var_01', 'reaction_terrible_var_02', 'reaction_terrible_var_03', 'reaction_terrible_var_04'})[math.random(1, 4)]
+            reaction = ({ 'reaction_terrible_var_01', 'reaction_terrible_var_02', 'reaction_terrible_var_03', 'reaction_terrible_var_04' })[math.random(1, 4)]
         end
 
         if reaction then
@@ -304,10 +304,10 @@ AquiverPoker = function(index, data)
 
         local pedReaction = CreateSynchronizedScene(self.data.Position, 0.0, 0.0, self.data.Heading, 2)
         if self.isPedFemale() then
-            local pedr = ({'female_dealer_reaction_good_var01', 'female_dealer_reaction_good_var02', 'female_dealer_reaction_good_var03'})[math.random(1, 3)]
+            local pedr = ({ 'female_dealer_reaction_good_var01', 'female_dealer_reaction_good_var02', 'female_dealer_reaction_good_var03' })[math.random(1, 3)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         else
-            local pedr = ({'reaction_good_var_01', 'reaction_good_var_02', 'reaction_good_var_03'})[math.random(1, 3)]
+            local pedr = ({ 'reaction_good_var_01', 'reaction_good_var_02', 'reaction_good_var_03' })[math.random(1, 3)]
             TaskSynchronizedScene(self.ped, pedReaction, Config.DealerAnimDictShared, pedr, 2.0, -2.0, 13, 16, 1000.0, 0)
         end
     end
@@ -406,7 +406,7 @@ AquiverPoker = function(index, data)
 
         if not IsEntityDead(PlayerPedId()) then
             QBCore.Functions.TriggerCallback(
-                'aquiverPoker:sitDown', 
+                'aquiverPoker:sitDown',
                 function(canSit)
                     if canSit then
                         activeChairData = {
@@ -442,7 +442,7 @@ AquiverPoker = function(index, data)
                         end
                         SetPlayerControl(PlayerPedId(), 0, 0)
                         local sitScene = NetworkCreateSynchronisedScene(chairCoords, chairRotation, 2, true, false, 1.0, 0.0, 1.0)
-                        local sitAnim = ({'sit_enter_left_side', 'sit_enter_right_side'})[math.random(1, 2)]
+                        local sitAnim = ({ 'sit_enter_left_side', 'sit_enter_right_side' })[math.random(1, 2)]
                         NetworkAddPedToSynchronisedScene(PlayerPedId(), sitScene, Config.PlayerAnimDictShared, sitAnim, 2.0, -2.0, 13, 16, 2.0, 0)
                         NetworkStartSynchronisedScene(sitScene)
 
@@ -453,7 +453,7 @@ AquiverPoker = function(index, data)
 
                         self.EnableRender(true)
                         SetPlayerControl(PlayerPedId(), 1, 0)
-                        exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong><strong>終了:</strong> ←") 
+                        exports["qb-core"]:DrawText("<strong>ベットする: </strong>↵</p><strong>ベットを調整する: </strong>↑/↓</p><strong><strong>終了:</strong> ←")
 
                         Citizen.Wait(500)
                     else
@@ -680,7 +680,7 @@ AquiverPoker = function(index, data)
                             watchingCards = true
                             -- ShakeGameplayCam('HAND_SHAKE', 0.15)
                             -- buttonScaleform = setupThirdButtons('instructional_buttons')
-                            exports["qb-core"]:DrawText("<strong>プレイ:</strong> E</p><strong>フォールド:</strong> ←") 
+                            exports["qb-core"]:DrawText("<strong>プレイ:</strong> E</p><strong>フォールド:</strong> ←")
 
                             local playerHandValue = Config.getHandAllValues(data.Hand)
                             if playerHandValue ~= nil then
@@ -691,15 +691,14 @@ AquiverPoker = function(index, data)
                                         function()
                                             while watchingCards do
                                                 Citizen.Wait(0)
-                                                exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>プレイヤーのハンド: "..form)   
+                                                exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>プレイヤーのハンド: " .. form)
 
                                                 -- drawText2d(0.5, 0.9, 0.45, form)
-
                                             end
                                         end
                                     )
-                                -- else
-                                --     exports['casinoUi']:HideCasinoUi('hide')
+                                    -- else
+                                    --     exports['casinoUi']:HideCasinoUi('hide')
                                 end
                             end
                         end
@@ -917,12 +916,12 @@ AquiverPoker = function(index, data)
             Citizen.CreateThread(
                 function()
                     while activePokerTable do
-                        Citizen.Wait(0) 
+                        Citizen.Wait(0)
                         DisableAllControlActions(0)
 
                         if buttonScaleform ~= nil then
                             -- DrawScaleformMovieFullscreen(buttonScaleform, 255, 255, 255, 255, 0)
-                            exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>現在のベット: "..currentBetInput.."</p>利用可能なチップ: "..PlayerOwnedChips)   
+                            exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>現在のベット: " .. currentBetInput .. "</p>利用可能なチップ: " .. PlayerOwnedChips)
                         end
 
                         EnableControlAction(0, 0, true) -- changing camera
@@ -930,7 +929,7 @@ AquiverPoker = function(index, data)
                         EnableControlAction(0, 2, true) -- mouse cam
                         EnableControlAction(0, 24, true)
                         EnableControlAction(0, 249, true)
-                        
+
                         -- if player betted then
                         if playerBetted and QBCore then
                             local reactiveText = ''
@@ -962,7 +961,7 @@ AquiverPoker = function(index, data)
                             end
 
                             if string.len(reactiveText) > 0 then
-                                ShowHelpNotification(reactiveText)  
+                                ShowHelpNotification(reactiveText)
                             end
                         end
 
@@ -1060,7 +1059,7 @@ AquiverPoker = function(index, data)
                         --         end
                         --     end
                         -- end
-                        -- exports['casinoUi']:DrawCasinoUi('show', "BET:"..currentBetInput.."</br>CHIPS:"..PlayerOwnedChips.."</br>MIN/MAX:"..self.data.MinimumBet.."/"..self.data.MaximumBet.."</br>TIME:")   
+                        -- exports['casinoUi']:DrawCasinoUi('show', "BET:"..currentBetInput.."</br>CHIPS:"..PlayerOwnedChips.."</br>MIN/MAX:"..self.data.MinimumBet.."/"..self.data.MaximumBet.."</br>TIME:")
                     end
                 end
             )
@@ -1106,16 +1105,16 @@ AquiverPoker = function(index, data)
                                     while DoesCamExist(mainCamera) do
                                         Citizen.Wait(0)
 
-                                        exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>ディーラーのハンド: "..form)   
+                                        exports['casinoUi']:DrawCasinoUi('show', "<strong>The Diamond Casino & Resort Poker</strong></p>ディーラーのハンド: " .. form)
 
                                         -- drawText2d(0.5, 0.9, 0.45, form)
-                                    -- elseif
-                                    --     exports['casinoUi']:HideCasinoUi('hide')
+                                        -- elseif
+                                        --     exports['casinoUi']:HideCasinoUi('hide')
                                     end
                                 end
                             )
-                        -- else
-                        --     exports['casinoUi']:HideCasinoUi('hide')
+                            -- else
+                            --     exports['casinoUi']:HideCasinoUi('hide')
                         end
                     end
 
@@ -1233,7 +1232,6 @@ AquiverPoker = function(index, data)
     end
 
     self.resetTable = function()
-
         -- chips clearing
         if #networkedChips > 0 then
             for i = 1, #networkedChips, 1 do
@@ -1531,50 +1529,50 @@ Citizen.CreateThread(function()
         local sleep = 5
         local inZone = false
         if QBCore and not InformationPlaying and activePokerTable == nil and activeChairData == nil then
-                local playerpos = GetEntityCoords(PlayerPedId())
-                for k, v in pairs(SharedPokers) do
-                    local dist = #(playerpos - v.data.Position)
-                    if dist < 3.0 then
-                        for i = 1, #Config.Tables, 1 do 
-                            local tableObj = GetClosestObjectOfType(playerpos, 3.0, GetHashKey(Config.Tables[i]), false)
-                            if DoesEntityExist(tableObj) then 
-                                for chairBone, chairId in pairs(Config.PokerChairs) do
-                                    local chaircoords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, chairBone))
-                                    if chaircoords then
-                                        if #(playerpos - chaircoords) < 1.5 then
-                                            wait = 5
-                                            inZone  = true
-                                            text = "<strong>The Diamond Casino & Resort</p>Poker</strong></p><strong>E</strong>で座る"
+            local playerpos = GetEntityCoords(PlayerPedId())
+            for k, v in pairs(SharedPokers) do
+                local dist = #(playerpos - v.data.Position)
+                if dist < 3.0 then
+                    for i = 1, #Config.Tables, 1 do
+                        local tableObj = GetClosestObjectOfType(playerpos, 3.0, GetHashKey(Config.Tables[i]), false)
+                        if DoesEntityExist(tableObj) then
+                            for chairBone, chairId in pairs(Config.PokerChairs) do
+                                local chaircoords = GetWorldPositionOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, chairBone))
+                                if chaircoords then
+                                    if #(playerpos - chaircoords) < 1.5 then
+                                        wait                = 5
+                                        inZone              = true
+                                        text                = "<strong>The Diamond Casino & Resort</p>Poker</strong></p><strong>E</strong>で座る"
 
-                                            local chairrotation = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, chairBone))
-                                            -- drawfreameeMarker(chaircoords + vector3(0.0, 0.0, 1.0))
+                                        local chairrotation = GetWorldRotationOfEntityBone(tableObj, GetEntityBoneIndexByName(tableObj, chairBone))
+                                        -- drawfreameeMarker(chaircoords + vector3(0.0, 0.0, 1.0))
 
-                                            if IsControlJustPressed(1, 51) then
-                                                v.sitDown(chairId, chaircoords, chairrotation)
-                                            end
-
-                                            break
+                                        if IsControlJustPressed(1, 51) then
+                                            v.sitDown(chairId, chaircoords, chairrotation)
                                         end
+
+                                        break
                                     end
                                 end
-                                break
                             end
+                            break
                         end
                     end
                 end
+            end
         end
 
         if inZone and not alreadyEnteredZone then
             alreadyEnteredZone = true
-            exports["qb-core"]:DrawText(text) 
+            exports["qb-core"]:DrawText(text)
         end
         if not inZone and alreadyEnteredZone then
             alreadyEnteredZone = false
             exports["qb-core"]:HideText()
         end
-        Wait(sleep)	
+        Wait(sleep)
     end
-end) 
+end)
 
 -- OTHERS
 

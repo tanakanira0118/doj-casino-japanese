@@ -1,12 +1,12 @@
 Config = {}
 Config.TranslationSelected = 'en'
 
-Config.Debug = false -- enable debug messages in sv/cl console
-Config.TestTicker = nil -- need for testing the numbers, you can change the fix roulette tick by /rultick [1-38]
+Config.Debug = false          -- enable debug messages in sv/cl console
+Config.TestTicker = nil       -- need for testing the numbers, you can change the fix roulette tick by /rultick [1-38]
 
 Config.allowCustomBet = false -- allow playes to enter a custom bet
 
-Config.RouletteStart = 40 -- how many seconds to start the rulett after you sit down
+Config.RouletteStart = 40     -- how many seconds to start the rulett after you sit down
 
 
 Config.RulettTables = {
@@ -15,7 +15,7 @@ Config.RulettTables = {
         position = vector3(1001.53, 56.479, 68.433), --Test Loc
         rot = 102.133,
         minBet = 10,
-        maxBet = 1000 
+        maxBet = 1000
     },
     [1] = {
         position = vector3(997.595, 55.573, 68.433),

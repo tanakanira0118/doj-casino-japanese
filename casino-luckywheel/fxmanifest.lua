@@ -1,5 +1,3 @@
-
-
 fx_version 'adamant'
 game 'gta5'
 description 'Lucky Wheel'
@@ -7,16 +5,16 @@ description 'Lucky Wheel'
 
 server_script 'server.lua'
 
-client_scripts {	
+client_scripts {
 	'@PolyZone/client.lua',
 	'@PolyZone/BoxZone.lua',
 	'@PolyZone/EntityZone.lua',
 	'@PolyZone/CircleZone.lua',
 	'@PolyZone/ComboZone.lua',
-    'client.lua',
+	'client.lua',
 }
 
-shared_script 'config.lua' 
+shared_script 'config.lua'
 
 -- files {
 -- 	'audio/dlcvinewood_amp.dat10',

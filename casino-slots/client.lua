@@ -17,19 +17,71 @@ local Scaleform
 local ClosestSlotModel
 local AnimDict = 'anim_casino_a@amb@casino@games@slots@male'
 local Sounds = {
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'no_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'small_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'big_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'jackpot', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'place_bet', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'place_max_bet', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'spinning', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'start_spin', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'wheel_stop_clunk', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'wheel_stop_on_prize', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'welcome_stinger', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'spin_wheel', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end,
-    function() local SoundId = GetSoundId() PlaySoundFromCoord(SoundId, 'spin_wheel_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false) ReleaseSoundId(SoundId) end
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'no_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'small_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'big_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'jackpot', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'place_bet', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'place_max_bet', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'spinning', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'start_spin', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'wheel_stop_clunk', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'wheel_stop_on_prize', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'welcome_stinger', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'spin_wheel', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end,
+    function()
+        local SoundId = GetSoundId()
+        PlaySoundFromCoord(SoundId, 'spin_wheel_win', ClosestSlotCoord, SlotReferences[ClosestSlotModel].sound, false, 20, false)
+        ReleaseSoundId(SoundId)
+    end
 }
 local Slots = {
     2362925439,
@@ -113,14 +165,19 @@ local function DrawText3D(x, y, z, text)
     SetTextEntry("STRING")
     SetTextCentre(true)
     AddTextComponentString(text)
-    SetDrawOrigin(x,y,z, 0)
+    SetDrawOrigin(x, y, z, 0)
     DrawText(0.0, 0.0)
     local factor = (string.len(text)) / 370
-    DrawRect(0.0, 0.0+0.0125, 0.017+ factor, 0.03, 0, 0, 0, 75)
+    DrawRect(0.0, 0.0 + 0.0125, 0.017 + factor, 0.03, 0, 0, 0, 75)
     ClearDrawOrigin()
 end
 
-local function LoadAnimDict(dict) while not HasAnimDictLoaded(dict) do RequestAnimDict(dict) Wait(0) end end
+local function LoadAnimDict(dict)
+    while not HasAnimDictLoaded(dict) do
+        RequestAnimDict(dict)
+        Wait(0)
+    end
+end
 
 local function StartIdleScene(CurrentAnimation)
     Wait(GetAnimDuration(AnimDict, CurrentAnimation) * 800)
@@ -132,38 +189,38 @@ local function StartIdleScene(CurrentAnimation)
 end
 
 local function CreateNamedRenderTargetForModel(name, model)
-	local handle = 0
-	if not IsNamedRendertargetRegistered(name) then
-		RegisterNamedRendertarget(name, 0)
-	end
-	if not IsNamedRendertargetLinked(model) then
-		LinkNamedRendertarget(model)
-	end
-	if IsNamedRendertargetRegistered(name) then
-		handle = GetNamedRendertargetRenderId(name)
-	end
-	return handle
+    local handle = 0
+    if not IsNamedRendertargetRegistered(name) then
+        RegisterNamedRendertarget(name, 0)
+    end
+    if not IsNamedRendertargetLinked(model) then
+        LinkNamedRendertarget(model)
+    end
+    if IsNamedRendertargetRegistered(name) then
+        handle = GetNamedRendertargetRenderId(name)
+    end
+    return handle
 end
 
 local function CallScaleformMethod(method, ...)
-	local t
-	local args = { ... }
-	BeginScaleformMovieMethod(Scaleform, method)
-	for _, v in ipairs(args) do
-		t = type(v)
-		if t == 'string' then
-			PushScaleformMovieMethodParameterString(v)
-		elseif t == 'number' then
-			if string.match(tostring(v), "%.") then
-				PushScaleformMovieFunctionParameterFloat(v)
-			else
-				PushScaleformMovieFunctionParameterInt(v)
-			end
-		elseif t == 'boolean' then
-			PushScaleformMovieMethodParameterBool(v)
-		end
-	end
-	EndScaleformMovieMethod()
+    local t
+    local args = { ... }
+    BeginScaleformMovieMethod(Scaleform, method)
+    for _, v in ipairs(args) do
+        t = type(v)
+        if t == 'string' then
+            PushScaleformMovieMethodParameterString(v)
+        elseif t == 'number' then
+            if string.match(tostring(v), "%.") then
+                PushScaleformMovieFunctionParameterFloat(v)
+            else
+                PushScaleformMovieFunctionParameterInt(v)
+            end
+        elseif t == 'boolean' then
+            PushScaleformMovieMethodParameterBool(v)
+        end
+    end
+    EndScaleformMovieMethod()
 end
 
 local function SetupScaleform()
@@ -172,7 +229,7 @@ local function SetupScaleform()
         while not HasScaleformMovieLoaded(Scaleform) do Wait(0) end
         if SlotReferences[ClosestSlotModel].theme then CallScaleformMethod('SET_THEME', SlotReferences[ClosestSlotModel].theme) else CallScaleformMethod('SET_THEME') end
         local model = ClosestSlotModel
-        local handle = CreateNamedRenderTargetForModel("machine_"..SlotReferences[ClosestSlotModel].scriptrt, model)
+        local handle = CreateNamedRenderTargetForModel("machine_" .. SlotReferences[ClosestSlotModel].scriptrt, model)
         while ShouldDrawScaleForm do
             N_0x32f34ff7f617643b(Scaleform, 1)
             SetTextRenderId(handle) -- Sets the render target to the handle we grab above
@@ -196,10 +253,10 @@ local function SlotMachineHandler()
     CreateThread(function()
         while true do
             QBCore.Functions.TriggerCallback('doj:server:CasinoChipsAmount', function(result)
-                exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>"..SlotReferences[ClosestSlotModel].name.."</p>利用可能なチップ: "..math.floor(result))   
+                exports['casinoUi']:DrawCasinoUi('show', "The Diamond Casino & Resort Slots</p>" .. SlotReferences[ClosestSlotModel].name .. "</p>利用可能なチップ: " .. math.floor(result))
             end)
             if not IsSpinning then
-                if IsControlJustPressed(0, 202) then -- BACKSPACE 
+                if IsControlJustPressed(0, 202) then -- BACKSPACE
                     local LeaveScene = NetworkCreateSynchronisedScene(ClosestSlotCoord, ClosestSlotRotation, 2, 2, 0, 1.0, 0, 1.0)
                     LoadAnimDict(AnimDict)
                     RandomAnimName = RandomLeave[math.random(1, #RandomLeave)]
@@ -210,7 +267,7 @@ local function SlotMachineHandler()
                     EnteredSlot = false
                     ShouldDrawScaleForm = false
                     exports['qb-core']:HideText()
-                    exports['casinoUi']:HideCasinoUi('hide') 
+                    exports['casinoUi']:HideCasinoUi('hide')
                     CallScaleformMethod('SET_BET')
                     CallScaleformMethod('SET_LAST_WIN')
                     CallScaleformMethod('SET_MESSAGE', '')
@@ -244,7 +301,7 @@ local function SlotMachineHandler()
                     NetworkStartSynchronisedScene(SpinningScene)
                     NetworkStopSynchronisedScene(LeverScene) --- Has to be stopped otherwise it will only work 50% of the time
                     FreezeEntityPosition(ClosestSlot, true)  --- N_0x45f35c0edc33b03b will prevent the machine being stuck to their position for some reason?
-                elseif IsControlJustPressed(0, 172) then -- UP ARROW
+                elseif IsControlJustPressed(0, 172) then     -- UP ARROW
                     Sounds[5]()
                     if not SlotReferences[ClosestSlotModel].betamounts[ChosenBetAmount + 1] then ChosenBetAmount = 1 else ChosenBetAmount = ChosenBetAmount + 1 end
                     local BetOneScene = NetworkCreateSynchronisedScene(ClosestSlotCoord, ClosestSlotRotation, 2, 2, 0, 1.0, 0, 1.0)
@@ -253,7 +310,7 @@ local function SlotMachineHandler()
                     NetworkStartSynchronisedScene(BetOneScene)
                     Wait(GetAnimDuration(AnimDict, 'press_betone_a') * 200)
                     CallScaleformMethod('SET_BET', SlotReferences[ClosestSlotModel].betamounts[ChosenBetAmount])
-                    StartIdleScene('press_betone_a') 
+                    StartIdleScene('press_betone_a')
                 elseif IsControlJustPressed(0, 45) then -- R
                     Sounds[6]()
                     ChosenBetAmount = #SlotReferences[ClosestSlotModel].betamounts
@@ -283,7 +340,7 @@ CreateThread(function()
     while not RequestScriptAudioBank("dlc_vinewood/casino_slot_machines_01", 0) do Wait(0) end
     while not RequestScriptAudioBank("dlc_vinewood/casino_slot_machines_02", 0) do Wait(0) end
     while not RequestScriptAudioBank("dlc_vinewood/casino_slot_machines_03", 0) do Wait(0) end
-	while true do
+    while true do
         local PlayerCoords = GetEntityCoords(PlayerPedId())
         for i = 1, #Slots do
             Slot = GetClosestObjectOfType(PlayerCoords, 1.2, Slots[i], true)
@@ -307,26 +364,26 @@ CreateThread(function()
             end
         end
         Wait(600)
-	end
+    end
 end)
 
 -- CreateThread(function()
 -- 	while true do
 --         local WaitTime = 500
 --         if NearbySlot and not EnteredSlot then
---             WaitTime = 0 
+--             WaitTime = 0
 --             -- exports['qb-core']:DrawText('<b>Diamond Casino Slots</p></b>'..SlotReferences[ClosestSlotModel].name..'</p>Press [E] to sit</p>')
 --             DrawText3D(ClosestSlotCoord.x - ClosestSlotForwardX, ClosestSlotCoord.y - ClosestSlotForwardY, ClosestSlotCoord.z + 1, "[E] - Play ~b~"..SlotReferences[ClosestSlotModel].name)
 --             if IsControlJustReleased(0, 38) then
 
 --                 QBCore.Functions.TriggerCallback('doj:server:HasCasinoMembership', function(HasItem)
---                     if HasItem then 
+--                     if HasItem then
 --                         local netID = NetworkGetEntityIsNetworked(ClosestSlot) and NetworkGetNetworkIdFromEntity(ClosestSlot)
 --                         if not netID then
 --                             NetworkRegisterEntityAsNetworked(ClosestSlot)
 --                             netID = NetworkGetNetworkIdFromEntity(ClosestSlot)
 --                             NetworkUseHighPrecisionBlending(netID, false)
---                             SetNetworkIdExistsOnAllMachines(netID, true) 
+--                             SetNetworkIdExistsOnAllMachines(netID, true)
 --                             SetNetworkIdCanMigrate(netID, true)
 --                         end
 --                         NetworkRequestControlOfEntity(ClosestSlot)
@@ -342,7 +399,7 @@ end)
 --         Wait(WaitTime)
 --     end
 -- end)
- 
+
 
 
 Citizen.CreateThread(function()
@@ -355,9 +412,9 @@ Citizen.CreateThread(function()
             local dist = #(pedCo - ClosestSlotCoord)
             local inZone = false
             if dist <= 2.0 then
-                wait = 5
-                inZone  = true 
-                text = '<b>The Diamond Casino & Resort</p>スロット: '..SlotReferences[ClosestSlotModel].name..'</b></p><b>E</b>で座る'
+                wait   = 5
+                inZone = true
+                text   = '<b>The Diamond Casino & Resort</p>スロット: ' .. SlotReferences[ClosestSlotModel].name .. '</b></p><b>E</b>で座る'
                 if IsControlJustPressed(0, 38) then
                     local netID = NetworkGetEntityIsNetworked(ClosestSlot) and NetworkGetNetworkIdFromEntity(ClosestSlot)
                     if not netID then
@@ -371,11 +428,11 @@ Citizen.CreateThread(function()
                     TriggerServerEvent('dc-casino:slots:server:enter', netID, ReelLocation1, ReelLocation2, ReelLocation3)
                 end
             else
-	            wait = 2000
+                wait = 2000
             end
             if inZone and not alreadyEnteredZone then
                 alreadyEnteredZone = true
-                exports["qb-core"]:DrawText(text)  
+                exports["qb-core"]:DrawText(text)
             end
             if not inZone and alreadyEnteredZone then
                 alreadyEnteredZone = false

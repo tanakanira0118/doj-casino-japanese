@@ -1,4 +1,3 @@
-
 local QBCore = exports['qb-core']:GetCoreObject()
 
 local cooldown = 60
@@ -11,36 +10,36 @@ local gameOpen = false
 
 CreateThread(function()
     local insideTrackZone = CircleZone:Create(vector3(955.619, 70.179, 70.433), 2.5, {
-        name="insideTrack",
-        heading=328.0,
-        debugPoly=false,
-        useZ=true,
+        name = "insideTrack",
+        heading = 328.0,
+        debugPoly = false,
+        useZ = true,
     })
     insideTrackZone:onPlayerInOut(function(isPointInside)
         if isPointInside then
-            if Config.HorseBetPrompt == 'walk-up' then 
-                TriggerEvent('doj:casinoinsideTrackHeader') 
+            if Config.HorseBetPrompt == 'walk-up' then
+                TriggerEvent('doj:casinoinsideTrackHeader')
             elseif Config.HorseBetPrompt == 'peek' then
                 text = '<b>The Diamond Casino & Resort Inside Track</b>'
-				exports['qb-core']:DrawText(text)
-                exports['qb-target']:AddCircleZone("Betting", vector3(956.121,70.185,70.433), 1.0, {
-                    name="賭ける",
-                    heading=160,
-                    debugPoly=false,
-                    useZ=true,
+                exports['qb-core']:DrawText(text)
+                exports['qb-target']:AddCircleZone("Betting", vector3(956.121, 70.185, 70.433), 1.0, {
+                    name = "賭ける",
+                    heading = 160,
+                    debugPoly = false,
+                    useZ = true,
                 }, {
                     options = {
                         {
-                            event = "QBCore:client:openInsideTrack", 
+                            event = "QBCore:client:openInsideTrack",
                             icon = "fas fa-coins",
                             label = "賭けを始める",
                         },
                     },
-                    distance = 3.0 
+                    distance = 3.0
                 })
             end
         else
-			exports['qb-menu']:closeMenu()
+            exports['qb-menu']:closeMenu()
             exports["qb-core"]:HideText()
         end
     end)
@@ -53,7 +52,7 @@ RegisterNetEvent('doj:casinoinsideTrackHeader', function()
             isMenuHeader = true,
         },
         {
-            header = "馬に賭ける", 
+            header = "馬に賭ける",
             txt = "100カジノチップ",
             params = {
                 event = "QBCore:client:openInsideTrack",
@@ -61,8 +60,8 @@ RegisterNetEvent('doj:casinoinsideTrackHeader', function()
         },
         {
             header = "キャンセル",
-			txt = "",
-			params = {
+            txt = "",
+            params = {
                 event = "doj:casinoinsideTrackHeader"
             }
         },
@@ -130,12 +129,12 @@ RegisterNetEvent('QBCore:client:openInsideTrack')
 AddEventHandler('QBCore:client:openInsideTrack', function()
     -- QBCore.Functions.TriggerCallback('QBCore:HasItem', function(HasItem)
     --     if HasItem then
-            OpenInsideTrack()
+    OpenInsideTrack()
     --     else
     --         QBCore.Functions.Notify('You are not a member of the casino', 'error', 3500)
     --     end
     -- end, "casino_member")
-end) 
+end)
 
 
 
@@ -183,7 +182,7 @@ function Utils:HandleControls()
             -- Left click
             if IsControlJustPressed(2, 237) then
                 local clickedButton = Utils:GetMouseClickedButton()
- 
+
                 if Utils.ChooseHorseVisible then
                     if (clickedButton ~= 12) and (clickedButton ~= -1) then
                         Utils.CurrentHorse = (clickedButton - 1)
@@ -202,7 +201,7 @@ function Utils:HandleControls()
                     if Utils.ChooseHorseVisible then
                         Utils.ChooseHorseVisible = false
                     end
-                    
+
                     if Utils.BetVisible then
                         Utils:ShowHorseSelection()
                         Utils.BetVisible = false
@@ -270,4 +269,3 @@ function Utils:HandleControls()
         end
     end)
 end
-

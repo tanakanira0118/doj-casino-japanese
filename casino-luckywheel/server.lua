@@ -2,12 +2,12 @@ math.randomseed(os.time())
 
 local QBCore = exports['qb-core']:GetCoreObject()
 isRoll = false
--- local car = Config.Cars[math.random(#Config.Cars)] 
+-- local car = Config.Cars[math.random(#Config.Cars)]
 
 if Config.LimitedSpins then
 	Citizen.CreateThread(function()
 		while true do
-			Wait(1000*60)
+			Wait(1000 * 60)
 			if os.date('%H:%M') == Config.LimitedSpins then
 				exports.oxmysql:execute('UPDATE players SET luckywheel_spins = 0')
 			end
@@ -17,9 +17,9 @@ end
 
 RegisterNetEvent('luckywheel:getwheel', function()
 	local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-	if Config.LimitedSpins == true then 
-		local result = exports.oxmysql:scalarSync('SELECT luckywheel_spins FROM players where citizenid= ?', {Player.PlayerData.citizenid})
+	local Player = QBCore.Functions.GetPlayer(src)
+	if Config.LimitedSpins == true then
+		local result = exports.oxmysql:scalarSync('SELECT luckywheel_spins FROM players where citizenid= ?', { Player.PlayerData.citizenid })
 		if result == '0' then
 			TriggerEvent("luckywheel:startwheel", Player, src)
 		else
@@ -39,14 +39,14 @@ end)
 RegisterNetEvent('luckywheel:startwheel', function(Player, source)
 	local src = source
 	local Player = QBCore.Functions.GetPlayer(src)
-    if not isRoll then
-        if Player ~= nil then
-            exports.oxmysql:execute('UPDATE players SET luckywheel_spins = 1 where citizenid= ?', {Player.PlayerData.citizenid})
+	if not isRoll then
+		if Player ~= nil then
+			exports.oxmysql:execute('UPDATE players SET luckywheel_spins = 1 where citizenid= ?', { Player.PlayerData.citizenid })
 			isRoll = true
 			local rnd = math.random(1, 1000)
 			local price = 0
 			local priceIndex = 0
-			for k,v in pairs(Config.Prices) do
+			for k, v in pairs(Config.Prices) do
 				if (rnd > v.probability.a) and (rnd <= v.probability.b) then
 					price = v
 					priceIndex = k
@@ -67,18 +67,18 @@ RegisterNetEvent('luckywheel:give', function(source, price)
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 	elseif price.type == 'item' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
-		Player.Functions.AddItem(price.name, price.count, slot) 
-		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは"..price.count.."個の"..price.name.."を得ました！", 'success')
-		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add",price.count )
+		Player.Functions.AddItem(price.name, price.count, slot)
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは" .. price.count .. "個の" .. price.name .. "を得ました！", 'success')
+		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add", price.count)
 	elseif price.type == 'money' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 		Player.Functions.AddMoney('bank', tonumber(price.count), 'banking-quick-depo')
-		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは$"..price.count.."を得ました！", 'success')
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは$" .. price.count .. "を得ました！", 'success')
 	elseif price.type == 'weapon' then
 		TriggerClientEvent("chCasinoWall:bigWin", source)
 		Player.Functions.AddItem(price.name, 1, slot)
-		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは"..price.name.."を得ました！", 'success')
-		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add",1)
+		TriggerClientEvent('QBCore:Notify', source, "おめでとうございます！あなたは" .. price.name .. "を得ました！", 'success')
+		TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items[price.name], "add", 1)
 	end
 	TriggerClientEvent("luckywheel:rollFinished", -1)
 end)
@@ -108,13 +108,11 @@ end)
 
 
 function GeneratePlate()
-    local plate = QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(2)
-    local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
-    if result then
-        return GeneratePlate()
-    else
-        return plate:upper()
-    end
+	local plate = QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(2)
+	local result = exports.oxmysql:scalarSync('SELECT plate FROM player_vehicles WHERE plate = ?', { plate })
+	if result then
+		return GeneratePlate()
+	else
+		return plate:upper()
+	end
 end
-
-

@@ -5,28 +5,28 @@ Config.SetShowCarOnDisplay = true
 Config.VehicleOnDisplay = `crownbp`
 
 
-Config.SetAnimatedWalls = true
+Config.SetAnimatedWalls   = true
 Config.AnimatedWallNormal = 'CASINO_DIA_PL'
-Config.AnimatedWallWin = 'CASINO_WIN_PL'
--- WALLS 
+Config.AnimatedWallWin    = 'CASINO_WIN_PL'
+-- WALLS
 -- CASINO_DIA_PL    - Falling Diamonds
 -- CASINO_HLW_PL    - Falling Skulls
--- CASINO_SNWFLK_PL - Falling Snowflakes 
--- CASINO_WIN_PL    - Falling Confetti 
+-- CASINO_SNWFLK_PL - Falling Snowflakes
+-- CASINO_WIN_PL    - Falling Confetti
 
-Config.SendWelcomeMail = false -- Sends a email to players phone on entering casino
-Config.WelcomeMailsender = "The Diamond Casino & Resort"
-Config.WelcomeMailsubject ="ようこそ"
+Config.SendWelcomeMail    = false -- Sends a email to players phone on entering casino
+Config.WelcomeMailsender  = "The Diamond Casino & Resort"
+Config.WelcomeMailsubject = "ようこそ"
 Config.WelcomeMailmessage = "The Diamond Casino & Resortへようこそ！ 年中無休＆電子決済のみ対応"
 
-Config.payment = "bank" -- or "cash" -- Payment player will recieve by selling casino chips
+Config.payment            = "bank" -- or "cash" -- Payment player will recieve by selling casino chips
 
 Config.casinoChipPrice    = 100
 Config.casinoMemberPrice  = 500
-Config.casinoVIPPrice  = 500
+Config.casinoVIPPrice     = 500
 
-Config.CasinoShop = {
-    [1] = { name = "casino_goldchip",   price = 100, amount = 1000, info = {}, type = "item", slot = 1 },
+Config.CasinoShop         = {
+    [1] = { name = "casino_goldchip", price = 100, amount = 1000, info = {}, type = "item", slot = 1 },
     -- [2] = { name = "casino_member",     price = 500, amount = 50, info = {}, type = "item", slot = 2 },
     -- [3] = { name = "casino_vip",        price = 750, amount = 50, info = {}, type = "item", slot = 3 }
-}   
+}

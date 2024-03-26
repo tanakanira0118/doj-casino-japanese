@@ -5,11 +5,11 @@
 
 local QBCore = exports['qb-core']:GetCoreObject()
 
-local closeToCasino = false 
+local closeToCasino = false
 local closestChair = -1
-local closestChairDist = 1000 
-local Local_198f_247 = -1 --this is just closestChair pretty sure 
-local closestDealerPed = nil 
+local closestChairDist = 1000
+local Local_198f_247 = -1 --this is just closestChair pretty sure
+local closestDealerPed = nil
 local closestDealerPedDist = 1000
 local dealerPeds = {}
 local Local_198f_255 = nil
@@ -34,13 +34,13 @@ local dealersHand = 0
 currentBetAmount = 0
 sittingAtBlackjackTable = false
 local canExitBlackjack = false
-local dealerSecondCardFromGameId = {} 
+local dealerSecondCardFromGameId = {}
 local blackjackGameInProgress = false
 local shouldForceIdleCardGames = false
 
 local cfg = {}
 
---Please note the config order is important, dealerPositions must start from 0 and increase consecutively 
+--Please note the config order is important, dealerPositions must start from 0 and increase consecutively
 cfg.blackjackTables = {
     --[id] = {x,y,z,heading}
     [0] = {
@@ -55,11 +55,11 @@ cfg.blackjackTables = {
         dealerPos = vector3(981.661, 62.706, 70.238),
         dealerHeading = 282.591,
         tablePos = vector3(982.48, 62.90, 69.32),
-        tableHeading =  103.309,
+        tableHeading = 103.309,
         distance = 1000.0,
         prop = "vw_prop_casino_blckjack_01b"
     },
-    [2] = { 
+    [2] = {
         dealerPos = vector3(988.644, 46.497, 70.238),
         dealerHeading = 199.665,
         tablePos = vector3(989.93, 45.7245, 69.23),
@@ -71,28 +71,28 @@ cfg.blackjackTables = {
         dealerPos = vector3(986.486, 41.996, 70.238),
         dealerHeading = 284.971,
         tablePos = vector3(987.26, 42.203, 69.232),
-        tableHeading =  103.309,
+        tableHeading = 103.309,
         distance = 1000.0,
         prop = "vw_prop_casino_blckjack_01b"
     },
 }
 
---Use this command to get the coords you need for setting up new tables. 
+--Use this command to get the coords you need for setting up new tables.
 --Some maps use the prop vw_prop_casino_blckjack_01 some use vw_prop_casino_blckjack_01b, so change accordingly.
-RegisterCommand("getcasinotable",function()
+RegisterCommand("getcasinotable", function()
     local playerCoords = GetEntityCoords(PlayerPedId())
-    local blackjackTable = GetClosestObjectOfType(playerCoords.x,playerCoords.y,playerCoords.z,3.0,GetHashKey("vw_prop_casino_blckjack_01"),0,0,0)
+    local blackjackTable = GetClosestObjectOfType(playerCoords.x, playerCoords.y, playerCoords.z, 3.0, GetHashKey("vw_prop_casino_blckjack_01"), 0, 0, 0)
     if DoesEntityExist(blackjackTable) then
         print("Found entity")
-        print("tablePos pos",GetEntityCoords(blackjackTable))
-        print("tableHeading heading",GetEntityHeading(blackjackTable))
+        print("tablePos pos", GetEntityCoords(blackjackTable))
+        print("tableHeading heading", GetEntityHeading(blackjackTable))
         print("prop: vw_prop_casino_blckjack_01")
     else
-        local blackjackTable2 = GetClosestObjectOfType(playerCoords.x,playerCoords.y,playerCoords.z,3.0,GetHashKey("vw_prop_casino_blckjack_01b"),0,0,0)
+        local blackjackTable2 = GetClosestObjectOfType(playerCoords.x, playerCoords.y, playerCoords.z, 3.0, GetHashKey("vw_prop_casino_blckjack_01b"), 0, 0, 0)
         if DoesEntityExist(blackjackTable2) then
             print("Found entity")
-            print("tablePos pos:",GetEntityCoords(blackjackTable2))
-            print("tableHeading heading:",GetEntityHeading(blackjackTable2))
+            print("tablePos pos:", GetEntityCoords(blackjackTable2))
+            print("tableHeading heading:", GetEntityHeading(blackjackTable2))
             print("prop: vw_prop_casino_blckjack_01")
         else
             print("Could not find entity")
@@ -101,7 +101,7 @@ RegisterCommand("getcasinotable",function()
 end)
 
 CreateThread(function()
-	TriggerServerEvent("Blackjack:requestBlackjackTableData")
+    TriggerServerEvent("Blackjack:requestBlackjackTableData")
 end)
 
 RegisterNetEvent("Blackjack:sendBlackjackTableData")
@@ -110,83 +110,85 @@ AddEventHandler("Blackjack:sendBlackjackTableData", function(newBlackjackTableDa
 end)
 
 CreateThread(function()
-    while not closeToCasino do 
+    while not closeToCasino do
         Wait(0)
     end
     maleCasinoDealer = GetHashKey("S_M_Y_Casino_01")
     femaleCasinoDealer = GetHashKey("S_F_Y_Casino_01")
     math.randomseed(GetGameTimer())
-   
+
     dealerAnimDict = "anim_casino_b@amb@casino@games@shared@dealer@"
     RequestAnimDict(dealerAnimDict)
     while not HasAnimDictLoaded(dealerAnimDict) do
         Wait(0)
     end
-    for i=0,#cfg.blackjackTables,1 do
-        math.random() math.random() math.random()
-        randomBlackShit = math.random(1,13)
-        if randomBlackShit < 7 then 
-            dealerModel = maleCasinoDealer 
-        else 
-            dealerModel = femaleCasinoDealer 
-        end 
+    for i = 0, #cfg.blackjackTables, 1 do
+        math.random()
+        math.random()
+        math.random()
+        randomBlackShit = math.random(1, 13)
+        if randomBlackShit < 7 then
+            dealerModel = maleCasinoDealer
+        else
+            dealerModel = femaleCasinoDealer
+        end
         RequestModel(dealerModel)
         while not HasModelLoaded(dealerModel) do
             RequestModel(dealerModel)
             Wait(0)
         end
-        dealerEntity = CreatePed(26,dealerModel,cfg.blackjackTables[i].dealerPos.x,cfg.blackjackTables[i].dealerPos.y,cfg.blackjackTables[i].dealerPos.z,cfg.blackjackTables[i].dealerHeading,false,true)
-        table.insert(dealerPeds,dealerEntity)
-        SetModelAsNoLongerNeeded(dealerModel)     
+        dealerEntity = CreatePed(26, dealerModel, cfg.blackjackTables[i].dealerPos.x, cfg.blackjackTables[i].dealerPos.y, cfg.blackjackTables[i].dealerPos.z, cfg.blackjackTables[i].dealerHeading, false, true)
+        table.insert(dealerPeds, dealerEntity)
+        SetModelAsNoLongerNeeded(dealerModel)
         SetEntityCanBeDamaged(dealerEntity, 0)
-        SetPedAsEnemy(dealerEntity, 0)   
+        SetPedAsEnemy(dealerEntity, 0)
         SetBlockingOfNonTemporaryEvents(dealerEntity, 1)
         SetPedResetFlag(dealerEntity, 249, 1)
         SetPedConfigFlag(dealerEntity, 185, true)
         SetPedConfigFlag(dealerEntity, 108, true)
         SetPedCanEvasiveDive(dealerEntity, 0)
         SetPedCanRagdollFromPlayerImpact(dealerEntity, 0)
-        SetPedConfigFlag(dealerEntity, 208, true)       
-        setBlackjackDealerPedVoiceGroup(randomBlackShit,dealerEntity)
-        setBlackjackDealerClothes(randomBlackShit,dealerEntity)
-        SetEntityCoordsNoOffset(dealerEntity, cfg.blackjackTables[i].dealerPos.x,cfg.blackjackTables[i].dealerPos.y,cfg.blackjackTables[i].dealerPos.z, 0,0,1)
+        SetPedConfigFlag(dealerEntity, 208, true)
+        setBlackjackDealerPedVoiceGroup(randomBlackShit, dealerEntity)
+        setBlackjackDealerClothes(randomBlackShit, dealerEntity)
+        SetEntityCoordsNoOffset(dealerEntity, cfg.blackjackTables[i].dealerPos.x, cfg.blackjackTables[i].dealerPos.y, cfg.blackjackTables[i].dealerPos.z, 0, 0, 1)
         SetEntityHeading(dealerEntity, cfg.blackjackTables[i].dealerHeading)
         if dealerModel == maleCasinoDealer then
-            TaskPlayAnim(dealerEntity, dealerAnimDict, "idle", 1000.0, -2.0, -1, 2, 1148846080, 0) --anim_name is idle or female_idle depending on gender
-        else 
+            TaskPlayAnim(dealerEntity, dealerAnimDict, "idle", 1000.0, -2.0, -1, 2, 1148846080, 0)        --anim_name is idle or female_idle depending on gender
+        else
             TaskPlayAnim(dealerEntity, dealerAnimDict, "female_idle", 1000.0, -2.0, -1, 2, 1148846080, 0) --anim_name is idle or female_idle depending on gender
         end
         PlayFacialAnim(dealerEntity, "idle_facial", dealerAnimDict)
         RemoveAnimDict(dealerAnimDict)
     end
-    local blackjackTable = GetClosestObjectOfType(1129.406, 262.3578, -52.041,1.0,GetHashKey("vw_prop_casino_blckjack_01b"),0,0,0)
-    SetObjectTextureVariant(blackjackTable,3)
-    local rouletteTable = GetClosestObjectOfType(1132.7875976563,262.42929077148,-51.035781860352,1.0,GetHashKey("vw_prop_casino_roulette_01b"),0,0,0)
-    SetObjectTextureVariant(rouletteTable,3)
-    local rouletteTable2 = GetClosestObjectOfType(1130.5859375,266.35610961914,-51.035778045654,1.0,GetHashKey("vw_prop_casino_roulette_01b"),0,0,0)
-    SetObjectTextureVariant(rouletteTable2,3)
-    local threeCardPoker = GetClosestObjectOfType(1132.9125976563,265.86212158203,-51.035766601563,1.0,GetHashKey("vw_prop_casino_3cardpoker_01b"),0,0,0)
-    SetObjectTextureVariant(threeCardPoker,3)
+    local blackjackTable = GetClosestObjectOfType(1129.406, 262.3578, -52.041, 1.0, GetHashKey("vw_prop_casino_blckjack_01b"), 0, 0, 0)
+    SetObjectTextureVariant(blackjackTable, 3)
+    local rouletteTable = GetClosestObjectOfType(1132.7875976563, 262.42929077148, -51.035781860352, 1.0, GetHashKey("vw_prop_casino_roulette_01b"), 0, 0, 0)
+    SetObjectTextureVariant(rouletteTable, 3)
+    local rouletteTable2 = GetClosestObjectOfType(1130.5859375, 266.35610961914, -51.035778045654, 1.0, GetHashKey("vw_prop_casino_roulette_01b"), 0, 0, 0)
+    SetObjectTextureVariant(rouletteTable2, 3)
+    local threeCardPoker = GetClosestObjectOfType(1132.9125976563, 265.86212158203, -51.035766601563, 1.0, GetHashKey("vw_prop_casino_3cardpoker_01b"), 0, 0, 0)
+    SetObjectTextureVariant(threeCardPoker, 3)
 
-    local blackjackTable = GetClosestObjectOfType(1145.3294677734,248.06758117676,-51.035781860352,1.0,GetHashKey("vw_prop_casino_blckjack_01b"),0,0,0)
-    SetObjectTextureVariant(blackjackTable,3)
-    local rouletteTable = GetClosestObjectOfType(1147.9478759766,247.95536804199,-51.035766601563,1.0,GetHashKey("vw_prop_casino_roulette_01b"),0,0,0)
-    SetObjectTextureVariant(rouletteTable,3)
-    local rouletteTable2 = GetClosestObjectOfType(1144.6773681641,250.74932861328,-51.035762786865,1.0,GetHashKey("vw_prop_casino_roulette_01b"),0,0,0)
-    SetObjectTextureVariant(rouletteTable2,3)
-    local threeCardPoker = GetClosestObjectOfType(1147.9067382813,250.86437988281,-51.035781860352,1.0,GetHashKey("vw_prop_casino_3cardpoker_01b"),0,0,0)
-    SetObjectTextureVariant(threeCardPoker,3)
+    local blackjackTable = GetClosestObjectOfType(1145.3294677734, 248.06758117676, -51.035781860352, 1.0, GetHashKey("vw_prop_casino_blckjack_01b"), 0, 0, 0)
+    SetObjectTextureVariant(blackjackTable, 3)
+    local rouletteTable = GetClosestObjectOfType(1147.9478759766, 247.95536804199, -51.035766601563, 1.0, GetHashKey("vw_prop_casino_roulette_01b"), 0, 0, 0)
+    SetObjectTextureVariant(rouletteTable, 3)
+    local rouletteTable2 = GetClosestObjectOfType(1144.6773681641, 250.74932861328, -51.035762786865, 1.0, GetHashKey("vw_prop_casino_roulette_01b"), 0, 0, 0)
+    SetObjectTextureVariant(rouletteTable2, 3)
+    local threeCardPoker = GetClosestObjectOfType(1147.9067382813, 250.86437988281, -51.035781860352, 1.0, GetHashKey("vw_prop_casino_3cardpoker_01b"), 0, 0, 0)
+    SetObjectTextureVariant(threeCardPoker, 3)
 end)
 
 function resetDealerIdle(dealerPed)
     local gender = getDealerGenderFromPed(dealerPed)
     if DoesEntityExist(dealerPed) then
-        if gender == "male" then 
-            genderAnimString = "" 
-        end 
-        if gender == "female" then 
-            genderAnimString = "female_" 
-        end 
+        if gender == "male" then
+            genderAnimString = ""
+        end
+        if gender == "female" then
+            genderAnimString = "female_"
+        end
         dealerAnimDict = "anim_casino_b@amb@casino@games@shared@dealer@"
         RequestAnimDict(dealerAnimDict)
         while not HasAnimDictLoaded(dealerAnimDict) do
@@ -195,14 +197,14 @@ function resetDealerIdle(dealerPed)
         -- -- print("playing idle animation: " .. tostring(genderAnimString .. "idle"))
         TaskPlayAnim(dealerPed, dealerAnimDict, genderAnimString .. "idle", 1000.0, -2.0, -1, 2, 1148846080, 0) --anim_name is idle or female_idle depending on gender
         PlayFacialAnim(dealerPed, "idle_facial", dealerAnimDict)
-        TaskPlayAnim(PlayerPedId(),"anim_casino_b@amb@casino@games@shared@player@", "idle_cardgames", 1.0, 1.0, -1, 0)
+        TaskPlayAnim(PlayerPedId(), "anim_casino_b@amb@casino@games@shared@player@", "idle_cardgames", 1.0, 1.0, -1, 0)
     end
 end
 
 CreateThread(function()
-    while true do 
+    while true do
         if shouldForceIdleCardGames and sittingAtBlackjackTable then
-            TaskPlayAnim(PlayerPedId(),"anim_casino_b@amb@casino@games@shared@player@", "idle_cardgames", 1.0, 1.0, -1, 0)
+            TaskPlayAnim(PlayerPedId(), "anim_casino_b@amb@casino@games@shared@player@", "idle_cardgames", 1.0, 1.0, -1, 0)
         end
         Wait(0)
     end
@@ -214,14 +216,14 @@ end)
 
 
 
-RegisterNetEvent('doj:client:openBetMenu', function() 
+RegisterNetEvent('doj:client:openBetMenu', function()
     exports['qb-menu']:openMenu({
         {
             header = "The Diamond Casino & Resort Blackjack",
             isMenuHeader = true,
         },
         {
-            header = "Increase Bet", 
+            header = "Increase Bet",
             txt = "+10",
             params = {
                 event = "doj:client:startingBets",
@@ -229,7 +231,7 @@ RegisterNetEvent('doj:client:openBetMenu', function()
             }
         },
         {
-            header = "Decrease bet", 
+            header = "Decrease bet",
             txt = "-10",
             params = {
                 event = "doj:client:startingBets",
@@ -237,7 +239,7 @@ RegisterNetEvent('doj:client:openBetMenu', function()
             }
         },
         {
-            header = "Submit bet", 
+            header = "Submit bet",
             txt = "",
             params = {
                 event = "doj:client:startingBets",
@@ -245,7 +247,7 @@ RegisterNetEvent('doj:client:openBetMenu', function()
             }
         },
         -- {
-        --     header = "Custom Bet", 
+        --     header = "Custom Bet",
         --     txt = "",
         --     params = {
         --         event = "doj:client:startingBets",
@@ -253,7 +255,7 @@ RegisterNetEvent('doj:client:openBetMenu', function()
         --     }
         -- },
         {
-            header = "Exit", 
+            header = "Exit",
             txt = "",
             params = {
                 event = "doj:client:startingBets",
@@ -266,34 +268,34 @@ end)
 RegisterNetEvent("doj:client:startingBets", function(args)
     local args = tonumber(args)
     if waitingForBetState then
-        if args == 1 then 
+        if args == 1 then
             -- -- print("Bet raised")
             TriggerEvent("doj:client:openBetMenu")
             currentBetAmount = currentBetAmount + 10
-        elseif args == 2 then 
+        elseif args == 2 then
             -- -- print("Bet lowered")
             TriggerEvent("doj:client:openBetMenu")
-            if currentBetAmount >= 10 then 
+            if currentBetAmount >= 10 then
                 currentBetAmount = currentBetAmount - 10
             else
                 QBCore.Functions.Notify("0以下のベットは出来ません", "error", 3500)
             end
-        elseif args == 3 then 
+        elseif args == 3 then
             -- -- print("submitting bet")
             if tonumber(currentBetAmount) >= 0 then
-                TriggerServerEvent("Blackjack:setBlackjackBet",globalGameId,currentBetAmount,closestChair)
+                TriggerServerEvent("Blackjack:setBlackjackBet", globalGameId, currentBetAmount, closestChair)
                 closestDealerPed = getClosestDealer()
-                PlayAmbientSpeech1(closestDealerPed,"MINIGAME_DEALER_PLACE_CHIPS","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1) --TODO check this is the right sound?
+                PlayAmbientSpeech1(closestDealerPed, "MINIGAME_DEALER_PLACE_CHIPS", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1) --TODO check this is the right sound?
                 putBetOnTable()
                 Wait(1000)
             else
                 QBCore.Functions.Notify("無効な数量。", "error", 3500)
             end
-        elseif args == 4 then 
+        elseif args == 4 then
             -- -- print("custom bet")
             local tmpInput = getGenericTextInput("Bet Amount")
             if tonumber(tmpInput) then
-                tmpInput = tonumber(tmpInput) 
+                tmpInput = tonumber(tmpInput)
                 if tmpInput > 0 then
                     currentBetAmount = tmpInput
                 end
@@ -304,31 +306,31 @@ RegisterNetEvent("doj:client:startingBets", function(args)
             shouldForceIdleCardGames = false
             blackjackAnimDictToLoad = "anim_casino_b@amb@casino@games@shared@player@"
             RequestAnimDict(blackjackAnimDictToLoad)
-            while not HasAnimDictLoaded(blackjackAnimDictToLoad) do 
+            while not HasAnimDictLoaded(blackjackAnimDictToLoad) do
                 Wait(0)
             end
             NetworkStopSynchronisedScene(Local_198f_255)
-            TaskPlayAnim(PlayerPedId(), blackjackAnimDictToLoad, "sit_exit_left", 1.0, 1.0, 2500, 0)              
+            TaskPlayAnim(PlayerPedId(), blackjackAnimDictToLoad, "sit_exit_left", 1.0, 1.0, 2500, 0)
             sittingAtBlackjackTable = false
             drawTimerBar = false
             drawCurrentHand = false
-            exports['casinoUi']:HideCasinoUi('hide') 
+            exports['casinoUi']:HideCasinoUi('hide')
             waitingForBetState = false
             TriggerServerEvent("Blackjack:leaveBlackjackTable")
             closestDealerPed, closestDealerPedDistance = getClosestDealer()
-            PlayAmbientSpeech1(closestDealerPed,"MINIGAME_DEALER_LEAVE_NEUTRAL_GAME","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
+            PlayAmbientSpeech1(closestDealerPed, "MINIGAME_DEALER_LEAVE_NEUTRAL_GAME", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
         end
     end
 end)
 
-RegisterNetEvent('doj:client:hit&standMenu', function() 
+RegisterNetEvent('doj:client:hit&standMenu', function()
     exports['qb-menu']:openMenu({
         {
             header = "The Diamond Casino & Resort Blackjack",
             isMenuHeader = true,
         },
         {
-            header = "ヒット", 
+            header = "ヒット",
             txt = "カードを引く",
             params = {
                 event = "doj:client:hit&standActions",
@@ -336,7 +338,7 @@ RegisterNetEvent('doj:client:hit&standMenu', function()
             }
         },
         {
-            header = "スタンド", 
+            header = "スタンド",
             txt = "確定する",
             params = {
                 event = "doj:client:hit&standActions",
@@ -348,18 +350,18 @@ end)
 
 RegisterNetEvent("doj:client:hit&standActions", function(args)
     local args = tonumber(args)
-    if waitingForStandOrHitState and sittingAtBlackjackTable and blackjackGameInProgress then 
-        if args == 1 then 
+    if waitingForStandOrHitState and sittingAtBlackjackTable and blackjackGameInProgress then
+        if args == 1 then
             -- print("hit")
             waitingForStandOrHitState = false
-            TriggerServerEvent("Blackjack:hitBlackjack",globalGameId,globalNextCardCount)
+            TriggerServerEvent("Blackjack:hitBlackjack", globalGameId, globalNextCardCount)
             drawTimerBar = false
             standOrHitThisRound = true
             requestCard()
         else
             -- print("stand")
             waitingForStandOrHitState = false
-            TriggerServerEvent("Blackjack:standBlackjack",globalGameId,globalNextCardCount)
+            TriggerServerEvent("Blackjack:standBlackjack", globalGameId, globalNextCardCount)
             drawTimerBar = false
             standOrHitThisRound = true
             declineCard()
@@ -368,24 +370,24 @@ RegisterNetEvent("doj:client:hit&standActions", function(args)
 end)
 
 RegisterNetEvent("Blackjack:successBlackjackBet")
-AddEventHandler("Blackjack:successBlackjackBet",function()
-    bettedThisRound = true 
+AddEventHandler("Blackjack:successBlackjackBet", function()
+    bettedThisRound = true
     waitingForBetState = false
     canExitBlackjack = false
 end)
 
 
 
-RegisterNetEvent("Blackjack:sitAtBlackjackTable",function(chair)
+RegisterNetEvent("Blackjack:sitAtBlackjackTable", function(chair)
     goToBlackjackSeat(chair)
 end)
 
 CreateThread(function()
-    while true do 
+    while true do
         local playerCoords = GetEntityCoords(PlayerPedId())
         closeToCasino = false
-        for k,v in pairs(cfg.blackjackTables) do
-            cfg.blackjackTables[k].distance = #(playerCoords-cfg.blackjackTables[k].tablePos)
+        for k, v in pairs(cfg.blackjackTables) do
+            cfg.blackjackTables[k].distance = #(playerCoords - cfg.blackjackTables[k].tablePos)
             if cfg.blackjackTables[k].distance < 100.0 then
                 closeToCasino = true
             end
@@ -394,22 +396,22 @@ CreateThread(function()
     end
 end)
 
- 
+
 CreateThread(function()
-	while true do
+    while true do
         local sleep = 5
         local playerPed = PlayerPedId()
         local inZone = false
         if not sittingAtBlackjackTable then
             if closestChair ~= nil and closestChairDist < 1.3 then
-                inZone  = true
-                text = "<b>The Diamond Casino & Resort</p>Blackjack RT98</b></p><b>E</b>で座る" 
+                inZone = true
+                text   = "<b>The Diamond Casino & Resort</p>Blackjack RT98</b></p><b>E</b>で座る"
                 if not timeoutHowToBlackjack then
                     if IsControlJustPressed(0, 38) then
                         if blackjackTableData[closestChair] == false then
                             print("calling goToBlackjackSeat with chairID: " .. tostring(closestChair))
-                            TriggerServerEvent("Blackjack:requestSitAtBlackjackTable",closestChair) 
-                        else 
+                            TriggerServerEvent("Blackjack:requestSitAtBlackjackTable", closestChair)
+                        else
                             QBCore.Functions.Notify("この席は埋まっています。", "error", 3500)
                         end
                     end
@@ -417,27 +419,27 @@ CreateThread(function()
             end
             if inZone and not alreadyEnteredZone then
                 alreadyEnteredZone = true
-                exports['qb-core']:DrawText(text)   
+                exports['qb-core']:DrawText(text)
             end
             if not inZone and alreadyEnteredZone then
                 alreadyEnteredZone = false
                 exports["qb-core"]:HideText()
             end
         end
-        Wait(sleep)		
-	end
+        Wait(sleep)
+    end
 end)
 
 CreateThread(function()
-    while true do 
+    while true do
         if closeToCasino then
             closestChairDist = 1000
             closestChair = -1
             local playerCoords = GetEntityCoords(PlayerPedId())
-            for i=0,((#cfg.blackjackTables+1)*4)-1,1 do
+            for i = 0, ((#cfg.blackjackTables + 1) * 4) - 1, 1 do
                 local vectorOfBlackjackSeat = blackjack_func_348(i)
                 local distToBlackjackSeat = #(playerCoords - vectorOfBlackjackSeat)
-                if distToBlackjackSeat < closestChairDist then 
+                if distToBlackjackSeat < closestChairDist then
                     closestChairDist = distToBlackjackSeat
                     closestChair = i
                 end
@@ -453,31 +455,31 @@ CreateThread(function()
         if drawTimerBar then
             QBCore.Functions.TriggerCallback('BLACKJACKRT98:server:blackChipsAmount', function(result)
                 retval = result
-                exports['casinoUi']:DrawCasinoUi('show', "<b>The Diamond Casino & Resort Blackjack</b></p>残り時間: 0:"..timeLeft.."</p>利用可能なチップ: "..math.floor(result).."</p>現在のベット: "..math.floor(currentBetAmount))   
-	        end) 
+                exports['casinoUi']:DrawCasinoUi('show', "<b>The Diamond Casino & Resort Blackjack</b></p>残り時間: 0:" .. timeLeft .. "</p>利用可能なチップ: " .. math.floor(result) .. "</p>現在のベット: " .. math.floor(currentBetAmount))
+            end)
         end
         if drawCurrentHand then
-            exports['qb-core']:DrawText("<b>ディーラーのハンド: </b>"..math.floor(dealersHand).."</p><b>あなたのハンド: </b>"..math.floor(currentHand)) 
+            exports['qb-core']:DrawText("<b>ディーラーのハンド: </b>" .. math.floor(dealersHand) .. "</p><b>あなたのハンド: </b>" .. math.floor(currentHand))
         end
-        Wait(250) 
+        Wait(250)
     end
 end)
 
 RegisterNetEvent("Blackjack:syncChipsPropBlackjack")
-AddEventHandler("Blackjack:syncChipsPropBlackjack",function(betAmount,chairId)
+AddEventHandler("Blackjack:syncChipsPropBlackjack", function(betAmount, chairId)
     if closeToCasino then
-        betBlackjack(betAmount,chairId)
+        betBlackjack(betAmount, chairId)
     end
 end)
 
 RegisterNetEvent("Blackjack:beginBetsBlackjack")
-AddEventHandler("Blackjack:beginBetsBlackjack",function(gameID,tableId)
+AddEventHandler("Blackjack:beginBetsBlackjack", function(gameID, tableId)
     globalGameId = gameID
     -- blackjackInstructional = setupBlackjackInstructionalScaleform("instructional_buttons")
     -- exports["qb-core"]:HideText()
     TriggerEvent("doj:client:openBetMenu")
     -- QBCore.Functions.Notify("Place your bets", 'primary', 3500)
-    exports['qb-core']:DrawText("賭けてください...")  
+    exports['qb-core']:DrawText("賭けてください...")
 
     bettedThisRound = false
     drawTimerBar = true
@@ -486,49 +488,49 @@ AddEventHandler("Blackjack:beginBetsBlackjack",function(gameID,tableId)
     canExitBlackjack = true
     waitingForBetState = true
     dealerPed = getDealerFromTableId(tableId)
-    PlayAmbientSpeech1(dealerPed,"MINIGAME_DEALER_PLACE_BET","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
+    PlayAmbientSpeech1(dealerPed, "MINIGAME_DEALER_PLACE_BET", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
     currentBetAmount = 0
     dealersHand = 0
     currentHand = 0
-    SetEntityCoordsNoOffset(dealerPed, cfg.blackjackTables[tableId].dealerPos.x,cfg.blackjackTables[tableId].dealerPos.y,cfg.blackjackTables[tableId].dealerPos.z, 0,0,1)
+    SetEntityCoordsNoOffset(dealerPed, cfg.blackjackTables[tableId].dealerPos.x, cfg.blackjackTables[tableId].dealerPos.y, cfg.blackjackTables[tableId].dealerPos.z, 0, 0, 1)
     SetEntityHeading(dealerPed, cfg.blackjackTables[tableId].dealerHeading)
     CreateThread(function()
         drawTimerBar = true
-        while timeLeft > 0 do 
+        while timeLeft > 0 do
             timeLeft = timeLeft - 1
             Wait(1000)
         end
         timeLeft = 20
         drawTimerBar = false
         -- if not bettedThisRound then
-                --QBCore.Functions.Notify("No bet placed, round skipped", 'primary', 3500)
+        --QBCore.Functions.Notify("No bet placed, round skipped", 'primary', 3500)
 
         -- end
     end)
 end)
 
 RegisterNetEvent("Blackjack:beginCardGiveOut")
-AddEventHandler("Blackjack:beginCardGiveOut",function(gameId,cardData,chairId,cardIndex,gotCurrentHand,tableId)
+AddEventHandler("Blackjack:beginCardGiveOut", function(gameId, cardData, chairId, cardIndex, gotCurrentHand, tableId)
     if closeToCasino then
         blackjackGameInProgress = true
-        exports['casinoUi']:HideCasinoUi('hide') 
+        exports['casinoUi']:HideCasinoUi('hide')
         blackjackAnimsToLoad = {
             "anim_casino_b@amb@casino@games@blackjack@dealer",
             "anim_casino_b@amb@casino@games@shared@dealer@",
-            "anim_casino_b@amb@casino@games@blackjack@player",  
+            "anim_casino_b@amb@casino@games@blackjack@player",
             "anim_casino_b@amb@casino@games@shared@player@",
         }
-        for k,v in pairs(blackjackAnimsToLoad) do 
+        for k, v in pairs(blackjackAnimsToLoad) do
             RequestAnimDict(v)
-            while not HasAnimDictLoaded(v) do 
+            while not HasAnimDictLoaded(v) do
                 Wait(0)
             end
         end
-        if sittingAtBlackjackTable and bettedThisRound then  
+        if sittingAtBlackjackTable and bettedThisRound then
             drawCurrentHand = true
         end
         dealerPed = getDealerFromTableId(tableId)
-        cardObj = startDealing(dealerPed,gameId,cardData,chairId,cardIndex+1,gotCurrentHand,((tableId+1)*4)-1)
+        cardObj = startDealing(dealerPed, gameId, cardData, chairId, cardIndex + 1, gotCurrentHand, ((tableId + 1) * 4) - 1)
         if blackjack_func_368(closestChair) == tableId and gameId == chairId and cardIndex == 0 then
             dealersHand = gotCurrentHand
             -- blackjackInstructional = nil
@@ -542,40 +544,40 @@ AddEventHandler("Blackjack:beginCardGiveOut",function(gameId,cardData,chairId,ca
 end)
 
 RegisterNetEvent("Blackjack:singleCard")
-AddEventHandler("Blackjack:singleCard",function(gameId,cardData,chairID,nextCardCount,gotCurrentHand,tableId)
+AddEventHandler("Blackjack:singleCard", function(gameId, cardData, chairID, nextCardCount, gotCurrentHand, tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
-        startSingleDealing(chairID,dealerPed,gameId,cardData,nextCardCount+1,gotCurrentHand)
+        startSingleDealing(chairID, dealerPed, gameId, cardData, nextCardCount + 1, gotCurrentHand)
     end
 end)
 
 RegisterNetEvent("Blackjack:singleDealerCard")
-AddEventHandler("Blackjack:singleDealerCard",function(gameId,cardData,nextCardCount,gotCurrentHand,tableId)
+AddEventHandler("Blackjack:singleDealerCard", function(gameId, cardData, nextCardCount, gotCurrentHand, tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
-        startSingleDealerDealing(dealerPed,gameId,cardData,nextCardCount+1,gotCurrentHand,((tableId+1)*4)-1,tableId)
+        startSingleDealerDealing(dealerPed, gameId, cardData, nextCardCount + 1, gotCurrentHand, ((tableId + 1) * 4) - 1, tableId)
     end
 end)
 
 RegisterNetEvent("Blackjack:standOrHit")
-AddEventHandler("Blackjack:standOrHit",function(gameId,chairId,nextCardCount,tableId)
+AddEventHandler("Blackjack:standOrHit", function(gameId, chairId, nextCardCount, tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
         standOrHitThisRound = false
         if closestChair == chairId then
             globalNextCardCount = nextCardCount
             waitingForStandOrHitState = true
-            PlayAmbientSpeech1(dealerPed,"MINIGAME_BJACK_DEALER_ANOTHER_CARD","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-            TriggerEvent("doj:client:hit&standMenu") 
-            startStandOrHit(gameId,dealerPed,chairId,true)
+            PlayAmbientSpeech1(dealerPed, "MINIGAME_BJACK_DEALER_ANOTHER_CARD", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+            TriggerEvent("doj:client:hit&standMenu")
+            startStandOrHit(gameId, dealerPed, chairId, true)
             CreateThread(function()
                 if sittingAtBlackjackTable then
                     drawTimerBar = true
                     timeLeft = 20
-                    while timeLeft > 0 do 
+                    while timeLeft > 0 do
                         timeLeft = timeLeft - 1
                         if timeLeft == 6 then
-                            PlayAmbientSpeech1(dealerPed,"MINIGAME_DEALER_COMMENT_SLOW","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1) --TODO check this is the right sound?
+                            PlayAmbientSpeech1(dealerPed, "MINIGAME_DEALER_COMMENT_SLOW", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1) --TODO check this is the right sound?
                         end
                         if standOrHitThisRound then
                             -- -- print("terminating standorhit timer thread")
@@ -590,13 +592,13 @@ AddEventHandler("Blackjack:standOrHit",function(gameId,chairId,nextCardCount,tab
                 if not standOrHitThisRound and sittingAtBlackjackTable then
                     -- print("you took too long fam standing shit")
                     waitingForStandOrHitState = false
-                    TriggerServerEvent("Blackjack:standBlackjack",globalGameId,globalNextCardCount)
+                    TriggerServerEvent("Blackjack:standBlackjack", globalGameId, globalNextCardCount)
                     declineCard()
                     QBCore.Functions.Notify("スタンド/ヒットの時間切れです。スタンドします。", 'error', 3500)
                 end
             end)
-        else 
-            startStandOrHit(gameId,dealerPed,chairId,false)
+        else
+            startStandOrHit(gameId, dealerPed, chairId, false)
         end
     end
 end)
@@ -605,12 +607,12 @@ function getClosestDealer()
     local tmpclosestDealerPed = nil
     local tmpclosestDealerPedDistance = 100000
     local playerCoords = GetEntityCoords(PlayerPedId())
-    for k,v in pairs(dealerPeds) do 
+    for k, v in pairs(dealerPeds) do
         local dealerPed = v
         -- -- print("Entity ID of this dealer ped: " .. tostring(dealerPed))
         local distanceToDealer = #(playerCoords - GetEntityCoords(dealerPed))
         -- -- print("Distance to dealer ped: " .. tostring(distanceToDealer))
-        if distanceToDealer < tmpclosestDealerPedDistance then 
+        if distanceToDealer < tmpclosestDealerPedDistance then
             tmpclosestDealerPedDistance = distanceToDealer
             tmpclosestDealerPed = dealerPed
         end
@@ -623,17 +625,16 @@ end
 
 function getDealerFromChairId(chairId)
     tableId = blackjack_func_368(chairId)
-    closestDealerPed = dealerPeds[tableId+1]
+    closestDealerPed = dealerPeds[tableId + 1]
     return closestDealerPed
 end
 
 function getDealerFromTableId(tableId)
-    closestDealerPed = dealerPeds[tableId+1]
+    closestDealerPed = dealerPeds[tableId + 1]
     return closestDealerPed
 end
 
 function goToBlackjackSeat(blackjackSeatID)
-
     sittingAtBlackjackTable = true
     waitingForSitDownState = true
     canExitBlackjack = true
@@ -641,37 +642,37 @@ function goToBlackjackSeat(blackjackSeatID)
     dealersHand = 0
 
     closestDealerPed, closestDealerPedDistance = getClosestDealer()
-    PlayAmbientSpeech1(closestDealerPed,"MINIGAME_DEALER_GREET","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
+    PlayAmbientSpeech1(closestDealerPed, "MINIGAME_DEALER_GREET", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
 
-    
-    -- print("[CMG Casino] start sit at blackjack seat") 
+
+    -- print("[CMG Casino] start sit at blackjack seat")
     exports['qb-core']:DrawText("ゲームの開始を待っています...")
 
     blackjackAnimsToLoad = {
-      "anim_casino_b@amb@casino@games@blackjack@dealer",
-      "anim_casino_b@amb@casino@games@shared@dealer@",
-      "anim_casino_b@amb@casino@games@blackjack@player",  
-      "anim_casino_b@amb@casino@games@shared@player@",
+        "anim_casino_b@amb@casino@games@blackjack@dealer",
+        "anim_casino_b@amb@casino@games@shared@dealer@",
+        "anim_casino_b@amb@casino@games@blackjack@player",
+        "anim_casino_b@amb@casino@games@shared@player@",
     }
-    for k,v in pairs(blackjackAnimsToLoad) do 
-      RequestAnimDict(v)
-        while not HasAnimDictLoaded(v) do 
+    for k, v in pairs(blackjackAnimsToLoad) do
+        RequestAnimDict(v)
+        while not HasAnimDictLoaded(v) do
             Wait(10)
         end
     end
-    -- print("[CMG Casino] blackjack anims loaded") 
+    -- print("[CMG Casino] blackjack anims loaded")
     Local_198f_247 = blackjackSeatID
     print("blackjackSeatID: " .. blackjackSeatID)
-    fVar3 = blackjack_func_217(PlayerPedId(),blackjack_func_218(Local_198f_247, 0), 1)
-    fVar4 = blackjack_func_217(PlayerPedId(),blackjack_func_218(Local_198f_247, 1), 1)
-    fVar5 = blackjack_func_217(PlayerPedId(),blackjack_func_218(Local_198f_247, 2), 1)
+    fVar3 = blackjack_func_217(PlayerPedId(), blackjack_func_218(Local_198f_247, 0), 1)
+    fVar4 = blackjack_func_217(PlayerPedId(), blackjack_func_218(Local_198f_247, 1), 1)
+    fVar5 = blackjack_func_217(PlayerPedId(), blackjack_func_218(Local_198f_247, 2), 1)
     -- print("[CMG Casino] fVars passed")
-    if (fVar4 < fVar5 and fVar4 < fVar3) then 
-      Local_198f_251 = 1
-    elseif (fVar5 < fVar4 and fVar5 < fVar3) then 
-      Local_198f_251 = 2
+    if (fVar4 < fVar5 and fVar4 < fVar3) then
+        Local_198f_251 = 1
+    elseif (fVar5 < fVar4 and fVar5 < fVar3) then
+        Local_198f_251 = 2
     else
-      Local_198f_251 = 0
+        Local_198f_251 = 0
     end
     --blackjack_func_218 is get_anim_offset
     --param0 is 0-3 && param1 is 0-15? (OF blackjack_func_218)
@@ -681,7 +682,7 @@ function goToBlackjackSeat(blackjackSeatID)
     TaskGoStraightToCoord(PlayerPedId(), walkToVector.x, walkToVector.y, walkToVector.z, 1.0, 5000, targetHeading, 0.01)
 
     local goToVector = blackjack_func_348(Local_198f_247)
-    local xRot,yRot,zRot = blackjack_func_215(Local_198f_247)
+    local xRot, yRot, zRot = blackjack_func_215(Local_198f_247)
     -- -- print("[CMG Casino] Blackjack sit at table net scene starting")
     -- -- print("[CMG Casino] creating Scene at, x: " .. tostring(goToVector.x) .. " y: " .. tostring(goToVector.y) .. " z: " .. tostring(goToVector.z))
     Local_198f_255 = NetworkCreateSynchronisedScene(goToVector.x, goToVector.y, goToVector.z, xRot, yRot, zRot, 2, 1, 0, 1065353216, 0, 1065353216)
@@ -704,26 +705,26 @@ function goToBlackjackSeat(blackjackSeatID)
     Citizen.InvokeNative(0x79C0E43EB9B944E2, -2124244681)
     waitingForSitDownState = false
     shouldForceIdleCardGames = true
-end 
+end
 
-function betBlackjack(amount,chairId)
+function betBlackjack(amount, chairId)
     local chipsProp = getChipPropFromAmount(amount)
     --betChipsForNextHand(100,chipsProp,pos,chairId,false,stack/100) --false or true no clue
-    -- for stack=1,10,1 do 
+    -- for stack=1,10,1 do
     --     for pos=0,1,1 do  --can be 0 to 3, however last 2 chip x/y positions are for a split I think
-            
+
     --     end
     -- end
-    for i,v in ipairs(chipsProp) do 
-        betChipsForNextHand(100,v,0,chairId,false,(i-1)/200) --false or true no clue
+    for i, v in ipairs(chipsProp) do
+        betChipsForNextHand(100, v, 0, chairId, false, (i - 1) / 200) --false or true no clue
     end
 end
 
-function startSingleDealerDealing(dealerPed,gameId,cardData,nextCardCount,gotCurrentHand,chairId,tableId)
+function startSingleDealerDealing(dealerPed, gameId, cardData, nextCardCount, gotCurrentHand, chairId, tableId)
     -- -- print("startSingleDealerDealing", chairId)
     N_0x469f2ecdec046337(1)
     StartAudioScene("DLC_VW_Casino_Cards_Focus_Hand") --need to stream this
-    ensureCardModelsLoaded() --request all 52 card models
+    ensureCardModelsLoaded()                          --request all 52 card models
     --AUDIO::_0xF8AD2EED7C47E8FE(iVar1, false, 1); call sound on dealer
     ----------------THIS CREATES A CARD AT THE MACHINE WHERE THE CARD COMES OUT OF-----------------------
     -- -- print("dealerPed: " .. tostring(dealerPed))
@@ -734,38 +735,38 @@ function startSingleDealerDealing(dealerPed,gameId,cardData,nextCardCount,gotCur
     if DoesEntityExist(dealerPed) then
         cardPosition = nextCardCount
         -- -- print("getLocalChairIdFromGlobalChairId: " .. tostring(getLocalChairIdFromGlobalChairId))
-        nextCard = getCardFromNumber(cardData,true)
-        local nextCardObj = getNewCardFromMachine(nextCard,chairId,gameId)
-        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
-        if gender == "male" then 
-            genderAnimString = "" 
-        end 
-        if gender == "female" then 
-            genderAnimString = "female_" 
-        end 
-        dealerGiveSelfCard(genderAnimString,dealerPed,3,nextCardObj)
-        DetachEntity(nextCardObj,false,true)
+        nextCard = getCardFromNumber(cardData, true)
+        local nextCardObj = getNewCardFromMachine(nextCard, chairId, gameId)
+        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+        if gender == "male" then
+            genderAnimString = ""
+        end
+        if gender == "female" then
+            genderAnimString = "female_"
+        end
+        dealerGiveSelfCard(genderAnimString, dealerPed, 3, nextCardObj)
+        DetachEntity(nextCardObj, false, true)
         -- -- print("blackjack_func_368(closestChair)",blackjack_func_368(closestChair))
         -- -- print("tableId",tableId)
         if blackjack_func_368(closestChair) == tableId then
             dealersHand = gotCurrentHand
         end
         local soundCardString = "MINIGAME_BJACK_DEALER_" .. tostring(gotCurrentHand)
-        PlayAmbientSpeech1(dealerPed,soundCardString,"SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-        vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
-        local tablePosX,tablePosY,tablePosZ = getTableCoords(blackjack_func_368(chairId))
-        local cardQueue = cardPosition -- number of card
+        PlayAmbientSpeech1(dealerPed, soundCardString, "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+        vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
+        local tablePosX, tablePosY, tablePosZ = getTableCoords(blackjack_func_368(chairId))
+        local cardQueue = cardPosition                                          -- number of card
         local iVar5 = cardQueue
-        cardOffsetX,cardOffsetY,cardOffsetZ = blackjack_func_377(iVar5, 4, 1) --iVar9 is seat number 0-3
+        cardOffsetX, cardOffsetY, cardOffsetZ = blackjack_func_377(iVar5, 4, 1) --iVar9 is seat number 0-3
         local cardPos = GetObjectOffsetFromCoords(tablePosX, tablePosY, tablePosZ, vVar8.z, cardOffsetX, cardOffsetY, cardOffsetZ)
         SetEntityCoordsNoOffset(nextCardObj, cardPos.x, cardPos.y, cardPos.z, 0, 0, 1)
         Wait(400)
-    else 
+    else
         -- -- print("Failed to deal cards, entity doesn't exist or we don't have control")
     end
 end
 
-function startSingleDealing(chairId,dealerPed,gameId,cardData,nextCardCount,gotCurrentHand)
+function startSingleDealing(chairId, dealerPed, gameId, cardData, nextCardCount, gotCurrentHand)
     N_0x469f2ecdec046337(1)
     StartAudioScene("DLC_VW_Casino_Cards_Focus_Hand") --need to stream this
     ensureCardModelsLoaded()
@@ -773,51 +774,51 @@ function startSingleDealing(chairId,dealerPed,gameId,cardData,nextCardCount,gotC
     if DoesEntityExist(dealerPed) then
         local localChairId = getLocalChairIdFromGlobalChairId(chairId)
         cardPosition = nextCardCount
-        nextCard = getCardFromNumber(cardData,true)
-        local nextCardObj = getNewCardFromMachine(nextCard,chairId)
-        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
-        if gender == "male" then 
-            genderAnimString = "" 
-        end 
-        if gender == "female" then 
-            genderAnimString = "female_" 
-        end 
-        dealerGiveCards(chairId,genderAnimString,dealerPed,nextCardObj) 
-        DetachEntity(nextCardObj,false,true)
+        nextCard = getCardFromNumber(cardData, true)
+        local nextCardObj = getNewCardFromMachine(nextCard, chairId)
+        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+        if gender == "male" then
+            genderAnimString = ""
+        end
+        if gender == "female" then
+            genderAnimString = "female_"
+        end
+        dealerGiveCards(chairId, genderAnimString, dealerPed, nextCardObj)
+        DetachEntity(nextCardObj, false, true)
         if chairId == closestChair then
             currentHand = gotCurrentHand
         end
         local soundCardString = "MINIGAME_BJACK_DEALER_" .. tostring(gotCurrentHand)
         -- -- print("trying soundString: " .. tostring(soundCardString))
-        PlayAmbientSpeech1(dealerPed,soundCardString,"SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-        vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
-        local tablePosX,tablePosY,tablePosZ = getTableCoords(blackjack_func_368(chairId))
+        PlayAmbientSpeech1(dealerPed, soundCardString, "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+        vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
+        local tablePosX, tablePosY, tablePosZ = getTableCoords(blackjack_func_368(chairId))
         local cardQueue = cardPosition -- number of card
         local iVar5 = cardQueue
-        local iVar9 = localChairId - 1-- <-ChairID 0-3
+        local iVar9 = localChairId - 1 -- <-ChairID 0-3
         if iVar9 <= 4 then
-            -- -- print("single card pos: " .. tostring(iVar5)) 
-            cardOffsetX,cardOffsetY,cardOffsetZ = blackjack_func_377(iVar5, iVar9, 0) --iVar9 is seat number 0-3
-        else 
-            cardOffsetX,cardOffsetY,cardOffsetZ = 0.5737, 0.2376, 0.948025
+            -- -- print("single card pos: " .. tostring(iVar5))
+            cardOffsetX, cardOffsetY, cardOffsetZ = blackjack_func_377(iVar5, iVar9, 0) --iVar9 is seat number 0-3
+        else
+            cardOffsetX, cardOffsetY, cardOffsetZ = 0.5737, 0.2376, 0.948025
         end
         local cardPos = GetObjectOffsetFromCoords(tablePosX, tablePosY, tablePosZ, vVar8.z, cardOffsetX, cardOffsetY, cardOffsetZ)
         SetEntityCoordsNoOffset(nextCardObj, cardPos.x, cardPos.y, cardPos.z, 0, 0, 1)
-        vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
+        vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
         cardObjectOffsetRotation = vVar8 + func_376(iVar5, iVar9, 0, false)
         SetEntityRotation(nextCardObj, cardObjectOffsetRotation.x, cardObjectOffsetRotation.y, cardObjectOffsetRotation.z, 2, 1)
-        Wait(400)    
-    else 
+        Wait(400)
+    else
         -- print("Failed to deal cards, entity doesn't exist or we don't have control")
     end
 end
 
-function startDealing(dealerPed,gameId,cardData,chairId,cardIndex,gotCurrentHand,fakeChairIdForDealerTurn)
+function startDealing(dealerPed, gameId, cardData, chairId, cardIndex, gotCurrentHand, fakeChairIdForDealerTurn)
     -- print("startDealing()")
     --NEXT --> func_90 the FAT FUNCTION
     N_0x469f2ecdec046337(1)
     StartAudioScene("DLC_VW_Casino_Cards_Focus_Hand") --need to stream this
-    ensureCardModelsLoaded() --request all 52 card models
+    ensureCardModelsLoaded()                          --request all 52 card models
     --AUDIO::_0xF8AD2EED7C47E8FE(iVar1, false, 1); call sound on dealer
     ----------------THIS CREATES A CARD AT THE MACHINE WHERE THE CARD COMES OUT OF-----------------------
     -- print("dealerPed: " .. tostring(dealerPed))
@@ -826,51 +827,51 @@ function startDealing(dealerPed,gameId,cardData,chairId,cardIndex,gotCurrentHand
     local gender = getDealerGenderFromPed(dealerPed)
     if DoesEntityExist(dealerPed) then
         -- print("startDealing() - entityExists")
-        -- print("request cardId: " .. tostring(cardData[cardIndex])) 
-        nextCard = getCardFromNumber(cardData[cardIndex],true)
-        local nextCardObj = getNewCardFromMachine(nextCard,chairId)
-        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
-        if gender == "male" then 
-            genderAnimString = "" 
-        end 
-        if gender == "female" then 
-            genderAnimString = "female_" 
-        end 
+        -- print("request cardId: " .. tostring(cardData[cardIndex]))
+        nextCard = getCardFromNumber(cardData[cardIndex], true)
+        local nextCardObj = getNewCardFromMachine(nextCard, chairId)
+        AttachEntityToEntity(nextCardObj, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+        if gender == "male" then
+            genderAnimString = ""
+        end
+        if gender == "female" then
+            genderAnimString = "female_"
+        end
         if chairId <= 1000 then
             -- print("[blackjack] giving player cards")
-            dealerGiveCards(chairId,genderAnimString,dealerPed,nextCardObj) 
-        else 
+            dealerGiveCards(chairId, genderAnimString, dealerPed, nextCardObj)
+        else
             -- print("[blackjack] giving dealers cards")
-            dealerGiveSelfCard(genderAnimString,dealerPed,cardIndex,nextCardObj) 
+            dealerGiveSelfCard(genderAnimString, dealerPed, cardIndex, nextCardObj)
         end
-        DetachEntity(nextCardObj,false,true)
+        DetachEntity(nextCardObj, false, true)
         if chairId ~= gameId or cardIndex ~= 2 then
             local soundCardString = "MINIGAME_BJACK_DEALER_" .. tostring(gotCurrentHand)
             -- print("trying soundString: " .. tostring(soundCardString))
-            PlayAmbientSpeech1(dealerPed,soundCardString,"SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
+            PlayAmbientSpeech1(dealerPed, soundCardString, "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
         end
         --ENTITY::SET_ENTITY_COORDS_NO_OFFSET(Local_198.f_648[iVar6], OBJECT::_GET_OBJECT_OFFSET_FROM_COORDS(func_70(iVar2), vVar8.z, func_377(iVar5, iVar9, 0)), 0, 0, 1);
         --ENTITY::SET_ENTITY_ROTATION(Local_198.f_648[iVar6], vVar8 + func_376(iVar5, iVar9, 0, func_380(iVar6)), 2, 1);
         cardQueue = cardIndex -- number of card
         iVar5 = cardQueue
-        iVar9 = chairId -- <-localChairId 0-3
+        iVar9 = chairId       -- <-localChairId 0-3
         if chairId <= 1000 then
-            vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
-            tablePosX,tablePosY,tablePosZ = getTableCoords(blackjack_func_368(chairId))
-            cardOffsetX,cardOffsetY,cardOffsetZ = blackjack_func_377(iVar5, getLocalChairIndexFromGlobalChairId(chairId), 0) --iVar9 is the local seat number 0-3
+            vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
+            tablePosX, tablePosY, tablePosZ = getTableCoords(blackjack_func_368(chairId))
+            cardOffsetX, cardOffsetY, cardOffsetZ = blackjack_func_377(iVar5, getLocalChairIndexFromGlobalChairId(chairId), 0) --iVar9 is the local seat number 0-3
         else
-            vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(fakeChairIdForDealerTurn)))
-            tablePosX,tablePosY,tablePosZ = getTableCoords(blackjack_func_368(fakeChairIdForDealerTurn))
-            cardOffsetX,cardOffsetY,cardOffsetZ = blackjack_func_377(iVar5, 4, 1)
+            vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(fakeChairIdForDealerTurn)))
+            tablePosX, tablePosY, tablePosZ = getTableCoords(blackjack_func_368(fakeChairIdForDealerTurn))
+            cardOffsetX, cardOffsetY, cardOffsetZ = blackjack_func_377(iVar5, 4, 1)
         end
         local cardPos = GetObjectOffsetFromCoords(tablePosX, tablePosY, tablePosZ, vVar8.z, cardOffsetX, cardOffsetY, cardOffsetZ)
         SetEntityCoordsNoOffset(nextCardObj, cardPos.x, cardPos.y, cardPos.z, 0, 0, 1)
         -- print("fakeChairIdForDealerTurn",fakeChairIdForDealerTurn)
         if chairId <= 1000 then
-            vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId))) 
+            vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
             cardObjectOffsetRotation = vVar8 + func_376(iVar5, getLocalChairIndexFromGlobalChairId(chairId), 0, false)
             SetEntityRotation(nextCardObj, cardObjectOffsetRotation.x, cardObjectOffsetRotation.y, cardObjectOffsetRotation.z, 2, 1)
-        else 
+        else
             cardObjectOffsetRotation = blackjack_func_398(blackjack_func_368(fakeChairIdForDealerTurn))
         end
         -- print("checking betttingInstructional",closestChair,chairId)
@@ -880,119 +881,119 @@ function startDealing(dealerPed,gameId,cardData,chairId,cardIndex,gotCurrentHand
         --soundID = GetSoundId()
         --PlaySoundFromEntity(soundID,"DLC_VW_CHIP_BET_SML_MEDIUM",nextCardObj,"dlc_vw_table_games_sounds", 0, 0)
         return nextCardObj
-    else 
+    else
         -- print("Failed to deal cards, entity doesn't exist or we don't have control")
-    end 
+    end
 end
 
-function startStandOrHit(gameId,dealerPed,chairId,actuallyPlaying)
+function startStandOrHit(gameId, dealerPed, chairId, actuallyPlaying)
     chairAnimId = getLocalChairIdFromGlobalChairId(chairId)
     gender = getDealerGenderFromPed(dealerPed)
-    if gender == "male" then 
-        genderAnimString = "" 
-    end 
-    if gender == "female" then 
-        genderAnimString = "female_" 
-    end 
+    if gender == "male" then
+        genderAnimString = ""
+    end
+    if gender == "female" then
+        genderAnimString = "female_"
+    end
     -- -- print("dealerPed: " .. tostring(dealerPed))
     -- -- print("chairAnimId: " .. tostring(chairAnimId))
     -- -- print("genderAnimString: " .. tostring(genderAnimString))
     RequestAnimDict("anim_casino_b@amb@casino@games@blackjack@dealer")
-    while not HasAnimDictLoaded("anim_casino_b@amb@casino@games@blackjack@dealer") do 
+    while not HasAnimDictLoaded("anim_casino_b@amb@casino@games@blackjack@dealer") do
         Wait(0)
     end
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_intro", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_intro", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
     PlayFacialAnim(dealerPed, genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
     Wait(0)
-    while IsEntityPlayingAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_intro") do 
+    while IsEntityPlayingAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_intro") do
         Wait(10)
         -- -- print("waiting for anim to end #1")
     end
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
     if actuallyPlaying then
         waitingForPlayerToHitOrStand = true
     end
 end
 
-function flipDealerCard(dealerPed,gotCurrentHand,tableId,gameId)
+function flipDealerCard(dealerPed, gotCurrentHand, tableId, gameId)
     cardObj = dealerSecondCardFromGameId[gameId]
-    local cardX,cardY,cardZ = GetEntityCoords(cardObj)
+    local cardX, cardY, cardZ = GetEntityCoords(cardObj)
     local gender = getDealerGenderFromPed(dealerPed)
-    if gender == "male" then 
-        genderAnimString = "" 
-    end 
-    if gender == "female" then 
-        genderAnimString = "female_" 
-    end 
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "check_and_turn_card", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+    if gender == "male" then
+        genderAnimString = ""
+    end
+    if gender == "female" then
+        genderAnimString = "female_"
+    end
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "check_and_turn_card", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
     --PlayFacialAnim(dealerPed, genderAnimString .. "check_and_turn_card_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
-    while not HasAnimEventFired(dealerPed,-1345695206) do
+    while not HasAnimEventFired(dealerPed, -1345695206) do
         -- print("waiting for -1345695206 to fire")
         Wait(0)
     end
-    AttachEntityToEntity(cardObj, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
-    while not HasAnimEventFired(dealerPed,585557868) do
+    AttachEntityToEntity(cardObj, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+    while not HasAnimEventFired(dealerPed, 585557868) do
         Wait(0)
     end
-    DetachEntity(cardObj,false,true)
+    DetachEntity(cardObj, false, true)
     if blackjack_func_368(closestChair) == tableId then
         dealersHand = gotCurrentHand
-    end    
+    end
     local soundCardString = "MINIGAME_BJACK_DEALER_" .. tostring(gotCurrentHand)
-    PlayAmbientSpeech1(dealerPed,soundCardString,"SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-    SetEntityCoordsNoOffset(cardObj, cardX,cardY,cardZ)
+    PlayAmbientSpeech1(dealerPed, soundCardString, "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+    SetEntityCoordsNoOffset(cardObj, cardX, cardY, cardZ)
 end
 
-function checkCard(dealerPed,cardObj)
-    local cardX,cardY,cardZ = GetEntityCoords(cardObj)
-    AttachEntityToEntity(cardObj, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+function checkCard(dealerPed, cardObj)
+    local cardX, cardY, cardZ = GetEntityCoords(cardObj)
+    AttachEntityToEntity(cardObj, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
     local gender = getDealerGenderFromPed(dealerPed)
-    if gender == "male" then 
-        genderAnimString = "" 
-    end 
-    if gender == "female" then 
-        genderAnimString = "female_" 
-    end 
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "check_card", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+    if gender == "male" then
+        genderAnimString = ""
+    end
+    if gender == "female" then
+        genderAnimString = "female_"
+    end
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "check_card", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
     PlayFacialAnim(dealerPed, genderAnimString .. "check_card_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
-    while not HasAnimEventFired(dealerPed,585557868) do
+    while not HasAnimEventFired(dealerPed, 585557868) do
         Wait(0)
     end
     Wait(100)
-    DetachEntity(cardObj,false,true)
-    SetEntityCoordsNoOffset(cardObj, cardX,cardY,cardZ)
+    DetachEntity(cardObj, false, true)
+    SetEntityCoordsNoOffset(cardObj, cardX, cardY, cardZ)
 end
 
 RegisterNetEvent("Blackjack:endStandOrHitPhase")
-AddEventHandler("Blackjack:endStandOrHitPhase",function(chairId,tableId)
+AddEventHandler("Blackjack:endStandOrHitPhase", function(chairId, tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
         waitingForPlayerToHitOrStand = false
         chairAnimId = getLocalChairIdFromGlobalChairId(chairId)
         gender = getDealerGenderFromPed(dealerPed)
-        if gender == "male" then 
-            genderAnimString = "" 
-        end 
-        if gender == "female" then 
-            genderAnimString = "female_" 
+        if gender == "male" then
+            genderAnimString = ""
+        end
+        if gender == "female" then
+            genderAnimString = "female_"
         end
         -- print("dealer ending anim: " .. "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_outro")
-        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_outro", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_outro", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
         PlayFacialAnim(dealerPed, genderAnimString .. "dealer_focus_player_0" .. chairAnimId .. "_idle_outro_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
     end
 end)
 
 RegisterNetEvent("Blackjack:bustBlackjack")
-AddEventHandler("Blackjack:bustBlackjack",function(chairID,tableId)
+AddEventHandler("Blackjack:bustBlackjack", function(chairID, tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
-        PlayAmbientSpeech1(dealerPed,"MINIGAME_BJACK_DEALER_PLAYER_BUST","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_bad", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        PlayAmbientSpeech1(dealerPed, "MINIGAME_BJACK_DEALER_PLAYER_BUST", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_bad", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
         -- print("closestChair:",closestChair)
         -- print("getLocalChairIdFromGlobalChairId(closestChair):",getLocalChairIdFromGlobalChairId(closestChair))
         -- print("chairID+1:",chairID)
         -- print("sittingAtBlackjackTable:",sittingAtBlackjackTable)
-        if chairID == closestChair and sittingAtBlackjackTable then 
+        if chairID == closestChair and sittingAtBlackjackTable then
             angryIBust()
             drawCurrentHand = false
             currentHand = 0
@@ -1002,31 +1003,31 @@ AddEventHandler("Blackjack:bustBlackjack",function(chairID,tableId)
 end)
 
 RegisterNetEvent("Blackjack:flipDealerCard")
-AddEventHandler("Blackjack:flipDealerCard",function(gotCurrentHand,tableId,gameId)
+AddEventHandler("Blackjack:flipDealerCard", function(gotCurrentHand, tableId, gameId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
-        flipDealerCard(dealerPed,gotCurrentHand,tableId,gameId)
+        flipDealerCard(dealerPed, gotCurrentHand, tableId, gameId)
     end
 end)
 
 RegisterNetEvent("Blackjack:dealerBusts")
-AddEventHandler("Blackjack:dealerBusts",function(tableId)
+AddEventHandler("Blackjack:dealerBusts", function(tableId)
     if closeToCasino then
         dealerPed = getDealerFromTableId(tableId)
-        PlayAmbientSpeech1(dealerPed,"MINIGAME_DEALER_BUSTS","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
+        PlayAmbientSpeech1(dealerPed, "MINIGAME_DEALER_BUSTS", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
     end
 end)
 
 RegisterNetEvent("Blackjack:blackjackLose")
-AddEventHandler("Blackjack:blackjackLose",function(tableId)
+AddEventHandler("Blackjack:blackjackLose", function(tableId)
     if closeToCasino then
         blackjackGameInProgress = false
         dealerPed = getDealerFromTableId(tableId)
-        PlayAmbientSpeech1(dealerPed,"MINIGAME_DEALER_WINS","SPEECH_PARAMS_FORCE_NORMAL_CLEAR",1)
-        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_bad", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        PlayAmbientSpeech1(dealerPed, "MINIGAME_DEALER_WINS", "SPEECH_PARAMS_FORCE_NORMAL_CLEAR", 1)
+        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_bad", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
         angryILost()
         canExitBlackjack = true
-        PlaySoundFrontend(-1, "CHALLENGE_UNLOCKED", "HUD_AWARDS", 1) 
+        PlaySoundFrontend(-1, "CHALLENGE_UNLOCKED", "HUD_AWARDS", 1)
         drawCurrentHand = false
         currentHand = 0
         dealersHand = 0
@@ -1034,11 +1035,11 @@ AddEventHandler("Blackjack:blackjackLose",function(tableId)
 end)
 
 RegisterNetEvent("Blackjack:blackjackPush")
-AddEventHandler("Blackjack:blackjackPush",function(tableId)
+AddEventHandler("Blackjack:blackjackPush", function(tableId)
     if closeToCasino then
         blackjackGameInProgress = false
         dealerPed = getDealerFromTableId(tableId)
-        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_impartial", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_impartial", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
         annoyedIPushed()
         canExitBlackjack = true
         PlaySoundFrontend(-1, "ERROR", "HUD_AMMO_SHOP_SOUNDSET", 1)
@@ -1049,11 +1050,11 @@ AddEventHandler("Blackjack:blackjackPush",function(tableId)
 end)
 
 RegisterNetEvent("Blackjack:blackjackWin")
-AddEventHandler("Blackjack:blackjackWin",function(tableId)
+AddEventHandler("Blackjack:blackjackWin", function(tableId)
     if closeToCasino then
         blackjackGameInProgress = false
         dealerPed = getDealerFromTableId(tableId)
-        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_good", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
+        TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", "reaction_good", 3.0, 1.0, -1, 2, 0, 0, 0, 0)
         happyIWon()
         canExitBlackjack = true
         PlaySoundFrontend(-1, "TENNIS_MATCH_POINT", "HUD_AWARDS", 1)
@@ -1064,16 +1065,16 @@ AddEventHandler("Blackjack:blackjackWin",function(tableId)
 end)
 
 RegisterNetEvent("Blackjack:chipsCleanup")
-AddEventHandler("Blackjack:chipsCleanup",function(chairId,tableId)
+AddEventHandler("Blackjack:chipsCleanup", function(chairId, tableId)
     if closeToCasino then
         if string.sub(chairId, -5) ~= "chips" then
             dealerPed = getDealerFromTableId(tableId)
             local gender = getDealerGenderFromPed(dealerPed)
-            if gender == "male" then 
-                genderAnimString = "" 
-            end 
-            if gender == "female" then 
-                genderAnimString = "female_" 
+            if gender == "male" then
+                genderAnimString = ""
+            end
+            if gender == "female" then
+                genderAnimString = "female_"
             end
             localChairId = getLocalChairIdFromGlobalChairId(chairId)
             if chairId > 99 then --if "chairId" is above 99 its not a chair Id, its the gameId so its the dealers turn
@@ -1081,36 +1082,36 @@ AddEventHandler("Blackjack:chipsCleanup",function(chairId,tableId)
                 PlayFacialAnim(dealerPed, genderAnimString .. "retrieve_own_cards_and_remove_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
             else
                 TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", genderAnimString .. "retrieve_cards_player_0" .. tostring(localChairId), 3.0, 1.0, -1, 2, 0, 0, 0, 0)
-                PlayFacialAnim(dealerPed, genderAnimString .. "retrieve_cards_player_0" .. tostring(localChairId).."_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
+                PlayFacialAnim(dealerPed, genderAnimString .. "retrieve_cards_player_0" .. tostring(localChairId) .. "_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
             end
-            while not HasAnimEventFired(dealerPed,-1345695206) do
+            while not HasAnimEventFired(dealerPed, -1345695206) do
                 -- print("waiting for -1345695206 to fire")
                 Wait(0)
             end
-            for k,v in pairs(cardObjects) do
+            for k, v in pairs(cardObjects) do
                 if k == chairId then
-                    for k2,v2 in pairs(v) do
+                    for k2, v2 in pairs(v) do
                         -- print("attach entity chairId",k,"objkey",k2," objvalue",v2)
-                        AttachEntityToEntity(v2, dealerPed, GetPedBoneIndex(dealerPed,28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
+                        AttachEntityToEntity(v2, dealerPed, GetPedBoneIndex(dealerPed, 28422), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 1, 2, 1)
                     end
                 end
             end
-            while not HasAnimEventFired(dealerPed,585557868) do
+            while not HasAnimEventFired(dealerPed, 585557868) do
                 -- print("waiting for 585557868 to fire")
                 Wait(0)
             end
-            for k,v in pairs(cardObjects) do
+            for k, v in pairs(cardObjects) do
                 if k == chairId then
-                    for k2,v2 in pairs(v) do
+                    for k2, v2 in pairs(v) do
                         DeleteEntity(v2)
                         --v[k2] = nil
                     end
                 end
             end
         else
-            for k,v in pairs(cardObjects) do
+            for k, v in pairs(cardObjects) do
                 if k == chairId then
-                    for k2,v2 in pairs(v) do
+                    for k2, v2 in pairs(v) do
                         DeleteEntity(v2)
                         --v[k2] = nil
                     end
@@ -1121,19 +1122,19 @@ AddEventHandler("Blackjack:chipsCleanup",function(chairId,tableId)
 end)
 
 RegisterNetEvent("Blackjack:chipsCleanupNoAnim")
-AddEventHandler("Blackjack:chipsCleanupNoAnim",function(chairId,tableId)
-    for k,v in pairs(cardObjects) do
+AddEventHandler("Blackjack:chipsCleanupNoAnim", function(chairId, tableId)
+    for k, v in pairs(cardObjects) do
         if k == chairId then
-            for k2,v2 in pairs(v) do
+            for k2, v2 in pairs(v) do
                 DeleteEntity(v2)
             end
         end
     end
 end)
 
-function betChipsForNextHand(chipsAmount,chipsProp,something,chairID,someBool,zOffset)
+function betChipsForNextHand(chipsAmount, chipsProp, something, chairID, someBool, zOffset)
     -- Local_198.f_538[func_379(iVar2, iVar9, 0)] = OBJECT::CREATE_OBJECT_NO_OFFSET(func_375(iVar14, bVar4), OBJECT::_GET_OBJECT_OFFSET_FROM_COORDS(func_70(iVar2), vVar8.z, func_374(iVar14, 0, iVar9, bVar4)), 0, false, 1);
-    -- ENTITY::SET_ENTITY_COORDS_NO_OFFSET(Local_198.f_538[func_379(iVar2, iVar9, 0)], 
+    -- ENTITY::SET_ENTITY_COORDS_NO_OFFSET(Local_198.f_538[func_379(iVar2, iVar9, 0)],
     --^-> OBJECT::_GET_OBJECT_OFFSET_FROM_COORDS(func_70(iVar2), vVar8.z, func_374(iVar14, 0, iVar9, bVar4)), 0, 0, 1);
     -- ENTITY::SET_ENTITY_ROTATION(Local_198.f_538[func_379(iVar2, iVar9, 0)], vVar8 + func_373(iVar14, 0, iVar9, bVar4), 2, 1);
     -- if (!MISC::IS_STRING_NULL_OR_EMPTY(func_372(iVar14)))
@@ -1143,26 +1144,26 @@ function betChipsForNextHand(chipsAmount,chipsProp,something,chairID,someBool,zO
     -- print("betChipsForNextHand",chairID)
     -- print("betChipsForNextHand_local",getLocalChairIndexFromGlobalChairId(chairID))
     RequestModel(chipsProp)
-    while not HasModelLoaded(chipsProp) do  
+    while not HasModelLoaded(chipsProp) do
         Wait(0)
         -- print("[CMG Casino] Stuck requesting model: " .. tostring(chipsProp))
         RequestModel(chipsProp)
     end
-    vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairID)))
-    local tablePosX,tablePosY,tablePosZ = getTableCoords(blackjack_func_368(chairID))
-    local chipsVector = blackjack_func_374(chipsAmount,something,getLocalChairIndexFromGlobalChairId(chairID),someBool)
-    local chipsOffset = GetObjectOffsetFromCoords(tablePosX,tablePosY,tablePosZ, vVar8.z, chipsVector.x, chipsVector.y, chipsVector.z)
-    
-    local chipsObj = CreateObjectNoOffset(GetHashKey(chipsProp), chipsOffset.x,chipsOffset.y,chipsOffset.z, false, false, 1)
+    vVar8 = vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairID)))
+    local tablePosX, tablePosY, tablePosZ = getTableCoords(blackjack_func_368(chairID))
+    local chipsVector = blackjack_func_374(chipsAmount, something, getLocalChairIndexFromGlobalChairId(chairID), someBool)
+    local chipsOffset = GetObjectOffsetFromCoords(tablePosX, tablePosY, tablePosZ, vVar8.z, chipsVector.x, chipsVector.y, chipsVector.z)
+
+    local chipsObj = CreateObjectNoOffset(GetHashKey(chipsProp), chipsOffset.x, chipsOffset.y, chipsOffset.z, false, false, 1)
     if cardObjects[tostring(chairID) .. "chips"] ~= nil then
-        table.insert(cardObjects[tostring(chairID) .. "chips"],chipsObj)
-    else 
+        table.insert(cardObjects[tostring(chairID) .. "chips"], chipsObj)
+    else
         cardObjects[tostring(chairID) .. "chips"] = {}
-        table.insert(cardObjects[tostring(chairID) .. "chips"],chipsObj)
+        table.insert(cardObjects[tostring(chairID) .. "chips"], chipsObj)
     end
-    SetEntityCoordsNoOffset(chipsObj, chipsOffset.x, chipsOffset.y, chipsOffset.z+zOffset, 0, 0, 1)
-    local chipOffsetRotation = blackjack_func_373(chipsAmount,0,getLocalChairIndexFromGlobalChairId(chairID),someBool)
-    SetEntityRotation(chipsObj,vVar8 + chipOffsetRotation, 2, 1)
+    SetEntityCoordsNoOffset(chipsObj, chipsOffset.x, chipsOffset.y, chipsOffset.z + zOffset, 0, 0, 1)
+    local chipOffsetRotation = blackjack_func_373(chipsAmount, 0, getLocalChairIndexFromGlobalChairId(chairID), someBool)
+    SetEntityRotation(chipsObj, vVar8 + chipOffsetRotation, 2, 1)
 
     -- print("betChips DEBUG")
     -- print("==============")
@@ -1175,55 +1176,55 @@ function betChipsForNextHand(chipsAmount,chipsProp,something,chairID,someBool,zO
     -- print("chipsOffset: " .. tostring(chipsOffset))
     -- print("chipsObj: " .. tostring(chipsObj))
     -- print("chipOffsetRotation: " .. tostring(chipOffsetRotation))
-end 
+end
 
 function getDealerGenderFromPed(dealerPed)
     maleCasinoDealer = GetHashKey("S_M_Y_Casino_01")
     femaleCasinoDealer = GetHashKey("S_F_Y_Casino_01")
 
-    if GetEntityModel(dealerPed) == maleCasinoDealer then 
-        return "male" 
-    end 
+    if GetEntityModel(dealerPed) == maleCasinoDealer then
+        return "male"
+    end
     return "female"
 end
 
-function getNewCardFromMachine(nextCard,chairId,gameId)
+function getNewCardFromMachine(nextCard, chairId, gameId)
     -- print("getNewCardFromMachine:",chairId)
     RequestModel(nextCard)
-    while not HasModelLoaded(nextCard) do  
+    while not HasModelLoaded(nextCard) do
         Wait(0)
         RequestModel(nextCard)
     end
     nextCardHash = GetHashKey(nextCard)
     local cardObjectOffset = blackjack_func_399(blackjack_func_368(chairId))
     local nextCardObj = CreateObjectNoOffset(nextCardHash, cardObjectOffset.x, cardObjectOffset.y, cardObjectOffset.z, false, false, 1)
-    if cardObjects[chairId] ~= nil then 
+    if cardObjects[chairId] ~= nil then
         if gameId then
             -- print("inserting chipsobjects with key: " .. tostring(gameId))
-            table.insert(cardObjects[gameId],nextCardObj)
+            table.insert(cardObjects[gameId], nextCardObj)
         else
             -- print("inserting chipsobjects with key: " .. tostring(chairId))
-            table.insert(cardObjects[chairId],nextCardObj)
+            table.insert(cardObjects[chairId], nextCardObj)
         end
     else
         cardObjects[chairId] = {}
         if gameId then
             -- print("inserting chipsobjects with key: " .. tostring(gameId))
-            table.insert(cardObjects[gameId],nextCardObj)
+            table.insert(cardObjects[gameId], nextCardObj)
         else
             -- print("inserting chipsobjects with key: " .. tostring(chairId))
-            table.insert(cardObjects[chairId],nextCardObj)
+            table.insert(cardObjects[chairId], nextCardObj)
         end
     end
-    SetEntityVisible(nextCardObj,false)
+    SetEntityVisible(nextCardObj, false)
     SetModelAsNoLongerNeeded(nextCardHash)
     local cardObjectOffsetRotation = blackjack_func_398(blackjack_func_368(chairId))
     SetEntityCoordsNoOffset(nextCardObj, cardObjectOffset.x, cardObjectOffset.y, cardObjectOffset.z, 0, 0, 1)
     --vVar8 =  vector3(0.0, 0.0, getTableHeading(blackjack_func_368(chairId)))
-    
-    --if chairId > 99 then 
+
+    --if chairId > 99 then
     --    cardObjectOffsetRotation = vVar8 + func_376(iVar5, iVar9, 0, false)
-    --else 
+    --else
     --    cardObjectOffsetRotation = blackjack_func_398(blackjack_func_368(chairId))
     --end
     -- print("cardObjectOffsetRotation.x: " .. tostring(cardObjectOffsetRotation.x))
@@ -1234,34 +1235,34 @@ function getNewCardFromMachine(nextCard,chairId,gameId)
     return nextCardObj
 end
 
-function dealerGiveCards(chairId,gender,dealerPed,cardObj) --func_36
+function dealerGiveCards(chairId, gender, dealerPed, cardObj) --func_36
     local seatNumber = tostring(getLocalChairIdFromGlobalChairId(chairId))
     --local currentScene = NetworkCreateSynchronisedScene(x, y, z, 0.0, 0.0, zRot, 2, 1, 0, 1065353216, 0, 1065353216)
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", gender .. "deal_card_player_0" .. seatNumber, 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
-    PlayFacialAnim(dealerPed,"deal_card_player_0"..seatNumber.."_facial")
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", gender .. "deal_card_player_0" .. seatNumber, 3.0, 1.0, -1, 2, 0, 0, 0, 0)
+    PlayFacialAnim(dealerPed, "deal_card_player_0" .. seatNumber .. "_facial")
     --NetworkStartSynchronisedScene(currentScene)
     --func_15(func_21(iParam0, Local_188.f_899[iVar2 /*9*/].f_8, 0, 0), Local_188.f_1[iParam0 /*211*/][Local_188.f_1[iParam0 /*211*/].f_209], 0, 0);
     Wait(300)
-    SetEntityVisible(cardObj,true)
-    while not HasAnimEventFired(dealerPed, 585557868) do 
+    SetEntityVisible(cardObj, true)
+    while not HasAnimEventFired(dealerPed, 585557868) do
         Wait(0)
         -- print("waiting for anim event to fire.. for dealergivecards")
-    end 
+    end
 end
 
-function dealerGiveSelfCard(gender,dealerPed,cardIndex,cardObj) --func_36
-    if cardIndex == 1 then 
+function dealerGiveSelfCard(gender, dealerPed, cardIndex, cardObj) --func_36
+    if cardIndex == 1 then
         cardAnim = "deal_card_self_second_card"
-    elseif cardIndex == 2 then 
+    elseif cardIndex == 2 then
         cardAnim = "deal_card_self"
-    else 
+    else
         cardAnim = "deal_card_self_card_10"
     end
-    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", gender .. cardAnim, 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
-    PlayFacialAnim(dealerPed, gender .. cardAnim.."_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
+    TaskPlayAnim(dealerPed, "anim_casino_b@amb@casino@games@blackjack@dealer", gender .. cardAnim, 3.0, 1.0, -1, 2, 0, 0, 0, 0)
+    PlayFacialAnim(dealerPed, gender .. cardAnim .. "_facial", "anim_casino_b@amb@casino@games@blackjack@dealer")
     Wait(300)
-    SetEntityVisible(cardObj,true)
-    while not HasAnimEventFired(dealerPed, 585557868) do 
+    SetEntityVisible(cardObj, true)
+    while not HasAnimEventFired(dealerPed, 585557868) do
         Wait(0)
         -- print("waiting for anim event to fire.. for dealerGiveSelfCard")
     end
@@ -1285,7 +1286,7 @@ local chipsProps = {
     "vw_prop_plaq_5kdollar_x1",
     "vw_prop_plaq_5kdollar_st",
     "vw_prop_plaq_10kdollar_x1",
-    "vw_prop_plaq_10kdollar_st", 
+    "vw_prop_plaq_10kdollar_st",
     "vw_prop_vw_chips_pile_01a",
     "vw_prop_vw_chips_pile_02a",
     "vw_prop_vw_chips_pile_03a",
@@ -1299,7 +1300,7 @@ function declineCard()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@blackjack@player", "decline_card_001", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(2000,function()
+    SetTimeout(2000, function()
         shouldForceIdleCardGames = true
     end)
 end
@@ -1311,10 +1312,10 @@ function requestCard()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@blackjack@player", "request_card", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(2000,function()
+    SetTimeout(2000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function putBetOnTable()
     shouldForceIdleCardGames = false
@@ -1323,10 +1324,10 @@ function putBetOnTable()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@blackjack@player", getAnimNameFromBet(100), 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(5000,function()
+    SetTimeout(5000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function angryIBust()
     shouldForceIdleCardGames = false
@@ -1335,10 +1336,10 @@ function angryIBust()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@shared@player@", "reaction_terrible_var_01", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(5000,function()
+    SetTimeout(5000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function angryILost()
     shouldForceIdleCardGames = false
@@ -1347,10 +1348,10 @@ function angryILost()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@shared@player@", "reaction_bad_var_01", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(5000,function()
+    SetTimeout(5000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function annoyedIPushed()
     shouldForceIdleCardGames = false
@@ -1359,10 +1360,10 @@ function annoyedIPushed()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@shared@player@", "reaction_impartial_var_01", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(5000,function()
+    SetTimeout(5000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function happyIWon()
     shouldForceIdleCardGames = false
@@ -1371,91 +1372,89 @@ function happyIWon()
     local currentScene = NetworkCreateSynchronisedScene(chairPos.x, chairPos.y, chairPos.z, chairRot.x, chairRot.y, chairRot.z, 2, 1, 0, 1065353216, 0, 1065353216)
     NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, "anim_casino_b@amb@casino@games@shared@player@", "reaction_good_var_01", 4.0, -2.0, 13, 16, 1148846080, 0)
     NetworkStartSynchronisedScene(currentScene)
-    SetTimeout(5000,function()
+    SetTimeout(5000, function()
         shouldForceIdleCardGames = true
-    end)    
-end 
+    end)
+end
 
 function blackjack_func_398(iParam0)
-	local vVar0 = vector3(0.0, 164.52, 11.5)
-	return vector3(getTableHeading(iParam0), 0.0, 0.0) + vVar0;
+    local vVar0 = vector3(0.0, 164.52, 11.5)
+    return vector3(getTableHeading(iParam0), 0.0, 0.0) + vVar0;
 end
 
 function blackjack_func_399(iParam0) --iParam0 is table ID?
     local vVar0 = vector3(0.526, 0.571, 0.963)
     -- print("func_399 iParam0",iParam0)
-    local x,y,z = getTableCoords(iParam0)
+    local x, y, z = getTableCoords(iParam0)
     return GetObjectOffsetFromCoords(x, y, z, getTableHeading(iParam0), vVar0.x, vVar0.y, vVar0.z)
 end
 
-
 function ensureCardModelsLoaded()
     cardNum = 0;
-	while cardNum < 52 do 
+    while cardNum < 52 do
         iVar1 = cardNum + 1
         local Local_198f_236 = 1 --assuming 1 cant find it equal anything else :/
-		iVar2 = getCardFromNumber(iVar1, Local_198f_236)
+        iVar2 = getCardFromNumber(iVar1, Local_198f_236)
         if not HasModelLoaded(iVar2) then
             RequestModel(iVar2)
-            while not HasModelLoaded(iVar2) do  
+            while not HasModelLoaded(iVar2) do
                 Wait(0)
             end
         end
         cardNum = cardNum + 1
     end
-end 
-
+end
 
 function blackjack_func_204(iParam0, iParam1, bParam2) --returns vector
-    if bParam2 then 
+    if bParam2 then
         return vector3(getTableHeading(iParam1), 0.0, 0.0) + vector3(0, 0.061, -59.1316);
     else
         vVar0 = blackjack_func_215(iParam0)
         return vector3(vVar0.z, 0.0, 0.0) + vector3(-87.48, 0, -60.84);
     end
     return 0.0, 0.0, 0.0
-end 
+end
 
 function blackjack_func_205(iParam0, iParam1, bParam2) --returns Vector
-    if bParam2 then 
+    if bParam2 then
         --return OBJECT::_GET_OBJECT_OFFSET_FROM_COORDS(func_70(iParam1), func_69(iParam1), -0.0094f, -0.0611f, 1.5098f);
-        return GetObjectOffsetFromCoords(getTableCoords(iParam1), getTableHeading(iParam1),-0.0094, -0.0611, 1.5098)
+        return GetObjectOffsetFromCoords(getTableCoords(iParam1), getTableHeading(iParam1), -0.0094, -0.0611, 1.5098)
     else
         --vVar0 = { func_215(iParam0) };
         --return OBJECT::_GET_OBJECT_OFFSET_FROM_COORDS(func_348(iParam0), vVar0.z, 0.245f, 0f, 1.415f);
         vVar0 = blackjack_func_215(iParam0)
-        return GetObjectOffsetFromCoords(blackjack_func_348(iParam0), vVar0.z,0.245, 0.0, 1.415)
+        return GetObjectOffsetFromCoords(blackjack_func_348(iParam0), vVar0.z, 0.245, 0.0, 1.415)
     end
     return 0.0, 0.0, 0.0
 end
 
 function blackjack_func_216(iParam0, iParam1)
     local goToVector = blackjack_func_348(iParam0)
-    local xRot,yRot,zRot = blackjack_func_215(iParam0)
+    local xRot, yRot, zRot = blackjack_func_215(iParam0)
     vVar0 = GetAnimInitialOffsetRotation("anim_casino_b@amb@casino@games@shared@player@", blackjack_func_213(iParam1), goToVector.x, goToVector.y, goToVector.z, xRot, yRot, zRot, 0.01, 2)
     return vVar0.z
 end
 
 function blackjack_func_217(iParam0, vParam1, bParam2)
-	local vVar0 = {}
-    
-    if not IsEntityDead(iParam0,0) then 
-        vVar0 = GetEntityCoords(iParam0,1)
+    local vVar0 = {}
+
+    if not IsEntityDead(iParam0, 0) then
+        vVar0 = GetEntityCoords(iParam0, 1)
     else
-        vVar0 = GetEntityCoords(iParam0,0)
+        vVar0 = GetEntityCoords(iParam0, 0)
     end
-    return #(vVar0-vParam1)
+    return #(vVar0 - vParam1)
 end
 
 function blackjack_func_218(iParam0, iParam1) --//param0 is 0-3 && param1 is 0-15?
     local goToVector = blackjack_func_348(iParam0)
-    local xRot,yRot,zRot = blackjack_func_215(iParam0)
+    local xRot, yRot, zRot = blackjack_func_215(iParam0)
     vVar0 = GetAnimInitialOffsetPosition("anim_casino_b@amb@casino@games@shared@player@", blackjack_func_213(iParam1), goToVector.x, goToVector.y, goToVector.z, xRot, yRot, zRot, 0.01, 2)
     return vVar0
 end
 
-function blackjack_func_213(sitAnimID) 
-    if sitAnimID == 0 then 
+function blackjack_func_213(sitAnimID)
+    if sitAnimID == 0 then
         return "sit_enter_left"
     elseif sitAnimID == 1 then
         return "sit_enter_left_side"
@@ -1474,68 +1473,68 @@ end
 
 function blackjack_func_348(iParam0) --GetVectorFromChairId
     if iParam0 == -1 then
-        return vector3(0.0,0.0,0.0)
+        return vector3(0.0, 0.0, 0.0)
     end
     local blackjackTableObj
     local tableId = blackjack_func_368(iParam0)
-    local x,y,z = getTableCoords(tableId)
+    local x, y, z = getTableCoords(tableId)
     blackjackTableObj = GetClosestObjectOfType(x, y, z, 1.0, cfg.blackjackTables[tableId].prop, 0, 0, 0)
-    
+
     if DoesEntityExist(blackjackTableObj) and DoesEntityHaveDrawable(blackjackTableObj) then
         local localChairId = getLocalChairIndexFromGlobalChairId(iParam0)
         -- -- print("localchairId was",localChairId)
         localChairId = getInverseChairId(localChairId) + 1
         -- -- print("localchairId is now",localChairId)
-        return GetWorldPositionOfEntityBone_2(blackjackTableObj,GetEntityBoneIndexByName(blackjackTableObj, "Chair_Base_0"..localChairId))
+        return GetWorldPositionOfEntityBone_2(blackjackTableObj, GetEntityBoneIndexByName(blackjackTableObj, "Chair_Base_0" .. localChairId))
     end
-    return vector3(0.0,0.0,0.0)
+    return vector3(0.0, 0.0, 0.0)
 end
 
 function blackjack_func_215(iParam0)
     if iParam0 == -1 then
-        return vector3(0.0,0.0,0.0)
+        return vector3(0.0, 0.0, 0.0)
     end
     local blackjackTableObj
     local tableId = blackjack_func_368(iParam0)
-    local x,y,z = getTableCoords(tableId)
+    local x, y, z = getTableCoords(tableId)
     blackjackTableObj = GetClosestObjectOfType(x, y, z, 1.0, cfg.blackjackTables[tableId].prop, 0, 0, 0)
     if DoesEntityExist(blackjackTableObj) and DoesEntityHaveDrawable(blackjackTableObj) then
         local localChairId = getLocalChairIndexFromGlobalChairId(iParam0)
         -- -- print("localchairId was",localChairId)
         localChairId = getInverseChairId(localChairId) + 1
         -- -- print("localchairId is now",localChairId)
-        return GetWorldRotationOfEntityBone(blackjackTableObj,GetEntityBoneIndexByName(blackjackTableObj, "Chair_Base_0"..localChairId))
+        return GetWorldRotationOfEntityBone(blackjackTableObj, GetEntityBoneIndexByName(blackjackTableObj, "Chair_Base_0" .. localChairId))
     else
-        return vector3(0.0,0.0,0.0)
-    end 
-end 
+        return vector3(0.0, 0.0, 0.0)
+    end
+end
 
 function blackjack_func_368(chairId) --returns tableID based on chairID
     local tableId = -1
-    for i=0,chairId,4 do
+    for i = 0, chairId, 4 do
         tableId = tableId + 1
     end
     return tableId
 end
 
 function getLocalChairIdFromGlobalChairId(globalChairId) --returns tableID based on chairID
-    if globalChairId ~= -1 then 
+    if globalChairId ~= -1 then
         return (globalChairId % 4) + 1
-    else 
+    else
         return 100
     end
 end
 
 function getLocalChairIndexFromGlobalChairId(globalChairId) --returns tableID based on chairID
-    if globalChairId ~= -1 then 
+    if globalChairId ~= -1 then
         return (globalChairId % 4)
-    else 
+    else
         return 100
     end
 end
 
 function getTableHeading(id) --previously blackjack_func_69
-    if cfg.blackjackTables[id] ~= nil then 
+    if cfg.blackjackTables[id] ~= nil then
         return cfg.blackjackTables[id].tableHeading
     else
         return 0.0 --for when tableId = gameId (i.e for dealer)
@@ -1543,15 +1542,15 @@ function getTableHeading(id) --previously blackjack_func_69
 end
 
 function getTableCoords(id) --previously blackjack_func_70
-    if cfg.blackjackTables[id] ~= nil then 
-        return cfg.blackjackTables[id].tablePos.x,cfg.blackjackTables[id].tablePos.y,cfg.blackjackTables[id].tablePos.z 
+    if cfg.blackjackTables[id] ~= nil then
+        return cfg.blackjackTables[id].tablePos.x, cfg.blackjackTables[id].tablePos.y, cfg.blackjackTables[id].tablePos.z
     else
-        return 0.0,0.0,0.0 --for when tableId = gameId (i.e for dealer)
+        return 0.0, 0.0, 0.0 --for when tableId = gameId (i.e for dealer)
     end
 end
 
 function getCardFromNumber(iParam0, bParam1)
-	if bParam1 then 
+    if bParam1 then
         if iParam0 == 1 then
             return "vw_prop_vw_club_char_a_a"
         elseif iParam0 == 2 then
@@ -1657,7 +1656,7 @@ function getCardFromNumber(iParam0, bParam1)
         elseif iParam0 == 52 then
             return "vw_prop_vw_spd_char_k_a"
         end
-	else
+    else
         if iParam0 == 1 then
             return "vw_prop_cas_card_club_ace"
         elseif iParam0 == 2 then
@@ -1691,12 +1690,12 @@ function getCardFromNumber(iParam0, bParam1)
         elseif iParam0 == 16 then
             return "vw_prop_cas_card_dia_03"
         elseif iParam0 == 17 then
-            return "vw_prop_cas_card_dia_04"        
+            return "vw_prop_cas_card_dia_04"
         elseif iParam0 == 18 then
             return "vw_prop_cas_card_dia_05"
         elseif iParam0 == 19 then
             return "vw_prop_cas_card_dia_06"
-        elseif iParam0 == 20  then
+        elseif iParam0 == 20 then
             return "vw_prop_cas_card_dia_07"
         elseif iParam0 == 21 then
             return "vw_prop_cas_card_dia_08"
@@ -1764,10 +1763,10 @@ function getCardFromNumber(iParam0, bParam1)
             return "vw_prop_cas_card_spd_king"
         end
     end
-	if bParam1 then
-		return "vw_prop_vw_jo_char_01a"
+    if bParam1 then
+        return "vw_prop_vw_jo_char_01a"
     end
-	return "vw_prop_casino_cards_single"
+    return "vw_prop_casino_cards_single"
 end
 
 function getAnimNameFromBet(betAmount)
@@ -1786,19 +1785,18 @@ function getAnimNameFromBet(betAmount)
 
     --default for now
     return "place_bet_small"
-end 
-
+end
 
 function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
     -- print("blackjack_func_377")
     -- print("iParam0: " .. tostring(iParam0))
     -- print("iParam1: " .. tostring(iParam1))
     -- print("bParam2: " .. tostring(bParam2))
-    if bParam2 == 0 then 
+    if bParam2 == 0 then
         -- print("first check [OK]")
         -- print("iParam1: " .. tostring(iParam1))
         -- print("iParam0: " .. tostring(iParam0))
-		if iParam1 == 0 then
+        if iParam1 == 0 then
             if iParam0 == 0 then
                 return 0.5737, 0.2376, 0.948025
             elseif iParam0 == 1 then
@@ -1813,8 +1811,8 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
                 return 0.524975, 0.30975, 0.9516
             elseif iParam0 == 6 then
                 return 0.515775, 0.325325, 0.95235
-            end 
-		elseif iParam1 == 1 then
+            end
+        elseif iParam1 == 1 then
             if iParam0 == 0 then
                 return 0.2325, -0.1082, 0.94805
             elseif iParam0 == 1 then
@@ -1829,7 +1827,7 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
                 return 0.257575, -0.0256, 0.9532
             elseif iParam0 == 6 then
                 return 0.2601, -0.008175, 0.954375
-            end 
+            end
         elseif iParam1 == 2 then
             if iParam0 == 0 then
                 return -0.2359, -0.1091, 0.9483
@@ -1846,7 +1844,7 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
             elseif iParam0 == 6 then
                 return -0.14895, -0.05155, 0.95255
             end
-		elseif iParam1 == 3 then
+        elseif iParam1 == 3 then
             if iParam0 == 0 then
                 return -0.5765, 0.2229, 0.9482
             elseif iParam0 == 1 then
@@ -1862,9 +1860,9 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
             elseif iParam0 == 6 then
                 return -0.4752, 0.197525, 0.9543
             end
-        end  
-	else
-		if iParam1 == 0 then 
+        end
+    else
+        if iParam1 == 0 then
             if iParam0 == 0 then
                 return 0.6083, 0.3523, 0.94795
             elseif iParam0 == 1 then
@@ -1879,10 +1877,10 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
                 return 0.5614, 0.4237, 0.951775
             elseif iParam0 == 6 then
                 return 0.554325, 0.4402, 0.952525
-            end 
-        elseif iParam1 == 1 then 
+            end
+        elseif iParam1 == 1 then
             if iParam0 == 0 then
-				return 0.3431, -0.0527, 0.94855
+                return 0.3431, -0.0527, 0.94855
             elseif iParam0 == 1 then
                 return 0.348575, -0.0348, 0.949425
             elseif iParam0 == 2 then
@@ -1895,8 +1893,8 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
                 return 0.368525, 0.032475, 0.95335
             elseif iParam0 == 6 then
                 return 0.373275, 0.0506, 0.9543
-            end 
-        elseif iParam1 == 2 then 
+            end
+        elseif iParam1 == 2 then
             if iParam0 == 0 then
                 return -0.116, -0.1501, 0.947875
             elseif iParam0 == 1 then
@@ -1911,8 +1909,8 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
                 return -0.046275, -0.095025, 0.9516
             elseif iParam0 == 6 then
                 return -0.031425, -0.0846, 0.952675
-            end 
-        elseif iParam1 == 3 then 
+            end
+        elseif iParam1 == 3 then
             if iParam0 == 0 then
                 return -0.5205, 0.1122, 0.9478
             elseif iParam0 == 1 then
@@ -1930,28 +1928,28 @@ function blackjack_func_377(iParam0, iParam1, bParam2) --iVar5, iVar9, 0
             end
         elseif iParam1 == 4 then --estimated
             if iParam0 == 0 then
-                return -0.293,0.253,0.950025
+                return -0.293, 0.253, 0.950025
             elseif iParam0 == 1 then
-                return -0.093,0.253,0.950025
+                return -0.093, 0.253, 0.950025
             elseif iParam0 == 2 then
-                return 0.0293,0.253,0.950025
+                return 0.0293, 0.253, 0.950025
             elseif iParam0 == 3 then
-                return 0.1516,0.253,0.950025
+                return 0.1516, 0.253, 0.950025
             elseif iParam0 == 4 then
-                return 0.2739,0.253,0.950025
+                return 0.2739, 0.253, 0.950025
             elseif iParam0 == 5 then
-                return 0.3962,0.253,0.950025
+                return 0.3962, 0.253, 0.950025
             elseif iParam0 == 6 then
-                return 0.5185,0.253,0.950025
-            end             
+                return 0.5185, 0.253, 0.950025
+            end
         end
-    end  
-	return 0.0, 0.0, 0.947875
+    end
+    return 0.0, 0.0, 0.947875
 end
 
 function func_376(iParam0, iParam1, bParam2, bParam3)
-	if not bParam2 then
-		if iParam1 == 0 then
+    if not bParam2 then
+        if iParam1 == 0 then
             if iParam0 == 0 then
                 return vector3(0.0, 0.0, 69.12)
             elseif iParam0 == 1 then
@@ -2015,9 +2013,9 @@ function func_376(iParam0, iParam1, bParam2, bParam3)
             elseif iParam0 == 6 then
                 return vector3(0.0, 0.0, -64.44)
             end
-        end      
-	else
-		if iParam1 == 0 then 
+        end
+    else
+        if iParam1 == 0 then
             if iParam0 == 0 then
                 return vector3(0.0, 0.0, 68.57)
             elseif iParam0 == 1 then
@@ -2083,10 +2081,10 @@ function func_376(iParam0, iParam1, bParam2, bParam3)
             end
         end
     end
-	if bParam3 then 
+    if bParam3 then
         vVar0.z = (vVar0.z + 90.0)
     end
-	return vVar0
+    return vVar0
 end
 
 function getChipPropFromAmount(amount)
@@ -2096,12 +2094,12 @@ function getChipPropFromAmount(amount)
     --vw_prop_chip_100dollar_x1 --! £100
     --vw_prop_chip_50dollar_st --!  £50 stack
     --vw_prop_chip_100dollar_st --!  £100 stack
-    --vw_prop_chip_500dollar_x1 --! £500 
+    --vw_prop_chip_500dollar_x1 --! £500
     --vw_prop_chip_1kdollar_x1 --!  £1,000
     --vw_prop_chip_500dollar_st --! £500 stack
     --vw_prop_chip_5kdollar_x1 --!  £5,000
     --vw_prop_chip_1kdollar_st --!  £1,000 stack
-    --vw_prop_chip_10kdollar_x1 --! £10,000 
+    --vw_prop_chip_10kdollar_x1 --! £10,000
     --vw_prop_chip_5kdollar_st --! £5,000 stack
     --vw_prop_chip_10kdollar_st --! £10,000 stack
     --vw_prop_plaq_5kdollar_x1 --! £5,000
@@ -2114,30 +2112,30 @@ function getChipPropFromAmount(amount)
     --vw_prop_vw_chips_pile_03a.ydr
     --vw_prop_vw_coin_01a.ydr
     amount = tonumber(amount)
-    if amount < 1000000 then 
-        denominations = {10,50,100,500,1000,5000,10000}  
-        chips = {} 
+    if amount < 1000000 then
+        denominations = { 10, 50, 100, 500, 1000, 5000, 10000 }
+        chips = {}
         local max = 7
-        for k,v in ipairs(denominations) do 
-            while amount >= denominations[max] do 
-                table.insert(chips,denominations[max])
+        for k, v in ipairs(denominations) do
+            while amount >= denominations[max] do
+                table.insert(chips, denominations[max])
                 amount = amount - denominations[max]
             end
             max = max - 1
         end
-        for k,v in ipairs(chips) do 
-            chips[k] = getChipFromAmount(v) 
+        for k, v in ipairs(chips) do
+            chips[k] = getChipFromAmount(v)
         end
         return chips
-    elseif amount < 5000000 then  
-        return {"vw_prop_vw_chips_pile_01a"}
-    elseif amount < 10000000 then  
-        return {"vw_prop_vw_chips_pile_02a"}
+    elseif amount < 5000000 then
+        return { "vw_prop_vw_chips_pile_01a" }
+    elseif amount < 10000000 then
+        return { "vw_prop_vw_chips_pile_02a" }
     else
-        return {"vw_prop_vw_chips_pile_03a"}
+        return { "vw_prop_vw_chips_pile_03a" }
     end
-    return {"vw_prop_chip_500dollar_st"}
-end     
+    return { "vw_prop_chip_500dollar_st" }
+end
 
 local chipsFromAmount = {
     [1] = "vw_prop_vw_coin_01a",
@@ -2150,9 +2148,9 @@ local chipsFromAmount = {
     [10000] = "vw_prop_plaq_10kdollar_x1",
 }
 
-function getChipFromAmount(amount) 
+function getChipFromAmount(amount)
     return chipsFromAmount[amount]
-end 
+end
 
 function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vector3
     --betAmount, 0, chairID, someBool
@@ -2162,10 +2160,10 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
     -- print("chairId: " .. tostring(chairId))
     -- print("bParam3: " .. tostring(bParam3))
     fVar0 = 0.0
-    vVar1 = vector3(0,0,0)
-    if not bParam3 then 
+    vVar1 = vector3(0, 0, 0)
+    if not bParam3 then
         -- print("now checking betAmount: " .. tostring(betAmount))
-        if betAmount == 10 then 
+        if betAmount == 10 then
             fVar0 = 0.95
         elseif betAmount == 20 then
             fVar0 = 0.896
@@ -2246,8 +2244,8 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
         elseif betAmount == 50000 then
             fVar0 = 0.912
         end
-		if chairId == 0 then 
-			if iParam1 == 0 then 
+        if chairId == 0 then
+            if iParam1 == 0 then
                 vVar1 = vector3(0.712625, 0.170625, 0.0001)
             elseif iParam1 == 1 then
                 vVar1 = vector3(0.6658, 0.218375, 0.0)
@@ -2255,8 +2253,8 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                 vVar1 = vector3(0.756775, 0.292775, 0.0)
             elseif iParam1 == 3 then
                 vVar1 = vector3(0.701875, 0.3439, 0.0)
-            end 
-        elseif chairId == 1 then 
+            end
+        elseif chairId == 1 then
             if iParam1 == 0 then
                 vVar1 = vector3(0.278125, -0.2571, 0.0)
             elseif iParam1 == 1 then
@@ -2265,8 +2263,8 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                 vVar1 = vector3(0.397775, -0.208525, 0.0)
             elseif iParam1 == 3 then
                 vVar1 = vector3(0.39715, -0.1354, 0.0)
-            end 
-        elseif chairId == 2 then 
+            end
+        elseif chairId == 2 then
             if iParam1 == 0 then
                 vVar1 = vector3(-0.30305, -0.2464, 0.0)
             elseif iParam1 == 1 then
@@ -2276,7 +2274,7 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
             elseif iParam1 == 3 then
                 vVar1 = vector3(-0.141675, -0.237925, 0.0)
             end
-        elseif chairId == 3 then 
+        elseif chairId == 3 then
             if iParam1 == 0 then
                 vVar1 = vector3(-0.72855, 0.17345, 0.0)
             elseif iParam1 == 1 then
@@ -2286,8 +2284,8 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
             elseif iParam1 == 3 then
                 vVar1 = vector3(-0.604425, 0.082575, 0.0)
             end
-        end 
-    else 
+        end
+    else
         if betAmount == 10 then
             fVar0 = 0.95
         elseif betAmount == 20 then
@@ -2368,7 +2366,7 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
             fVar0 = 0.932
         elseif betAmount == 50000 then
             fVar0 = 0.912
-        end 
+        end
         -- case 5000:
         -- case 10000:
         -- case 15000:
@@ -2378,7 +2376,7 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
         -- case 35000:
         -- case 40000:
         -- case 45000:
-        if betAmount ==  50000 then
+        if betAmount == 50000 then
             if chairId == 0 then
                 if iParam1 == 0 then
                     vVar1 = vector3(0.6931, 0.1952, 0.0)
@@ -2399,7 +2397,7 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                 elseif iParam1 == 3 then
                     vVar1 = vector3(0.49275, -0.111575, 0.0)
                 end
-            elseif chairId == 2 then    
+            elseif chairId == 2 then
                 if iParam1 == 0 then
                     vVar1 = vector3(-0.279425, -0.2238, 0.0)
                 elseif iParam1 == 1 then
@@ -2408,8 +2406,8 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                     vVar1 = vector3(-0.125775, -0.26815, 0.0)
                 elseif iParam1 == 3 then
                     vVar1 = vector3(-0.05615, -0.29435, 0.0)
-                end 
-            elseif chairId ==  3 then
+                end
+            elseif chairId == 3 then
                 if iParam1 == 0 then
                     vVar1 = vector3(-0.685925, 0.173275, 0.0)
                 elseif iParam1 == 1 then
@@ -2418,21 +2416,21 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                     vVar1 = vector3(-0.612875, 0.033025, 0.0)
                 elseif iParam1 == 3 then
                     vVar1 = vector3(-0.58465, -0.0374, 0.0)
-                end 
-            end 
-        else 
-            if chairId == 0 then 
+                end
+            end
+        else
+            if chairId == 0 then
                 if iParam1 == 0 then
-                    vVar1 = vector3(0.712625, 0.170625, 0.0)       
+                    vVar1 = vector3(0.712625, 0.170625, 0.0)
                 elseif iParam1 == 1 then
-                    vVar1 = vector3(0.6658, 0.218375, 0.0)      
-                elseif iParam1 ==  2 then
+                    vVar1 = vector3(0.6658, 0.218375, 0.0)
+                elseif iParam1 == 2 then
                     vVar1 = vector3(0.756775, 0.292775, 0.0)
-                elseif iParam1 ==  3 then
+                elseif iParam1 == 3 then
                     vVar1 = vector3(0.701875, 0.3439, 0.0)
-                end 
-            elseif chairId == 1 then 
-                if iParam1 == 0 then 
+                end
+            elseif chairId == 1 then
+                if iParam1 == 0 then
                     vVar1 = vector3(0.278125, -0.2571, 0.0)
                 elseif iParam1 == 1 then
                     vVar1 = vector3(0.280375, -0.190375, 0.0)
@@ -2450,7 +2448,7 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                     vVar1 = vector3(-0.186575, -0.2861, 0.0)
                 elseif iParam1 == 3 then
                     vVar1 = vector3(-0.141675, -0.237925, 0.0)
-                end 
+                end
             elseif chairId == 3 then
                 if iParam1 == 0 then
                     vVar1 = vector3(-0.72855, 0.17345, 0.0)
@@ -2460,21 +2458,21 @@ function blackjack_func_374(betAmount, iParam1, chairId, bParam3) --returns vect
                     vVar1 = vector3(-0.6783, 0.0744, 0.0)
                 elseif iParam1 == 3 then
                     vVar1 = vector3(-0.604425, 0.082575, 0.0)
-                end 
-            end 
+                end
+            end
         end
-    end 
-    -- print(vVar1) 
-    -- print(vVar1.z) 
-    -- print(fVar0) 
+    end
+    -- print(vVar1)
+    -- print(vVar1.z)
+    -- print(fVar0)
     --vVar1.z = fVar0
-    vVar1 = vVar1 + vector3(0.0,0.0,fVar0)
+    vVar1 = vVar1 + vector3(0.0, 0.0, fVar0)
     return vVar1
-end 
+end
 
 function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
-	if not bParam3 then 
-		if iParam2 == 0 then 
+    if not bParam3 then
+        if iParam2 == 0 then
             if iParam1 == 0 then
                 return vector3(0.0, 0.0, 72)
             elseif iParam1 == 1 then
@@ -2484,7 +2482,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
             elseif iParam1 == 3 then
                 return vector3(0.0, 0.0, 72)
             end
-        elseif iParam2 == 1 then 
+        elseif iParam2 == 1 then
             if iParam1 == 0 then
                 return vector3(0.0, 0.0, 12.96)
             elseif iParam1 == 1 then
@@ -2493,8 +2491,8 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                 return vector3(0.0, 0.0, 32.04)
             elseif iParam1 == 3 then
                 return vector3(0.0, 0.0, 32.04)
-            end 
-		elseif iParam2 == 2 then
+            end
+        elseif iParam2 == 2 then
             if iParam1 == 0 then
                 return vector3(0.0, 0.0, -18.36)
             elseif iParam1 == 1 then
@@ -2503,7 +2501,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                 return vector3(0.0, 0.0, -15.48)
             elseif iParam1 == 3 then
                 return vector3(0.0, 0.0, -18)
-            end 
+            end
         elseif iParam2 == 3 then
             if iParam1 == 0 then
                 return vector3(0.0, 0.0, -79.2)
@@ -2514,8 +2512,8 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
             elseif iParam1 == 3 then
                 return vector3(0.0, 0.0, -64.8)
             end
-		end 
-	else
+        end
+    else
         -- case 5000 then
         -- case 10000 then
         -- case 15000 then
@@ -2525,8 +2523,8 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
         -- case 35000 then
         -- case 40000 then
         -- case 45000 then
-        if iParam0 == 50000 then 
-            if iParam2 == 0 then 
+        if iParam0 == 50000 then
+            if iParam2 == 0 then
                 if iParam1 == 0 then
                     return vector3(0.0, 0.0, -16.56)
                 elseif iParam1 == 1 then
@@ -2566,7 +2564,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                 elseif iParam1 == 3 then
                     return vector3(0.0, 0.0, -146.52)
                 end
-            end 
+            end
         else
             if iParam2 == 0 then
                 if iParam1 == 0 then
@@ -2587,7 +2585,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                     return vector3(0.0, 0.0, 32.04)
                 elseif iParam1 == 3 then
                     return vector3(0.0, 0.0, 32.04)
-                end 
+                end
             elseif iParam2 == 2 then
                 if iParam1 == 0 then
                     return vector3(0.0, 0.0, -18.36)
@@ -2597,7 +2595,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                     return vector3(0.0, 0.0, -15.48)
                 elseif iParam1 == 3 then
                     return vector3(0.0, 0.0, -18)
-                end 
+                end
             elseif iParam2 == 3 then
                 if iParam1 == 0 then
                     return vector3(0.0, 0.0, -79.2)
@@ -2609,7 +2607,7 @@ function blackjack_func_373(iParam0, iParam1, iParam2, bParam3)
                     return vector3(0.0, 0.0, -64.8)
                 end
             end
-        end  
+        end
     end
     return vector3(0.0, 0.0, 0)
 end
@@ -2631,7 +2629,7 @@ function setupBlackjackInstructionalScaleform(scaleform)
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
-    
+
     PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
@@ -2664,9 +2662,9 @@ function setupBlackjackInstructionalScaleform(scaleform)
     -- PushScaleformMovieFunctionParameterInt(4)
     -- Button(GetControlInstructionalButton(2, 22, true))
     -- ButtonMessage("Custom bet") --Space
-    -- PopScaleformMovieFunctionVoid()  
-    
-    
+    -- PopScaleformMovieFunctionVoid()
+
+
 
     PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
     PopScaleformMovieFunctionVoid()
@@ -2688,7 +2686,7 @@ function setupBlackjackMidBetScaleform(scaleform)
     end
     PushScaleformMovieFunction(scaleform, "CLEAR_ALL")
     PopScaleformMovieFunctionVoid()
-    
+
     PushScaleformMovieFunction(scaleform, "SET_CLEAR_SPACE")
     PushScaleformMovieFunctionParameterInt(200)
     PopScaleformMovieFunctionVoid()
@@ -2696,15 +2694,15 @@ function setupBlackjackMidBetScaleform(scaleform)
     PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(1)
     Button(GetControlInstructionalButton(2, 194, true)) -- The button to display
-    ButtonMessage("Stand") --BACKSPACE
+    ButtonMessage("Stand")                              --BACKSPACE
     PopScaleformMovieFunctionVoid()
 
     PushScaleformMovieFunction(scaleform, "SET_DATA_SLOT")
     PushScaleformMovieFunctionParameterInt(4)
     Button(GetControlInstructionalButton(2, 22, true))
     ButtonMessage("Hit") --Space
-    PopScaleformMovieFunctionVoid()  
-    
+    PopScaleformMovieFunctionVoid()
+
     PushScaleformMovieFunction(scaleform, "DRAW_INSTRUCTIONAL_BUTTONS")
     PopScaleformMovieFunctionVoid()
 
@@ -2722,50 +2720,50 @@ function getDealerIdFromEntity(dealerEntity)
     local closestID = nil
     local closestDist = 10000
     local dealerCoords = GetEntityCoords(dealerEntity)
-    for k,v in pairs(cfg.blackjackTables) do 
+    for k, v in pairs(cfg.blackjackTables) do
         local actualDealerPos = v.dealerPos
-        if #(dealerCoords-dealerPos) < closestDist then 
+        if #(dealerCoords - dealerPos) < closestDist then
             closestID = k
-            closestDist = #(dealerCoords-dealerPos)
+            closestDist = #(dealerCoords - dealerPos)
         end
     end
     return closestID
 end
 
-function setBlackjackDealerPedVoiceGroup(randomNumber,dealerPed)
+function setBlackjackDealerPedVoiceGroup(randomNumber, dealerPed)
     if randomNumber == 0 then
-        SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_WHITE_01"))
-	elseif randomNumber == 1 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_ASIAN_01"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_WHITE_01"))
+    elseif randomNumber == 1 then
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_ASIAN_01"))
     elseif randomNumber == 2 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_ASIAN_02"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_ASIAN_02"))
     elseif randomNumber == 3 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_ASIAN_01"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_ASIAN_01"))
     elseif randomNumber == 4 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_WHITE_01"))
-	elseif randomNumber == 5 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_WHITE_02"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_WHITE_01"))
+    elseif randomNumber == 5 then
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_WHITE_02"))
     elseif randomNumber == 6 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_M_Y_Casino_01_WHITE_01"))	
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_M_Y_Casino_01_WHITE_01"))
     elseif randomNumber == 7 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_ASIAN_01"))	
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_ASIAN_01"))
     elseif randomNumber == 8 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_ASIAN_02"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_ASIAN_02"))
     elseif randomNumber == 9 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_ASIAN_01"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_ASIAN_01"))
     elseif randomNumber == 10 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_ASIAN_02"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_ASIAN_02"))
     elseif randomNumber == 11 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_LATINA_01"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_LATINA_01"))
     elseif randomNumber == 12 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_LATINA_02"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_LATINA_02"))
     elseif randomNumber == 13 then
-		SetPedVoiceGroup(dealerPed,GetHashKey("S_F_Y_Casino_01_LATINA_01"))
+        SetPedVoiceGroup(dealerPed, GetHashKey("S_F_Y_Casino_01_LATINA_01"))
     end
 end
 
-function setBlackjackDealerClothes(randomNumber,dealerPed)
-    if randomNumber == 0 then 
+function setBlackjackDealerClothes(randomNumber, dealerPed)
+    if randomNumber == 0 then
         SetPedDefaultComponentVariation(dealerPed)
         SetPedComponentVariation(dealerPed, 0, 3, 0, 0)
         SetPedComponentVariation(dealerPed, 1, 1, 0, 0)
@@ -2909,7 +2907,7 @@ function setBlackjackDealerClothes(randomNumber,dealerPed)
         SetPedComponentVariation(dealerPed, 8, 0, 0, 0)
         SetPedComponentVariation(dealerPed, 10, 0, 0, 0)
         SetPedComponentVariation(dealerPed, 11, 0, 0, 0)
-            SetPedPropIndex(dealerPed, 1, 0, 0, false)
+        SetPedPropIndex(dealerPed, 1, 0, 0, false)
     elseif randomNumber == 12 then
         SetPedDefaultComponentVariation(dealerPed)
         SetPedComponentVariation(dealerPed, 0, 3, 1, 0)
@@ -2935,83 +2933,82 @@ function setBlackjackDealerClothes(randomNumber,dealerPed)
         SetPedComponentVariation(dealerPed, 10, 0, 0, 0)
         SetPedComponentVariation(dealerPed, 11, 0, 0, 0)
         SetPedPropIndex(dealerPed, 1, 0, 0, false)
-	end
+    end
 end
 
 function DrawTimerBar2(title, text, barIndex)
-	local width = 0.13
-	local hTextMargin = 0.003
-	local rectHeight = 0.038
-	local textMargin = 0.008
-	
-	local rectX = GetSafeZoneSize() - width + width / 2
-	local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2 - (barIndex - 1) * (rectHeight + 0.005)
-	
-	DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, 0.038, 0, 0, 0, 0, 128)
-	
-	DrawTimerBarText(title, GetSafeZoneSize() - width + hTextMargin, rectY - textMargin, 0.32)
-	DrawTimerBarText(string.upper(text), GetSafeZoneSize() - hTextMargin, rectY - 0.0175, 0.5, true, width / 2)
+    local width = 0.13
+    local hTextMargin = 0.003
+    local rectHeight = 0.038
+    local textMargin = 0.008
+
+    local rectX = GetSafeZoneSize() - width + width / 2
+    local rectY = GetSafeZoneSize() - rectHeight + rectHeight / 2 - (barIndex - 1) * (rectHeight + 0.005)
+
+    DrawSprite("timerbars", "all_black_bg", rectX, rectY, width, 0.038, 0, 0, 0, 0, 128)
+
+    DrawTimerBarText(title, GetSafeZoneSize() - width + hTextMargin, rectY - textMargin, 0.32)
+    DrawTimerBarText(string.upper(text), GetSafeZoneSize() - hTextMargin, rectY - 0.0175, 0.5, true, width / 2)
 end
 
 function DrawNoiseBar(noise, barIndex)
-	DrawTimerBar2("NOISE", math.floor(noise), barIndex)
+    DrawTimerBar2("NOISE", math.floor(noise), barIndex)
 end
 
 function DrawTimerBarText(text, x, y, scale, right, width)
-	SetTextFont(0)
-	SetTextScale(scale, scale)
-	SetTextColour(254, 254, 254, 255)
+    SetTextFont(0)
+    SetTextScale(scale, scale)
+    SetTextColour(254, 254, 254, 255)
 
-	if right then
-		SetTextWrap(x - width, x)
-		SetTextRightJustify(true)
-	end
-	
-	BeginTextCommandDisplayText("STRING")	
-	AddTextComponentSubstringPlayerName(text)
-	EndTextCommandDisplayText(x, y)
+    if right then
+        SetTextWrap(x - width, x)
+        SetTextRightJustify(true)
+    end
+
+    BeginTextCommandDisplayText("STRING")
+    AddTextComponentSubstringPlayerName(text)
+    EndTextCommandDisplayText(x, y)
 end
 
-function DrawAdvancedNativeText(x,y,w,h,sc, text, r,g,b,a,font,jus)
+function DrawAdvancedNativeText(x, y, w, h, sc, text, r, g, b, a, font, jus)
     SetTextFont(font)
     SetTextScale(sc, sc)
-	N_0x4e096588b13ffeca(jus)
+    N_0x4e096588b13ffeca(jus)
     SetTextColour(254, 254, 254, 255)
     SetTextEntry("STRING")
     AddTextComponentString(text)
-	DrawText(x - 0.1+w, y - 0.02+h)
+    DrawText(x - 0.1 + w, y - 0.02 + h)
 end
 
-
 RegisterNetEvent("blackjack:notify")
-AddEventHandler("blackjack:notify",function(msg)
+AddEventHandler("blackjack:notify", function(msg)
     QBCore.Functions.Notify(msg, 'success', 3500)
 end)
 
 function getGenericTextInput(type)
-	if type == nil then type = "" end
-	AddTextEntry('FMMC_MPM_NA', "Enter " .. tostring(type))
-	DisplayOnscreenKeyboard(1, "FMMC_MPM_NA", "Enter " .. tostring(type) .. " message", "", "", "", "", 30)
+    if type == nil then type = "" end
+    AddTextEntry('FMMC_MPM_NA', "Enter " .. tostring(type))
+    DisplayOnscreenKeyboard(1, "FMMC_MPM_NA", "Enter " .. tostring(type) .. " message", "", "", "", "", 30)
     while (UpdateOnscreenKeyboard() == 0) do
         DisableAllControlActions(0);
         Wait(0);
     end
     if (GetOnscreenKeyboardResult()) then
         local result = GetOnscreenKeyboardResult()
-		if result then
-			return result
-		end
+        if result then
+            return result
+        end
     end
-	return false
+    return false
 end
 
 --Debug Commands--
-RegisterCommand("cleantable",function()
-    for k,v in pairs(cardObjects) do
-        for _,obj in pairs(v) do
+RegisterCommand("cleantable", function()
+    for k, v in pairs(cardObjects) do
+        for _, obj in pairs(v) do
             DeleteObject(obj)
         end
-	end	
+    end
 end)
 
 -- RegisterCommand("debugtable",function()
@@ -3030,11 +3027,11 @@ end)
 -- RegisterCommand("testcasinoanim", function()
 --     TaskPlayAnim(PlayerPedId(), "anim_casino_b@amb@casino@games@blackjack@dealer", "check_card", 3.0, 1.0, -1, 2, 0, 0, 0, 0 )
 --     -- print("animation started")
---     -- while not HasEntityAnimFinished(PlayerPedId(), "anim_casino_b@amb@casino@games@blackjack@dealer", "check_card",3) do 
+--     -- while not HasEntityAnimFinished(PlayerPedId(), "anim_casino_b@amb@casino@games@blackjack@dealer", "check_card",3) do
 --     --     -- print("waiting for check card animation to end")
 --     --     Wait(0)
 --     -- end
---     while true do 
+--     while true do
 --         -- print("hasAnimEventFired: " .. tostring(HasAnimEventFired(PlayerPedId(),585557868)))
 --         Wait(0)
 --     end

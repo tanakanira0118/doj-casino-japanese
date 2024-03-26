@@ -1,4 +1,3 @@
-
 local QBCore = exports['qb-core']:GetCoreObject()
 
 SITTING_SCENE = nil
@@ -44,7 +43,7 @@ lastAimedBet = -1
 --     })
 --     removeOldRouletteTables:onPlayerInOut(function(isPointInside)
 --         if isPointInside then
-            
+
 --             -- local table = `vw_prop_casino_roulette_01`
 --             local table = GetHashKey('vw_prop_casino_roulette_01b')
 --             RequestModel(table)
@@ -68,7 +67,7 @@ createRulettAsztal = function(index, data)
 
     RequestModel(GetHashKey('vw_prop_casino_roulette_01'))
     while not HasModelLoaded(GetHashKey('vw_prop_casino_roulette_01')) do
-        Wait(1) 
+        Wait(1)
     end
 
     self.tableObject = CreateObject(GetHashKey('vw_prop_casino_roulette_01'), data.position, false)
@@ -177,7 +176,6 @@ createRulettAsztal = function(index, data)
                         currentBetAmount = currentBetAmount + 10
                         changeBetAmount(currentBetAmount)
                         -- QBCore.Functions.Notify('+'..currentBetAmount.." bet [raised]",'success')
-
                     elseif IsDisabledControlPressed(0, 173) then
                         if currentBetAmount > 0 then
                             currentBetAmount = currentBetAmount - 10
@@ -187,7 +185,6 @@ createRulettAsztal = function(index, data)
                             end
                             changeBetAmount(currentBetAmount)
                             -- QBCore.Functions.Notify('-'..currentBetAmount.." bet [lowered]",'primary')
-
                         end
                     end
                 end
@@ -211,7 +208,7 @@ createRulettAsztal = function(index, data)
                                 tmpInput = tonumber(tmpInput)
                                 if tmpInput > 0 then
                                     changeBetAmount(tmpInput)
-                                    QBCore.Functions.Notify('カスタムベット: '..currentBetAmount..'チップ','success')
+                                    QBCore.Functions.Notify('カスタムベット: ' .. currentBetAmount .. 'チップ', 'success')
                                 end
                             end
                         end
@@ -247,7 +244,7 @@ createRulettAsztal = function(index, data)
             elseif SELECTED_CHAIR_ID == 2 then
                 whichAnim = 'sit_exit_right'
             elseif SELECTED_CHAIR_ID == 3 then
-                whichAnim = ({'sit_exit_left', 'sit_exit_right'})[math.random(1, 2)]
+                whichAnim = ({ 'sit_exit_left', 'sit_exit_right' })[math.random(1, 2)]
             elseif SELECTED_CHAIR_ID == 4 then
                 whichAnim = 'sit_exit_left'
             end
@@ -346,7 +343,7 @@ createRulettAsztal = function(index, data)
                         name = e + 1,
                         pos = GetOffsetFromEntityInWorldCoords(self.tableObject, (0.081 * i) - 0.057, (0.167 * j) - 0.192, 0.9448),
                         objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.081 * i - 0.057, 0.167 * j - 0.192, 0.9448),
-                        hoverNumbers = {e}
+                        hoverNumbers = { e }
                     }
                 )
 
@@ -368,7 +365,7 @@ createRulettAsztal = function(index, data)
                 name = 'Zero',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.137, -0.148, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.137, -0.148, 0.9448),
-                hoverNumbers = {#self.numbersData}
+                hoverNumbers = { #self.numbersData }
             }
         )
         table.insert(
@@ -386,7 +383,7 @@ createRulettAsztal = function(index, data)
                 name = 'Double Zero',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.133, 0.107, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.133, 0.107, 0.9448),
-                hoverNumbers = {#self.numbersData}
+                hoverNumbers = { #self.numbersData }
             }
         )
         table.insert(
@@ -396,7 +393,7 @@ createRulettAsztal = function(index, data)
                 name = 'RED',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.3, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.3, -0.4, 0.9448),
-                hoverNumbers = {1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36}
+                hoverNumbers = { 1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36 }
             }
         )
         table.insert(
@@ -406,7 +403,7 @@ createRulettAsztal = function(index, data)
                 name = 'BLACK',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.5, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.5, -0.4, 0.9448),
-                hoverNumbers = {0, 2, 4, 6, 8, 9, 11, 13, 15, 18, 20, 22, 24, 26, 27, 29, 31, 33, 35}
+                hoverNumbers = { 0, 2, 4, 6, 8, 9, 11, 13, 15, 18, 20, 22, 24, 26, 27, 29, 31, 33, 35 }
             }
         )
         table.insert(
@@ -416,7 +413,7 @@ createRulettAsztal = function(index, data)
                 name = 'EVEN',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.15, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.15, -0.4, 0.9448),
-                hoverNumbers = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36}
+                hoverNumbers = { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36 }
             }
         )
         table.insert(
@@ -426,7 +423,7 @@ createRulettAsztal = function(index, data)
                 name = 'ODD',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.65, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.65, -0.4, 0.9448),
-                hoverNumbers = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35}
+                hoverNumbers = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35 }
             }
         )
         table.insert(
@@ -436,7 +433,7 @@ createRulettAsztal = function(index, data)
                 name = '1to18',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.02, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, -0.02, -0.4, 0.9448),
-                hoverNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18}
+                hoverNumbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }
             }
         )
         table.insert(
@@ -446,7 +443,7 @@ createRulettAsztal = function(index, data)
                 name = '19to36',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.78, -0.4, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.78, -0.4, 0.9448),
-                hoverNumbers = {19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36}
+                hoverNumbers = { 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 }
             }
         )
         table.insert(
@@ -456,7 +453,7 @@ createRulettAsztal = function(index, data)
                 name = '1st 12',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.05, -0.3, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.05, -0.3, 0.9448),
-                hoverNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}
+                hoverNumbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 }
             }
         )
         table.insert(
@@ -466,7 +463,7 @@ createRulettAsztal = function(index, data)
                 name = '2nd 12',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.4, -0.3, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.4, -0.3, 0.9448),
-                hoverNumbers = {13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}
+                hoverNumbers = { 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }
             }
         )
         table.insert(
@@ -476,7 +473,7 @@ createRulettAsztal = function(index, data)
                 name = '3rd 12',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.75, -0.3, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.75, -0.3, 0.9448),
-                hoverNumbers = {25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36}
+                hoverNumbers = { 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 }
             }
         )
         table.insert(
@@ -486,7 +483,7 @@ createRulettAsztal = function(index, data)
                 name = '2to1',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, -0.15, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, -0.15, 0.9448),
-                hoverNumbers = {1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34}
+                hoverNumbers = { 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34 }
             }
         )
         table.insert(
@@ -496,7 +493,7 @@ createRulettAsztal = function(index, data)
                 name = '2to1',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, 0.0, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, 0.0, 0.9448),
-                hoverNumbers = {2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35}
+                hoverNumbers = { 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35 }
             }
         )
         table.insert(
@@ -506,7 +503,7 @@ createRulettAsztal = function(index, data)
                 name = '2to1',
                 pos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, 0.15, 0.9448),
                 objectPos = GetOffsetFromEntityInWorldCoords(self.tableObject, 0.91, 0.15, 0.9448),
-                hoverNumbers = {3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36}
+                hoverNumbers = { 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36 }
             }
         )
 
@@ -646,8 +643,7 @@ createRulettAsztal = function(index, data)
                                                     PlaySoundFrontend(-1, 'DLC_VW_BET_DOWN', 'dlc_vw_table_games_frontend_sounds', true)
                                                     TriggerServerEvent('casino:taskBetRulett', selectedRulett, aimingAtBet, currentBetAmount)
                                                 else
-                                                    QBCore.Functions.Notify('あなたのベットはこのテーブルに対して低すぎるか高すぎます。','error')
-
+                                                    QBCore.Functions.Notify('あなたのベットはこのテーブルに対して低すぎるか高すぎます。', 'error')
                                                 end
                                             end
                                         else
@@ -781,14 +777,13 @@ end
 
 function hideUi()
     exports["qb-core"]:HideText()
-	exports['casinoUi']:HideCasinoUi('hide') 
+    exports['casinoUi']:HideCasinoUi('hide')
 end
 
 function changeBetAmount(amount)
     currentBetAmount = amount
     PlaySoundFrontend(-1, 'DLC_VW_BET_HIGHLIGHT', 'dlc_vw_table_games_frontend_sounds', true)
 end
-
 
 function getGenericTextInput(type)
     if type == nil then
@@ -853,9 +848,9 @@ CreateThread(
 --                     local objcoords = GetEntityCoords(v.tableObject)
 --                     local dist = Vdist(playerpos, objcoords)
 --                     if dist < 2.4 then
---                         if dist < 2.3 then 
+--                         if dist < 2.3 then
 --                             -- exports['textUi']:DrawTextUi('show',"Diamond Casino Roulette</p>Press [E] to sit down")
---                             exports["qb-core"]:DrawText("<strong>The Diamond Casino & Resort</p>Roulette</strong></p>Press <strong>E</strong> to sit") 
+--                             exports["qb-core"]:DrawText("<strong>The Diamond Casino & Resort</p>Roulette</strong></p>Press <strong>E</strong> to sit")
 --                             local closestChairData = getClosestChairData(v.tableObject)
 
 --                             if closestChairData == nil then
@@ -863,17 +858,17 @@ CreateThread(
 --                             end
 --                             if IsControlJustPressed(0, 38) then
 --                                 -- QBCore.Functions.TriggerCallback('doj:server:HasCasinoMembership', function(HasItem)
---                                 --     if HasItem then 
+--                                 --     if HasItem then
 --                                         TriggerServerEvent('server_remote:rulett:taskSitDown', k, closestChairData)
 --                                 -- 	else
 -- 							    --         QBCore.Functions.Notify('You are not a member of the casino', 'error', 3500)
 -- 						        --     end
 -- 					            -- end)
---                             end 
+--                             end
 --                             break
 --                         end
 --                         hideUi()
---                     end 
+--                     end
 --                 end
 --             end
 --         end
@@ -898,24 +893,24 @@ Citizen.CreateThread(function()
                 if DoesEntityExist(v.tableObject) then
                     local objcoords = GetEntityCoords(v.tableObject)
                     local dist = Vdist(playerpos, objcoords)
-                    if dist <= 2.0 then 
-                        wait = 5
-                        inZone  = true 
-                        text = "<strong>The Diamond Casino & Resort</p>Roulette</strong></p><strong>E</strong>で座る"
+                    if dist <= 2.0 then
+                        wait                   = 5
+                        inZone                 = true
+                        text                   = "<strong>The Diamond Casino & Resort</p>Roulette</strong></p><strong>E</strong>で座る"
                         local closestChairData = getClosestChairData(v.tableObject)
                         if closestChairData == nil then
                             break
                         end
                         if IsControlJustPressed(0, 38) then
                             TriggerServerEvent('server_remote:rulett:taskSitDown', k, closestChairData)
-                        end 
+                        end
                         -- break
-                    -- else
-                    --     wait = 2000
+                        -- else
+                        --     wait = 2000
                     end
                     if inZone and not alreadyEnteredZone then
                         alreadyEnteredZone = true
-                        exports["qb-core"]:DrawText(text)  
+                        exports["qb-core"]:DrawText(text)
                     end
                     if not inZone and alreadyEnteredZone then
                         alreadyEnteredZone = false
@@ -924,16 +919,16 @@ Citizen.CreateThread(function()
                 end
             end
         end
-        Wait(wait)		
+        Wait(wait)
     end
 end)
 
 
 
 
-RegisterNetEvent('client_callback:rulett:taskSitDown',function(rulettIndex, chairData)
+RegisterNetEvent('client_callback:rulett:taskSitDown', function(rulettIndex, chairData)
     -- exports['progressBars']:drawBar(4000, 'Sitting...')
-    -- QBCore.Functions.Notify("Sitting...", "primary", 3200)  
+    -- QBCore.Functions.Notify("Sitting...", "primary", 3200)
     exports["qb-core"]:HideText()
     SELECTED_CHAIR_ID = chairData.chairId
     CURRENT_CHAIR_DATA = chairData
@@ -942,7 +937,7 @@ RegisterNetEvent('client_callback:rulett:taskSitDown',function(rulettIndex, chai
     while not HasAnimDictLoaded('anim_casino_b@amb@casino@games@shared@player@') do
         Wait(1)
     end
-    local randomSit = ({'sit_enter_left', 'sit_enter_right'})[math.random(1, 2)]
+    local randomSit = ({ 'sit_enter_left', 'sit_enter_right' })[math.random(1, 2)]
     NetworkAddPedToSynchronisedScene(PlayerPedId(), SITTING_SCENE, 'anim_casino_b@amb@casino@games@shared@player@', randomSit, 2.0, -2.0, 13, 16, 2.0, 0)
     NetworkStartSynchronisedScene(SITTING_SCENE)
     SetPlayerControl(PlayerId(), 0, 0)
@@ -958,7 +953,7 @@ function startRulett(index, chairId)
 end
 
 RegisterNetEvent('client:casino:openRulett')
-AddEventHandler('client:casino:openRulett',function(rulettIndex)
+AddEventHandler('client:casino:openRulett', function(rulettIndex)
     if Rulettek[rulettIndex] ~= nil then
         Wait(4000)
         Rulettek[rulettIndex].enableCamera(true)
@@ -969,9 +964,7 @@ RegisterNetEvent('casino:rulett:startSpin')
 AddEventHandler(
     'casino:rulett:startSpin',
     function(rulettIndex, tickRate)
-
         if Rulettek[rulettIndex] ~= nil then
-
             Config.DebugMsg(string.format('rulett table index: %s, tickrate: %s', rulettIndex, tickRate))
             Rulettek[rulettIndex].spinRulett(tickRate)
 
@@ -987,7 +980,6 @@ RegisterNetEvent('client:rulett:updateStatusz')
 AddEventHandler(
     'client:rulett:updateStatusz',
     function(rulettIndex, ido, statusz)
-
         if Rulettek[rulettIndex] ~= nil then
             Rulettek[rulettIndex].ido = ido
             Rulettek[rulettIndex].statusz = statusz
@@ -1007,30 +999,29 @@ AddEventHandler(
 )
 
 function casinoNuiUpdateGame(rulettIndex, ido, statusz)
-    QBCore.Functions.TriggerCallback('roulette:server:ChipsAmount', function(result) 
+    QBCore.Functions.TriggerCallback('roulette:server:ChipsAmount', function(result)
         retval = result
         if selectedRulett == rulettIndex then
             if not statusz then
-                exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Roulette</p>残り時間: "..ido.."</p>現在のベット: "..currentBetAmount.."</p>利用可能なチップ: "..math.floor(retval))
+                exports['casinoUi']:DrawCasinoUi('show', "Diamond Casino Roulette</p>残り時間: " .. ido .. "</p>現在のベット: " .. currentBetAmount .. "</p>利用可能なチップ: " .. math.floor(retval))
                 if Config.allowCustomBet then
                     exports["qb-core"]:DrawText("<strong>ベットをする: </strong>左クリック</p><strong>ベットを調整する: </strong>↑/↓</p><strong>終了:</strong> ←</p><strong>量をカスタム:</strong> スペースバー")
                 else
                     exports["qb-core"]:DrawText("<strong>ベットをする: </strong>左クリック</p><strong>ベットを調整する: </strong>↑/↓</p><strong>終了:</strong> ←")
                 end
             else
-                exports["qb-core"]:DrawText("ゲームを開始しています...")  
+                exports["qb-core"]:DrawText("ゲームを開始しています...")
                 hideUi()
             end
         end
     end)
 end
 
-
 function getClosestChairData(tableObject)
     local localPlayer = PlayerPedId()
     local playerpos = GetEntityCoords(localPlayer)
     if DoesEntityExist(tableObject) then
-        local chairs = {'Chair_Base_01', 'Chair_Base_02', 'Chair_Base_03', 'Chair_Base_04'}
+        local chairs = { 'Chair_Base_01', 'Chair_Base_02', 'Chair_Base_03', 'Chair_Base_04' }
         for i = 1, #chairs, 1 do
             local objcoords = GetWorldPositionOfEntityBone(tableObject, GetEntityBoneIndexByName(tableObject, chairs[i]))
             local dist = Vdist(playerpos, objcoords)
@@ -1114,7 +1105,7 @@ AddEventHandler(
                 PlayerPedId(),
                 currentScene,
                 L,
-                ({'place_bet_zone1', 'place_bet_zone2', 'place_bet_zone3'})[math.random(1, 3)],
+                ({ 'place_bet_zone1', 'place_bet_zone2', 'place_bet_zone3' })[math.random(1, 3)],
                 4.0,
                 -2.0,
                 13,
@@ -1172,7 +1163,7 @@ AddEventHandler(
     end
 )
 
-RegisterNetEvent('client:rulett:playLossAnim',function(chairId)
+RegisterNetEvent('client:rulett:playLossAnim', function(chairId)
     local rot = CURRENT_CHAIR_DATA.rotation
 
     if chairId == 4 then
@@ -1208,7 +1199,7 @@ RegisterNetEvent('client:rulett:playLossAnim',function(chairId)
             PlayerPedId(),
             currentScene,
             L,
-            ({'reaction_bad_var01', 'reaction_bad_var02', 'reaction_terrible'})[math.random(1, 3)],
+            ({ 'reaction_bad_var01', 'reaction_bad_var02', 'reaction_terrible' })[math.random(1, 3)],
             4.0,
             -2.0,
             13,
@@ -1258,7 +1249,7 @@ function playImpartial()
             PlayerPedId(),
             currentScene,
             L,
-            ({'reaction_impartial_var01', 'reaction_impartial_var02', 'reaction_impartial_var03'})[math.random(1, 3)],
+            ({ 'reaction_impartial_var01', 'reaction_impartial_var02', 'reaction_impartial_var03' })[math.random(1, 3)],
             4.0,
             -2.0,
             13,
@@ -1304,7 +1295,7 @@ function playRulettIdle()
 
     if CURRENT_CHAIR_DATA ~= nil then
         local currentScene = NetworkCreateSynchronisedScene(CURRENT_CHAIR_DATA.position, rot, 2, 1, 0, 1065353216, 0, 1065353216)
-        NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, L, ({'idle_a', 'idle_b', 'idle_c', 'idle_d'})[math.random(1, 4)], 1.0, -2.0, 13, 16, 1148846080, 0)
+        NetworkAddPedToSynchronisedScene(PlayerPedId(), currentScene, L, ({ 'idle_a', 'idle_b', 'idle_c', 'idle_d' })[math.random(1, 4)], 1.0, -2.0, 13, 16, 1148846080, 0)
         NetworkStartSynchronisedScene(currentScene)
     end
 end

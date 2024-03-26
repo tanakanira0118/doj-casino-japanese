@@ -11,7 +11,7 @@ this_is_a_map 'yes'
 
 
 client_scripts {
-    'client/client.lua',
+	'client/client.lua',
 	'client/mph4_gtxd.meta',
 	'client/water.lua',
 }

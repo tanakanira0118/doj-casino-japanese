@@ -18,8 +18,8 @@ function giveChips(source, amount)
     local Player = QBCore.Functions.GetPlayer(source)
     if Player then
         Player.Functions.AddItem("casino_goldchip", amount, nil, nil, false, GetCurrentResourceName(), "", "", "")
-        TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "add", amount) 
-        updatePlayerChips(source) 
+        TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "add", amount)
+        updatePlayerChips(source)
     end
 end
 
@@ -27,7 +27,7 @@ function removeChips(source, amount)
     local Player = QBCore.Functions.GetPlayer(source)
     if Player then
         Player.Functions.RemoveItem("casino_goldchip", amount)
-        TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "remove", amount) 
+        TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items['casino_goldchip'], "remove", amount)
         updatePlayerChips(source)
     end
 end
@@ -235,7 +235,7 @@ Citizen.CreateThread(
 
                                         TriggerClientEvent('aquiverPoker:Stage:6', -1, tableId) -- reveal DEALER cards
                                         Citizen.Wait(10000)
-                                        CheckWinners(tableId) -- checking winners on server side
+                                        CheckWinners(tableId)                                   -- checking winners on server side
                                         Citizen.Wait(1500)
 
                                         TriggerClientEvent('aquiverPoker:Stage:7', -1, tableId) -- clearing table
@@ -287,7 +287,7 @@ function CheckWinners(tableId)
                     local playerHand_third = Config.getHandAllValues(data.Hand, false, true)
 
                     if Config.canDealerPlay(dealerHand) then
-                        if playerHand > dealerHand then -- win
+                        if playerHand > dealerHand then     -- win
                             playerWon(targetSrc, tableId, playerHand)
                         elseif playerHand < dealerHand then -- lose
                             playerLost(targetSrc, tableId, playerHand)
@@ -334,9 +334,6 @@ function playerPairPlusWon(targetSrc, tableId, pairMultiplier)
         end
     end
 end
-
-
-
 
 function playerWon(targetSrc, tableId, handValue)
     local betAmount = getPlayerBetAmount(targetSrc, tableId)
@@ -443,14 +440,14 @@ QBCore.Functions.CreateCallback(
     function(source, cb, tableId, chairId)
         if ServerPokers[tableId] == nil then
             ServerPokers[tableId] = {
-                ChairsUsed = {}, -- chairs used, for disable sitting
-                PlayerBets = {}, -- player bets ofc.
+                ChairsUsed = {},    -- chairs used, for disable sitting
+                PlayerBets = {},    -- player bets ofc.
                 Active = false,
-                Cards = {}, -- player / dealer cards, etc.
-                UsedCards = {}, -- which card was used, so we can not pick the same
+                Cards = {},         -- player / dealer cards, etc.
+                UsedCards = {},     -- which card was used, so we can not pick the same
                 PlayersFolded = {}, -- following who folded their cards
                 PairPlusBets = {},
-                Stage = 0, -- following the stages
+                Stage = 0,          -- following the stages
                 TimeLeft = nil
             }
         end

@@ -1,4 +1,3 @@
-
 local QBCore = exports['qb-core']:GetCoreObject()
 
 
@@ -8,14 +7,14 @@ local ItemList = {
 QBCore.Functions.CreateCallback('BLACKJACKRT98:server:blackChipsAmount', function(source, cb)
     local retval = 0
     local Player = QBCore.Functions.GetPlayer(source)
-    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then 
-        for k, v in pairs(Player.PlayerData.items) do 
-            if Player.PlayerData.items[k] ~= nil then 
-                if ItemList[Player.PlayerData.items[k].name] ~= nil then 
+    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then
+        for k, v in pairs(Player.PlayerData.items) do
+            if Player.PlayerData.items[k] ~= nil then
+                if ItemList[Player.PlayerData.items[k].name] ~= nil then
                     retval = retval + (ItemList[Player.PlayerData.items[k].name] * Player.PlayerData.items[k].amount)
                 end
             end
-        end 
+        end
     end
     cb(retval)
 end)
@@ -41,14 +40,14 @@ local blackjackTables = {
     [15] = false,
 }
 
-for i=0,127,1 do
+for i = 0, 127, 1 do
     blackjackTables[i] = false
 end
 
 local blackjackGameInProgress = {}
 local blackjackGameData = {}
 
-function tryTakeChips(source,amount)
+function tryTakeChips(source, amount)
     local Player = QBCore.Functions.GetPlayer(source)
     local ItemList = {
         ["casino_goldchip"] = 1,
@@ -56,11 +55,11 @@ function tryTakeChips(source,amount)
     local playerChips = Player.Functions.GetItemByName("casino_goldchip")
     local canBet = false
 
-    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then 
-        for k, v in pairs(Player.PlayerData.items) do 
-            if Player.PlayerData.items[k] ~= nil then 
-                if ItemList[Player.PlayerData.items[k].name] ~= nil then 
-                    if playerChips.amount >= amount then 
+    if Player.PlayerData.items ~= nil and next(Player.PlayerData.items) ~= nil then
+        for k, v in pairs(Player.PlayerData.items) do
+            if Player.PlayerData.items[k] ~= nil then
+                if ItemList[Player.PlayerData.items[k].name] ~= nil then
+                    if playerChips.amount >= amount then
                         Player.Functions.RemoveItem("casino_goldchip", amount)
                         TriggerClientEvent('inventory:client:ItemBox', source, QBCore.Shared.Items["casino_goldchip"], 'remove')
                         canBet = true
@@ -71,25 +70,24 @@ function tryTakeChips(source,amount)
     end
 
     return canBet
-end 
+end
 
-
-function giveChips(source,amount)
-    local src = source 
+function giveChips(source, amount)
+    local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if Player ~= nil then
-        if Player.Functions.AddItem('casino_goldchip', amount, nil, {["quality"] = 100}) then
+        if Player.Functions.AddItem('casino_goldchip', amount, nil, { ["quality"] = 100 }) then
             TriggerClientEvent('inventory:client:ItemBox', src, QBCore.Shared.Items["casino_goldchip"], "add", amount)
-            TriggerClientEvent('QBCore:Notify', src, "あなたは "..math.floor(amount).."カジノチップ勝ちました！")
+            TriggerClientEvent('QBCore:Notify', src, "あなたは " .. math.floor(amount) .. "カジノチップ勝ちました！")
         else
             TriggerClientEvent('QBCore:Notify', src, 'ポケットがいっぱいです', 'error')
         end
     end
-end 
+end
 
-AddEventHandler('playerDropped', function (reason)
+AddEventHandler('playerDropped', function(reason)
     local source = source
-    for k,v in pairs(blackjackTables) do
+    for k, v in pairs(blackjackTables) do
         if v == source then
             blackjackTables[k] = false
         end
@@ -99,7 +97,7 @@ end)
 RegisterNetEvent("Blackjack:requestBlackjackTableData")
 AddEventHandler("Blackjack:requestBlackjackTableData", function()
     local source = source
-    TriggerClientEvent("Blackjack:sendBlackjackTableData",source,blackjackTables)
+    TriggerClientEvent("Blackjack:sendBlackjackTableData", source, blackjackTables)
 end)
 
 RegisterNetEvent("Blackjack:requestSitAtBlackjackTable")
@@ -107,8 +105,8 @@ AddEventHandler("Blackjack:requestSitAtBlackjackTable", function(chairId)
     local source = source
 
     if source ~= nil then
-        for k,v in pairs(blackjackTables) do 
-            if v == source then 
+        for k, v in pairs(blackjackTables) do
+            if v == source then
                 blackjackTables[k] = false
                 --print("[Error] Player tried to sit at a table, but he's already sitting there :?, proceeding...")
                 return
@@ -116,8 +114,8 @@ AddEventHandler("Blackjack:requestSitAtBlackjackTable", function(chairId)
         end
         --print("setting blackjacktable chairID: " .. tostring(chairId))
         blackjackTables[chairId] = source
-        TriggerClientEvent("Blackjack:sendBlackjackTableData",-1,blackjackTables)
-        TriggerClientEvent("Blackjack:sitAtBlackjackTable",source,chairId)
+        TriggerClientEvent("Blackjack:sendBlackjackTableData", -1, blackjackTables)
+        TriggerClientEvent("Blackjack:sitAtBlackjackTable", source, chairId)
     else
         TriggerClientEvent('QBCore:Notify', source, 'あなたを座らせることが出来ません', 'error')
     end
@@ -127,21 +125,21 @@ RegisterNetEvent("Blackjack:leaveBlackjackTable")
 AddEventHandler("Blackjack:leaveBlackjackTable", function(chairId)
     local source = source
 
-    if source ~= nil then 
-        for k,v in pairs(blackjackTables) do 
-            if v == source then 
+    if source ~= nil then
+        for k, v in pairs(blackjackTables) do
+            if v == source then
                 blackjackTables[k] = false
             end
         end
-        TriggerClientEvent("Blackjack:sendBlackjackTableData",-1,blackjackTables)
+        TriggerClientEvent("Blackjack:sendBlackjackTableData", -1, blackjackTables)
     end
 end)
 
 RegisterNetEvent("Blackjack:setBlackjackBet")
-AddEventHandler("Blackjack:setBlackjackBet",function(gameId,betAmount,chairId)
+AddEventHandler("Blackjack:setBlackjackBet", function(gameId, betAmount, chairId)
     local source = source
 
-    if gameId ~= nil and betAmount ~= nil and chairId ~= nil then 
+    if gameId ~= nil and betAmount ~= nil and chairId ~= nil then
         if blackjackGameData[gameId] == nil then
             blackjackGameData[gameId] = {}
         end
@@ -149,17 +147,17 @@ AddEventHandler("Blackjack:setBlackjackBet",function(gameId,betAmount,chairId)
             if tonumber(betAmount) then
                 betAmount = tonumber(betAmount)
                 if betAmount > 0 then
-                    if tryTakeChips(source,betAmount) then
+                    if tryTakeChips(source, betAmount) then
                         ----print("Taken",betAmount,"chips from id",source)
                         if blackjackGameData[gameId][source] == nil then
                             blackjackGameData[gameId][source] = {}
                         end
                         blackjackGameData[gameId][source][1] = betAmount
                         ----print("GameId: " .. tostring(gameId) .. " source: " .. tostring(source) .. " has placed a bet of " .. tostring(betAmount))
-                        TriggerClientEvent("Blackjack:successBlackjackBet",source)
-                        TriggerClientEvent("Blackjack:syncChipsPropBlackjack",-1,betAmount,chairId)
+                        TriggerClientEvent("Blackjack:successBlackjackBet", source)
+                        TriggerClientEvent("Blackjack:syncChipsPropBlackjack", -1, betAmount, chairId)
                         -- TriggerClientEvent('QBCore:Notify', source, 'Bet placed: ' .. tostring(betAmount) .. ' chips.', 'success')
-                    else  
+                    else
                         TriggerClientEvent('QBCore:Notify', source, 'チップが不足しています', 'error')
                         TriggerClientEvent("doj:client:openBetMenu", source)
                     end
@@ -168,63 +166,62 @@ AddEventHandler("Blackjack:setBlackjackBet",function(gameId,betAmount,chairId)
         end
     else
         TriggerClientEvent('QBCore:Notify', source, 'Error betting!', 'error')
-
     end
 end)
 
 RegisterNetEvent("Blackjack:hitBlackjack")
-AddEventHandler("Blackjack:hitBlackjack",function(gameId,nextCardCount)
+AddEventHandler("Blackjack:hitBlackjack", function(gameId, nextCardCount)
     local source = source
     blackjackGameData[gameId][source][2][nextCardCount] = true
 end)
 
 RegisterNetEvent("Blackjack:standBlackjack")
-AddEventHandler("Blackjack:standBlackjack",function(gameId,nextCardCount)
+AddEventHandler("Blackjack:standBlackjack", function(gameId, nextCardCount)
     local source = source
     blackjackGameData[gameId][source][2][nextCardCount] = false
 end)
 
-for i=0,31,1 do
+for i = 0, 31, 1 do
     CreateThread(function()
-        math.randomseed(os.clock()*100000000000)
-        while true do  --blackjack game management thread
-            math.random() 
+        math.randomseed(os.clock() * 100000000000)
+        while true do --blackjack game management thread
+            math.random()
             math.random()
             math.random()
             local game_ready = false
             local players_ready = {}
             local tableId = i
-            local chairIdInitial = i*4 --0-3,4-7,8-11,12-15
-            local chairIdFinal = (i*4)+3
-            for chairID=chairIdInitial,chairIdFinal do
-                ----print("checking chairID[" .. tostring(chairID) .. "] = " .. tostring(blackjackTables[chairID])) 
+            local chairIdInitial = i * 4 --0-3,4-7,8-11,12-15
+            local chairIdFinal = (i * 4) + 3
+            for chairID = chairIdInitial, chairIdFinal do
+                ----print("checking chairID[" .. tostring(chairID) .. "] = " .. tostring(blackjackTables[chairID]))
                 if blackjackTables[chairID] ~= false then
-                    table.insert(players_ready,blackjackTables[chairID])
+                    table.insert(players_ready, blackjackTables[chairID])
                     game_ready = true
                 end
             end
             if game_ready then
-                local gameId = math.random(1000,10000000)
+                local gameId = math.random(1000, 10000000)
                 --print("generated gameId",gameId)
                 blackjackGameData[gameId] = {} --init game data
                 blackjackGameInProgress[gameId] = false
-                for k,v in pairs(players_ready) do 
+                for k, v in pairs(players_ready) do
                     local source = v
                     blackjackGameData[gameId][v] = {}
-                    if source ~= nil then 
-                        TriggerClientEvent("Blackjack:beginBetsBlackjack",source,gameId,tableId)
+                    if source ~= nil then
+                        TriggerClientEvent("Blackjack:beginBetsBlackjack", source, gameId, tableId)
                     end
                 end
                 Wait(21000) --Wait 20 seconds for everyone to put bets up
                 if blackjackGameData[gameId] ~= nil then
-                    for k,v in pairs(blackjackGameData[gameId]) do
+                    for k, v in pairs(blackjackGameData[gameId]) do
                         if v ~= nil then
-                            local playerBetted = false 
+                            local playerBetted = false
                             betAmount = v[1]
                             -- --print("betAmount: " .. tostring(betAmount))
                             -- --print("v: " .. tostring(v))
                             -- --print("vdump: " .. dump(blackjackGameData[gameId][k]))
-                            if betAmount ~= nil and betAmount > 0 then 
+                            if betAmount ~= nil and betAmount > 0 then
                                 playerBetted = true
                             end
                             if not playerBetted then
@@ -235,8 +232,8 @@ for i=0,31,1 do
                     if not isTableEmpty(blackjackGameData[gameId]) then
                         blackjackGameInProgress[gameId] = true
                         --generate random cards here to send? in round "1"
-                        for cardIndex=0,1,1 do
-                            for chairID=chairIdInitial,chairIdFinal do
+                        for cardIndex = 0, 1, 1 do
+                            for chairID = chairIdInitial, chairIdFinal do
                                 if blackjackTables[chairID] ~= false then
                                     local source = blackjackTables[chairID]
                                     if blackjackGameData[gameId] == nil then
@@ -245,46 +242,46 @@ for i=0,31,1 do
                                     if blackjackGameData[gameId][source] == nil then
                                         blackjackGameData[gameId][source] = {}
                                     end
-                                    if blackjackGameData[gameId][source][1] ~= nil then 
-                                        if blackjackGameData[gameId][source][1] > 0 then     
-                                            if blackjackGameData[gameId][source]["cardData"] == nil then 
+                                    if blackjackGameData[gameId][source][1] ~= nil then
+                                        if blackjackGameData[gameId][source][1] > 0 then
+                                            if blackjackGameData[gameId][source]["cardData"] == nil then
                                                 blackjackGameData[gameId][source]["cardData"] = {}
                                             end
-                                            local randomCard = math.random(1,52)
+                                            local randomCard = math.random(1, 52)
                                             table.insert(blackjackGameData[gameId][source]["cardData"], randomCard)
-                                            TriggerClientEvent("Blackjack:beginCardGiveOut",-1,gameId,blackjackGameData[gameId][source]["cardData"],chairID,cardIndex,getCurrentHand(gameId,source),tableId)
+                                            TriggerClientEvent("Blackjack:beginCardGiveOut", -1, gameId, blackjackGameData[gameId][source]["cardData"], chairID, cardIndex, getCurrentHand(gameId, source), tableId)
                                             Wait(3500)
-                                        else 
+                                        else
                                             blackjackGameData[gameId][source] = nil
                                         end
-                                    else 
+                                    else
                                         blackjackGameData[gameId][source] = nil
                                     end
                                 end
                             end
-                            if blackjackGameData[gameId]["dealer"] == nil then 
+                            if blackjackGameData[gameId]["dealer"] == nil then
                                 blackjackGameData[gameId]["dealer"] = {}
                             end
-                            if blackjackGameData[gameId]["dealer"]["cardData"] == nil then 
+                            if blackjackGameData[gameId]["dealer"]["cardData"] == nil then
                                 blackjackGameData[gameId]["dealer"]["cardData"] = {}
                             end
                             if cardIndex == 0 then
-                                local randomCard = math.random(1,52)
+                                local randomCard = math.random(1, 52)
                                 ----print("randomDealerCard: " .. tostring(randomCard))
-                                table.insert(blackjackGameData[gameId]["dealer"]["cardData"], randomCard) 
-                                TriggerClientEvent("Blackjack:beginCardGiveOut",-1,gameId,blackjackGameData[gameId]["dealer"]["cardData"],gameId,cardIndex,getCurrentHand(gameId,"dealer"),tableId)
+                                table.insert(blackjackGameData[gameId]["dealer"]["cardData"], randomCard)
+                                TriggerClientEvent("Blackjack:beginCardGiveOut", -1, gameId, blackjackGameData[gameId]["dealer"]["cardData"], gameId, cardIndex, getCurrentHand(gameId, "dealer"), tableId)
                             end
-                            Wait(1500) --Wait between each initial give out card 
+                            Wait(1500) --Wait between each initial give out card
                         end
                         --Wait(6000) --Wait for dealer to check own card
-                        for chairID=chairIdInitial,chairIdFinal do
+                        for chairID = chairIdInitial, chairIdFinal do
                             if blackjackTables[chairID] ~= false then
                                 local source = blackjackTables[chairID]
-                                if blackjackGameData[gameId][source] ~= nil then 
+                                if blackjackGameData[gameId][source] ~= nil then
                                     local nextCardCount = 1
-                                    local currentHand = getCurrentHand(gameId,source)
+                                    local currentHand = getCurrentHand(gameId, source)
                                     if currentHand < 21 then
-                                        TriggerClientEvent("Blackjack:standOrHit",-1,gameId,chairID,nextCardCount,tableId)                            
+                                        TriggerClientEvent("Blackjack:standOrHit", -1, gameId, chairID, nextCardCount, tableId)
                                         blackjackGameData[gameId][source][2] = {}
                                         ----print("initialize card count = 1")
                                         while nextCardCount >= 1 do
@@ -294,34 +291,34 @@ for i=0,31,1 do
                                             ----print("gameId",gameId)
                                             --print(dump(blackjackGameData[gameId]))
                                             ----print("=======")
-                                            while blackjackGameData[gameId][source][2][nextCardCount] == nil and secondsWaited < 20 do 
+                                            while blackjackGameData[gameId][source][2][nextCardCount] == nil and secondsWaited < 20 do
                                                 Wait(100)
                                                 secondsWaited = secondsWaited + 0.1
                                                 ------print("response to stand or hit is still false")
                                             end
                                             --print("response received! [ok]")
-                                            if blackjackGameData[gameId][source][2][nextCardCount] == true then --if hit 
+                                            if blackjackGameData[gameId][source][2][nextCardCount] == true then --if hit
                                                 ----print("response was hit")
                                                 nextCardCount = nextCardCount + 1
-                                                local randomCard = math.random(1,52)
+                                                local randomCard = math.random(1, 52)
                                                 table.insert(blackjackGameData[gameId][source]["cardData"], randomCard)
-                                                TriggerClientEvent("Blackjack:singleCard",-1,gameId,randomCard,chairID,nextCardCount,getCurrentHand(gameId,source),tableId) 
+                                                TriggerClientEvent("Blackjack:singleCard", -1, gameId, randomCard, chairID, nextCardCount, getCurrentHand(gameId, source), tableId)
                                                 Wait(2000)
-                                                local currentHand = getCurrentHand(gameId,source)
+                                                local currentHand = getCurrentHand(gameId, source)
                                                 ----print("Checking for bust... currentHand: " .. tostring(currentHand))
                                                 if currentHand > 21 then
                                                     ----print("currentHand > 21")
-                                                    TriggerClientEvent("Blackjack:bustBlackjack",-1,chairID,tableId)
+                                                    TriggerClientEvent("Blackjack:bustBlackjack", -1, chairID, tableId)
                                                     nextCardCount = 0
                                                     blackjackGameData[gameId][source]["status"] = "bust"
                                                     local lostAmount = blackjackGameData[gameId][source][1]
-                                                    TriggerClientEvent('QBCore:Notify', source, '敗北 -'..tostring(lostAmount).."チップ", 'error')
+                                                    TriggerClientEvent('QBCore:Notify', source, '敗北 -' .. tostring(lostAmount) .. "チップ", 'error')
                                                     if lostAmount > 10000000 then
                                                         TriggerClientEvent('chatMessage', -1, "Diamond Casino | " .. GetPlayerName(source) .. "が" .. tostring(getMoneyStringFormatted(lostAmount)) .. "チップ負けました！")
                                                     end
                                                 elseif currentHand < 21 then
                                                     ----print("currentHand < 21")
-                                                    TriggerClientEvent("Blackjack:standOrHit",-1,gameId,chairID,nextCardCount,tableId)  
+                                                    TriggerClientEvent("Blackjack:standOrHit", -1, gameId, chairID, nextCardCount, tableId)
                                                 else
                                                     ----print("currentHand == 21")
                                                     ----print("got 21 auto-standing")
@@ -332,42 +329,42 @@ for i=0,31,1 do
                                                 ----print("response was false")
                                                 nextCardCount = 0
                                                 blackjackGameData[gameId][source]["status"] = "stand"
-                                            else 
+                                            else
                                                 ----print("response was false")
                                                 nextCardCount = 0
                                                 blackjackGameData[gameId][source]["status"] = "stand"
                                             end
                                         end
-                                    else 
+                                    else
                                         ----print("got 21 auto-standing")
                                         blackjackGameData[gameId][source]["status"] = "stand"
                                     end
                                 end
-                                TriggerClientEvent("Blackjack:endStandOrHitPhase",-1,chairID,tableId) 
+                                TriggerClientEvent("Blackjack:endStandOrHitPhase", -1, chairID, tableId)
                             end
                         end
-                        local randomCard = math.random(1,52)
+                        local randomCard = math.random(1, 52)
                         ----print("randomDealerCard: " .. tostring(randomCard))
-                        table.insert(blackjackGameData[gameId]["dealer"]["cardData"], randomCard) 
-                        TriggerClientEvent("Blackjack:beginCardGiveOut",-1,gameId,blackjackGameData[gameId]["dealer"]["cardData"],gameId,1,getCurrentHand(gameId,"dealer"),tableId)
+                        table.insert(blackjackGameData[gameId]["dealer"]["cardData"], randomCard)
+                        TriggerClientEvent("Blackjack:beginCardGiveOut", -1, gameId, blackjackGameData[gameId]["dealer"]["cardData"], gameId, 1, getCurrentHand(gameId, "dealer"), tableId)
                         Wait(2800)
-                        dealerHand = getCurrentHand(gameId,"dealer")
-                        TriggerClientEvent("Blackjack:flipDealerCard",-1,dealerHand,tableId,gameId)
+                        dealerHand = getCurrentHand(gameId, "dealer")
+                        TriggerClientEvent("Blackjack:flipDealerCard", -1, dealerHand, tableId, gameId)
                         Wait(2800)
                         --Dealer hit til 17 logic
                         local allPlayersHaveBusted = true
                         ----print("allPlayersHaveBusted loop")
-                        for k,v in pairs(blackjackGameData[gameId]) do 
+                        for k, v in pairs(blackjackGameData[gameId]) do
                             local betStatus = v["status"]
                             ----print("betStatus: " .. tostring(betStatus))
-                            if betStatus ~= nil then 
-                                if betStatus == "stand" then 
+                            if betStatus ~= nil then
+                                if betStatus == "stand" then
                                     allPlayersHaveBusted = false
                                     ----print("allPlayersHaveBusted!")
                                 end
                             end
                         end
-                        dealerHand = getCurrentHand(gameId,"dealer")
+                        dealerHand = getCurrentHand(gameId, "dealer")
                         if not allPlayersHaveBusted then
                             ----print("dealing hand is: " .. tostring(dealerHand))
                             if dealerHand >= 17 then
@@ -377,9 +374,9 @@ for i=0,31,1 do
                                 local nextCardCount = 2
                                 local highestPlayerHand = 0
                                 ----print("highestPlayerHand",highestPlayerHand)
-                                for k,v in pairs(blackjackGameData[gameId]) do 
-                                    if k ~= "dealer" then 
-                                        playerHand = getCurrentHand(gameId,k)
+                                for k, v in pairs(blackjackGameData[gameId]) do
+                                    if k ~= "dealer" then
+                                        playerHand = getCurrentHand(gameId, k)
                                         ----print("================")
                                         ----print("playerHand",playerHand)
                                         ----print("highestPlayerHand",highestPlayerHand)
@@ -392,18 +389,18 @@ for i=0,31,1 do
                                         end
                                     end
                                 end
-                                while dealerHand < 17 do 
-                                    local randomCard = math.random(1,52)
+                                while dealerHand < 17 do
+                                    local randomCard = math.random(1, 52)
                                     ----print("randomDealerCard: " .. tostring(randomCard))
                                     table.insert(blackjackGameData[gameId]["dealer"]["cardData"], randomCard)
-                                    TriggerClientEvent("Blackjack:singleDealerCard",-1,gameId,randomCard,nextCardCount,getCurrentHand(gameId,"dealer"),tableId)
+                                    TriggerClientEvent("Blackjack:singleDealerCard", -1, gameId, randomCard, nextCardCount, getCurrentHand(gameId, "dealer"), tableId)
                                     Wait(2800)
                                     nextCardCount = nextCardCount + 1
-                                    dealerHand = getCurrentHand(gameId,"dealer")
+                                    dealerHand = getCurrentHand(gameId, "dealer")
                                 end
                             end
                         end
-                        for k,v in pairs(blackjackGameData[gameId]) do
+                        for k, v in pairs(blackjackGameData[gameId]) do
                             if k ~= "dealer" then
                                 local source = k
                                 if blackjackGameData[gameId][source] ~= nil then
@@ -411,8 +408,8 @@ for i=0,31,1 do
                                     ----print("result: " .. tostring(blackjackGameData[gameId][source]["status"]))
                                     ----print("table dump:")
                                     --print(dump(blackjackGameData[gameId][source]))
-                                    if blackjackGameData[gameId][source]["status"] ~= "bust" then 
-                                        local currentHand = getCurrentHand(gameId,source)
+                                    if blackjackGameData[gameId][source]["status"] ~= "bust" then
+                                        local currentHand = getCurrentHand(gameId, source)
                                         ----print("Checking for bust... currentHand: " .. tostring(currentHand))
                                         ----print("dealerHand: " .. tostring(dealerHand))
                                         if currentHand ~= nil then
@@ -422,24 +419,24 @@ for i=0,31,1 do
                                                 local playerPing = GetPlayerPing(source)
                                                 if dealerHand > 21 then
                                                     ----print("source: " .. tostring(source) .. " wins!")
-                                                    giveChips(source,potentialWinAmount)
+                                                    giveChips(source, potentialWinAmount)
                                                     if playerPing ~= nil then
                                                         if playerPing > 0 then
-                                                            TriggerClientEvent("Blackjack:blackjackWin",source,tableId)
-                                                            TriggerClientEvent('QBCore:Notify', source, 'ブラックジャックです！ +'..tostring(potentialWinAmount)..'チップ', 'success')
+                                                            TriggerClientEvent("Blackjack:blackjackWin", source, tableId)
+                                                            TriggerClientEvent('QBCore:Notify', source, 'ブラックジャックです！ +' .. tostring(potentialWinAmount) .. 'チップ', 'success')
                                                             if potentialPushAmount > 10000000 then
                                                                 TriggerClientEvent('chatMessage', -1, "Diamond Casino | " .. GetPlayerName(source) .. " が" .. tostring(getMoneyStringFormatted(potentialPushAmount)) .. "チップ勝ちました！")
                                                             end
                                                         end
                                                     end
-                                                    TriggerClientEvent("Blackjack:dealerBusts",-1,tableId) 
+                                                    TriggerClientEvent("Blackjack:dealerBusts", -1, tableId)
                                                 elseif currentHand > dealerHand and currentHand <= 21 then
                                                     ----print("source: " .. tostring(source) .. " wins!")
-                                                    giveChips(source,potentialWinAmount)
+                                                    giveChips(source, potentialWinAmount)
                                                     if playerPing ~= nil then
                                                         if playerPing > 0 then
-                                                            TriggerClientEvent("Blackjack:blackjackWin",source,tableId)
-                                                            TriggerClientEvent('QBCore:Notify', source, 'ブラックジャックです！ +'..tostring(potentialWinAmount)..'チップ', 'success')
+                                                            TriggerClientEvent("Blackjack:blackjackWin", source, tableId)
+                                                            TriggerClientEvent('QBCore:Notify', source, 'ブラックジャックです！ +' .. tostring(potentialWinAmount) .. 'チップ', 'success')
                                                             if potentialPushAmount > 10000000 then
                                                                 TriggerClientEvent('chatMessage', -1, "Diamond Casino | " .. GetPlayerName(source) .. "が" .. tostring(getMoneyStringFormatted(potentialPushAmount)) .. "チップ勝ちました！")
                                                             end
@@ -447,10 +444,10 @@ for i=0,31,1 do
                                                     end
                                                 elseif currentHand == dealerHand then
                                                     ----print("source: " .. tostring(source) .. " pushes!")
-                                                    giveChips(source,potentialPushAmount)
+                                                    giveChips(source, potentialPushAmount)
                                                     if playerPing ~= nil then
                                                         if playerPing > 0 then
-                                                            TriggerClientEvent("Blackjack:blackjackPush",source,tableId)
+                                                            TriggerClientEvent("Blackjack:blackjackPush", source, tableId)
                                                             TriggerClientEvent('QBCore:Notify', source, 'プッシュです', 'error')
                                                         end
                                                     end
@@ -458,8 +455,8 @@ for i=0,31,1 do
                                                     ----print("source: " .. tostring(source) .. " loses!")
                                                     if playerPing ~= nil then
                                                         if playerPing > 0 then
-                                                            TriggerClientEvent("Blackjack:blackjackLose",source,tableId)
-                                                            TriggerClientEvent('QBCore:Notify', source, '負けました！ -'..tostring(potentialPushAmount)..'チップ', 'error')
+                                                            TriggerClientEvent("Blackjack:blackjackLose", source, tableId)
+                                                            TriggerClientEvent('QBCore:Notify', source, '負けました！ -' .. tostring(potentialPushAmount) .. 'チップ', 'error')
                                                             if potentialPushAmount > 10000000 then
                                                                 TriggerClientEvent('chatMessage', -1, "Diamond Casino | " .. GetPlayerName(source) .. "が" .. tostring(getMoneyStringFormatted(potentialPushAmount)) .. "チップ負けました！")
                                                             end
@@ -472,31 +469,31 @@ for i=0,31,1 do
                                 end
                             end
                         end
-                        for chairID=chairIdInitial,chairIdFinal do
+                        for chairID = chairIdInitial, chairIdFinal do
                             if blackjackTables[chairID] ~= false then
                                 local source = blackjackTables[chairID]
-                                if blackjackGameData[gameId][source] ~= nil then 
-                                    TriggerClientEvent("Blackjack:chipsCleanup",-1,chairID,tableId) 
-                                    TriggerClientEvent("Blackjack:chipsCleanup",-1,tostring(chairID).."chips",tableId)
-                                    ----print("chips cleanup for chairID, waiting 2 seconds....") 
+                                if blackjackGameData[gameId][source] ~= nil then
+                                    TriggerClientEvent("Blackjack:chipsCleanup", -1, chairID, tableId)
+                                    TriggerClientEvent("Blackjack:chipsCleanup", -1, tostring(chairID) .. "chips", tableId)
+                                    ----print("chips cleanup for chairID, waiting 2 seconds....")
                                     Wait(3500)
                                 end
                             end
                         end
                         ----print("chips cleanup for dealer")
-                        TriggerClientEvent("Blackjack:chipsCleanup",-1,gameId,tableId)
-                        for chairID=chairIdInitial,chairIdFinal do
-                            TriggerClientEvent("Blackjack:chipsCleanupNoAnim",-1,chairID,tableId) 
-                            TriggerClientEvent("Blackjack:chipsCleanupNoAnim",-1,tostring(chairID).."chips",tableId)
+                        TriggerClientEvent("Blackjack:chipsCleanup", -1, gameId, tableId)
+                        for chairID = chairIdInitial, chairIdFinal do
+                            TriggerClientEvent("Blackjack:chipsCleanupNoAnim", -1, chairID, tableId)
+                            TriggerClientEvent("Blackjack:chipsCleanupNoAnim", -1, tostring(chairID) .. "chips", tableId)
                         end
                         blackjackGameInProgress[gameId] = false
-                    else 
+                    else
                         ----print("Game not started")
                     end
-                else 
+                else
                     ----print("No one betted :(")
                 end
-            else 
+            else
                 Wait(1000)
             end
             Wait(1000) --Check ever second if anyones sitting at the table
@@ -505,16 +502,16 @@ for i=0,31,1 do
 end
 
 --1,1,3,6
-function getCurrentHand(gameId,userId)
+function getCurrentHand(gameId, userId)
     ----print("error debug #2")
     ----print("gameId",gameId)
     ----print("userId",userId)
     --print(dump(blackjackGameData[gameId]))
     ----print("=======")
-    if blackjackGameData[gameId][userId]["cardData"] ~= nil then 
+    if blackjackGameData[gameId][userId]["cardData"] ~= nil then
         local hand = 0
         local numberOfAces = 0
-        for k,v in pairs(blackjackGameData[gameId][userId]["cardData"]) do
+        for k, v in pairs(blackjackGameData[gameId][userId]["cardData"]) do
             local nextCard = getCardNumberFromCardId(v)
             if nextCard == 11 then
                 numberOfAces = numberOfAces + 1
@@ -522,8 +519,8 @@ function getCurrentHand(gameId,userId)
                 hand = hand + nextCard
             end
         end
-        for i=1,numberOfAces,1 do 
-            if i == 1 then 
+        for i = 1, numberOfAces, 1 do
+            if i == 1 then
                 if hand + 11 > 21 then
                     nextCard = 1
                 else
@@ -539,10 +536,10 @@ function getCurrentHand(gameId,userId)
 end
 
 function chairIdToTableId(chairId)
-    if chairId <= 3 then return 0 end 
-    if chairId <= 7 then return 1 end 
-    if chairId <= 11 then return 2 end 
-    if chairId <= 15 then return 3 end  
+    if chairId <= 3 then return 0 end
+    if chairId <= 7 then return 1 end
+    if chairId <= 11 then return 2 end
+    if chairId <= 15 then return 3 end
 end
 
 function getCardNumberFromCardId(cardId)
@@ -579,12 +576,12 @@ function getCardNumberFromCardId(cardId)
     elseif cardId == 16 then
         return 3
     elseif cardId == 17 then
-        return 4        
+        return 4
     elseif cardId == 18 then
         return 5
     elseif cardId == 19 then
         return 6
-    elseif cardId == 20  then
+    elseif cardId == 20 then
         return 7
     elseif cardId == 21 then
         return 8
@@ -661,28 +658,28 @@ function isTableEmpty(self)
 end
 
 function getMoneyStringFormatted(cashString)
-	local i, j, minus, int, fraction = tostring(cashString):find('([-]?)(%d+)([.]?%d*)')
+    local i, j, minus, int, fraction = tostring(cashString):find('([-]?)(%d+)([.]?%d*)')
 
-	-- reverse the int-string and append a comma to all blocks of 3 digits
-	int = int:reverse():gsub("(%d%d%d)", "%1,")
-  
-	-- reverse the int-string back remove an optional comma and put the 
-	-- optional minus and fractional part back
-	return minus .. int:reverse():gsub("^,", "") .. fraction 
+    -- reverse the int-string and append a comma to all blocks of 3 digits
+    int = int:reverse():gsub("(%d%d%d)", "%1,")
+
+    -- reverse the int-string back remove an optional comma and put the
+    -- optional minus and fractional part back
+    return minus .. int:reverse():gsub("^,", "") .. fraction
 end
 
 function dump(o)
     if type(o) == 'table' then
-       local s = '{ '
-       for k,v in pairs(o) do
-          if type(k) ~= 'number' then k = '"'..k..'"' end
-          s = s .. '['..k..'] = ' .. dump(v) .. ','
-       end
-       return s .. '} '
+        local s = '{ '
+        for k, v in pairs(o) do
+            if type(k) ~= 'number' then k = '"' .. k .. '"' end
+            s = s .. '[' .. k .. '] = ' .. dump(v) .. ','
+        end
+        return s .. '} '
     else
-       return tostring(o)
+        return tostring(o)
     end
- end
+end
 
 -- RegisterCommand("debugtableserver",function()
 --     --print("blackjackTables")

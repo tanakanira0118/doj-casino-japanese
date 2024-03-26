@@ -10,11 +10,10 @@ shared_scripts {
 	'coords.lua',
 }
 
-client_scripts{
+client_scripts {
 	'client/*.lua'
-} 
+}
 
-server_scripts{
+server_scripts {
 	'server/*.lua'
-} 
-
+}

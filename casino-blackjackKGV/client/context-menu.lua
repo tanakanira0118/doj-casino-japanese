@@ -1,11 +1,11 @@
-RegisterNetEvent('casino:context:hit&stand', function() 
+RegisterNetEvent('casino:context:hit&stand', function()
     exports['qb-menu']:openMenu({
         {
             header = "Diamond Casino Blackjack",
             isMenuHeader = true,
         },
         {
-            header = "ヒット", 
+            header = "ヒット",
             txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -13,7 +13,7 @@ RegisterNetEvent('casino:context:hit&stand', function()
             }
         },
         {
-            header = "スタンド", 
+            header = "スタンド",
             txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -23,14 +23,14 @@ RegisterNetEvent('casino:context:hit&stand', function()
     })
 end)
 
-RegisterNetEvent('casino:context:hit&doubledown', function() 
+RegisterNetEvent('casino:context:hit&doubledown', function()
     exports['qb-menu']:openMenu({
         {
             header = "Diamond Casino Blackjack",
             isMenuHeader = true,
         },
         {
-            header = "ヒット", 
+            header = "ヒット",
             txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -38,7 +38,7 @@ RegisterNetEvent('casino:context:hit&doubledown', function()
             }
         },
         {
-            header = "スタンド", 
+            header = "スタンド",
             txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -46,7 +46,7 @@ RegisterNetEvent('casino:context:hit&doubledown', function()
             }
         },
         {
-            header = "ダブルダウン", 
+            header = "ダブルダウン",
             txt = "初回のベットを倍にする",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -63,7 +63,7 @@ RegisterNetEvent('casino:context:hit&split', function()
             isMenuHeader = true,
         },
         {
-            header = "ヒット", 
+            header = "ヒット",
             txt = "もう1枚カードを引く",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -71,7 +71,7 @@ RegisterNetEvent('casino:context:hit&split', function()
             }
         },
         {
-            header = "スタンド", 
+            header = "スタンド",
             txt = "確定する",
             params = {
                 event = "doj:client:blackjackMenu",
@@ -79,7 +79,7 @@ RegisterNetEvent('casino:context:hit&split', function()
             }
         },
         {
-            header = "スプリット", 
+            header = "スプリット",
             txt = "分割する",
             params = {
                 event = "doj:client:blackjackMenu",

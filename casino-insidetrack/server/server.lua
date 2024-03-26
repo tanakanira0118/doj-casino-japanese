@@ -7,7 +7,7 @@ QBCore.Functions.CreateCallback("insidetrack:server:getbalance", function(source
     local minAmount = 100
     if Chips ~= nil then
         if Chips.amount >= minAmount then
-            Chips = Chips
+            cb(Chips.amount)
         else
             return TriggerClientEvent('QBCore:client:closeBetsNotEnough', src)
         end
